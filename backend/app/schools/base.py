@@ -123,6 +123,21 @@ class SchoolRules(ABC):
     @abstractmethod
     def audit_max_age_days(self) -> int: ...
 
+    @abstractmethod
+    def mentor_weights(self, goal: str) -> Mapping[str, float]:
+        """Mentor score weights for one goal (see `engine/mentors.py` for the names)."""
+
+    @abstractmethod
+    def mentor_min_grade(self) -> str:
+        """Lowest grade that counts as "passed" for a shared class."""
+
+    @abstractmethod
+    def grade_scale(self) -> list[str]:
+        """Letter grades, best first."""
+
+    @abstractmethod
+    def mentor_max_results(self) -> int: ...
+
     def audit_is_stale(self, audit_date: date, today: date) -> bool:
         return (today - audit_date).days > self.audit_max_age_days()
 

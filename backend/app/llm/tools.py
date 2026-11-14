@@ -291,7 +291,11 @@ def toggle_favorite_professor(ctx: ToolContext, args: ToggleFavoriteArgs) -> Jso
 
 
 def find_mentors(ctx: ToolContext, args: FindMentorsArgs) -> Json:
-    matches = mentors_api.search_mentors(MentorSearchRequest(goal=args.goal, tags=args.tags))
+    matches = mentors_api.find_mentors(
+        MentorSearchRequest(goal=args.goal, tags=args.tags),
+        ctx.audit,
+        ctx.favorite_professor_ids,
+    )
     return {"matches": [_dump(m) for m in matches]}
 
 
@@ -398,7 +402,8 @@ TOOLS: tuple[Tool, ...] = (
     ),
     Tool(
         "find_mentors",
-        "Rank professors as possible mentors for a goal, by overlap with topic tags.",
+        "Rank professors as possible mentors for a goal: topic-tag overlap, classes the "
+        "student passed with them, Winter courses in the area, and listed research.",
         _obj(
             {
                 "goal": _enum(_GOALS, "What the student wants from the mentor."),

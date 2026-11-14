@@ -64,3 +64,39 @@ relaxation_order:
   - credit_min
   - credit_max
   - include_courses
+
+# Mentor ranking (ENG-06). Points per unit, by goal:
+#   topic_overlap    per requested topic tag that is on the professor's profile
+#   took_class       per audit class with this professor passed at min_grade or better
+#   teaches_winter   once, when the professor teaches a Winter course whose
+#                    title or description names a requested tag
+#   lists_research   once, when the profile lists undergraduate research
+# For "recommendation letter", took_class must stay above the most a pure topic
+# match can score (8 tags x topic_overlap + teaches_winter), so a
+# professor the student took a class with ranks first. A test checks it.
+mentors:
+  max_results: 5
+  min_grade: B
+  # Best to worst. A grade not listed here (P, W, I) never counts as passed.
+  grade_scale: [A, A-, B+, B, B-, C+, C, C-, D+, D, D-, F]
+  weights:
+    research:
+      topic_overlap: 20
+      took_class: 10
+      teaches_winter: 10
+      lists_research: 15
+    recommendation letter:
+      topic_overlap: 5
+      took_class: 100
+      teaches_winter: 4
+      lists_research: 0
+    TA job:
+      topic_overlap: 10
+      took_class: 40
+      teaches_winter: 15
+      lists_research: 0
+    internship referral:
+      topic_overlap: 10
+      took_class: 25
+      teaches_winter: 5
+      lists_research: 0
