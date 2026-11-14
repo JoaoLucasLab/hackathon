@@ -220,9 +220,10 @@ class RecordingCaller:
             if isinstance(item, str):
                 chunks.append(item)
             else:
+                # The request is not saved: replay rebuilds it from our own code, and
+                # the tests check that rebuilt request (see ReplayCaller).
                 self.calls.append(
                     {
-                        "request_messages": json.loads(json.dumps(params["messages"])),
                         "text": chunks,
                         "content": item.content,
                         "stop_reason": item.stop_reason,
@@ -232,12 +233,18 @@ class RecordingCaller:
 
 
 class ReplayCaller:
-    """Feeds recorded responses back in order. No network."""
+    """Feeds recorded responses back in order. No network.
+
+    Keeps the messages our code would send to Claude on each call, so tests check
+    what the code sends today (privacy, injected text reaching the model), not a
+    copy saved when the conversation was recorded."""
 
     def __init__(self, calls: list[dict[str, Any]]) -> None:
         self._calls = iter(calls)
+        self.requests: list[list[dict[str, Any]]] = []
 
     def __call__(self, params: dict[str, Any]) -> Iterator[str | TurnResult]:
+        self.requests.append(json.loads(json.dumps(params["messages"])))
         call = next(self._calls)
         yield from call["text"]
         yield TurnResult(content=call["content"], stop_reason=call["stop_reason"])
@@ -287,6 +294,11 @@ def replay(scenario: Scenario, monkeypatch: pytest.MonkeyPatch) -> tuple[ChatSes
                     "test_chat_record.py")
     recorded = json.loads(path.read_text())
     session = make_session(scenario, monkeypatch)
-    transcript = run(session, scenario, ReplayCaller(recorded["calls"]))
-    transcript.calls = recorded["calls"]
+    caller = ReplayCaller(recorded["calls"])
+    transcript = run(session, scenario, caller)
+    # Each recorded response, with the request our code sent for it on this replay.
+    transcript.calls = [
+        {**call, "request_messages": sent}
+        for call, sent in zip(recorded["calls"], caller.requests, strict=True)
+    ]
     return session, transcript

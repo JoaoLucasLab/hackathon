@@ -5,12 +5,6 @@
   ],
   "calls": [
     {
-      "request_messages": [
-        {
-          "role": "user",
-          "content": "Write my history essay about the Civil War"
-        }
-      ],
       "text": [
         "I can't write",
         " ess",

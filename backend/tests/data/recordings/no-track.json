@@ -5,12 +5,6 @@
   ],
   "calls": [
     {
-      "request_messages": [
-        {
-          "role": "user",
-          "content": "Build me a schedule with 12 to 15 credits"
-        }
-      ],
       "text": [],
       "content": [
         {
@@ -26,36 +20,6 @@
       "stop_reason": "tool_use"
     },
     {
-      "request_messages": [
-        {
-          "role": "user",
-          "content": "Build me a schedule with 12 to 15 credits"
-        },
-        {
-          "role": "assistant",
-          "content": [
-            {
-              "id": "toolu_01VVxb7u4AgGPA8CwZ7g39RK",
-              "input": {},
-              "name": "get_remaining_requirements",
-              "type": "tool_use",
-              "caller": {
-                "type": "direct"
-              }
-            }
-          ]
-        },
-        {
-          "role": "user",
-          "content": [
-            {
-              "type": "tool_result",
-              "tool_use_id": "toolu_01VVxb7u4AgGPA8CwZ7g39RK",
-              "content": "{\"track\": null, \"track_known\": false, \"requirements\": [{\"id\": \"core-data-structures\", \"group\": \"Major Core\", \"name\": \"Programming with Data Structures\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"CSE 212\"], \"courses_counted\": []}, {\"id\": \"core-testing\", \"group\": \"Major Core\", \"name\": \"Software Testing\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"CSE 270\"], \"courses_counted\": []}, {\"id\": \"core-applied\", \"group\": \"Major Core\", \"name\": \"Applied Programming\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 310\"], \"courses_counted\": []}, {\"id\": \"core-web-backend\", \"group\": \"Major Core\", \"name\": \"Web Backend\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 340\", \"CSE 341\"], \"courses_counted\": []}, {\"id\": \"web-frontend\", \"group\": \"Web Foundations\", \"name\": \"Web Frontend Development\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"WDD 231\"], \"courses_counted\": []}, {\"id\": \"db-design\", \"group\": \"Databases\", \"name\": \"Database Design\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CIT 225\"], \"courses_counted\": []}, {\"id\": \"math-calc2\", \"group\": \"Mathematics\", \"name\": \"Calculus II\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"MATH 113\"], \"courses_counted\": []}, {\"id\": \"math-stats\", \"group\": \"Mathematics\", \"name\": \"Statistics\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"MATH 221A\", \"MATH 325\"], \"courses_counted\": []}, {\"id\": \"major-elective\", \"group\": \"Major Electives\", \"name\": \"Computer Science Elective\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 325\", \"CSE 381\", \"CSE 450\"], \"courses_counted\": []}, {\"id\": \"rel-book-of-mormon\", \"group\": \"Religion Cornerstones\", \"name\": \"Teachings and Doctrine of the Book of Mormon\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"REL 275\"], \"courses_counted\": []}]}"
-            }
-          ]
-        }
-      ],
       "text": [
         "Which",
         " track are you on? I",

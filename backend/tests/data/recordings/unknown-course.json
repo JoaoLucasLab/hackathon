@@ -5,12 +5,6 @@
   ],
   "calls": [
     {
-      "request_messages": [
-        {
-          "role": "user",
-          "content": "Add CSE 999 to my schedule"
-        }
-      ],
       "text": [],
       "content": [
         {
@@ -31,41 +25,6 @@
       "stop_reason": "tool_use"
     },
     {
-      "request_messages": [
-        {
-          "role": "user",
-          "content": "Add CSE 999 to my schedule"
-        },
-        {
-          "role": "assistant",
-          "content": [
-            {
-              "id": "toolu_01AAbTaWDhGbVK1JJWtfzxsY",
-              "input": {
-                "course_codes": [
-                  "CSE 999"
-                ],
-                "delivery_method": null
-              },
-              "name": "search_sections",
-              "type": "tool_use",
-              "caller": {
-                "type": "direct"
-              }
-            }
-          ]
-        },
-        {
-          "role": "user",
-          "content": [
-            {
-              "type": "tool_result",
-              "tool_use_id": "toolu_01AAbTaWDhGbVK1JJWtfzxsY",
-              "content": "{\"courses\": [], \"not_found\": [\"CSE 999\"]}"
-            }
-          ]
-        }
-      ],
       "text": [
         "I couldn't find CS",
         "E 999 in the",

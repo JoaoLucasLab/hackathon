@@ -48,11 +48,7 @@ jobs:
           alembic upgrade head
           alembic downgrade base
       # Tests marked `live` are skipped by pytest's addopts in pyproject.toml.
-      # Ignored: test_explain_grounded.py (AI-03). It fails on main: its recorded Claude
-      # replies are named stub-1..3, but ENG-03 now gives real schedule ids. The AI &
-      # Product owner re-records them (test_record_live_explanations, by hand with an API
-      # key); then drop the --ignore.
-      - run: pytest --ignore=backend/tests/test_explain_grounded.py
+      - run: pytest
 
   frontend:
     runs-on: ubuntu-latest
