@@ -12,6 +12,8 @@ schedules are ranked by it.
 
 Results come back one at a time: after each solve, a constraint forces the next
 schedule to differ by at least one course or by the sections of two courses.
+Schedules the student rejected (ENG-07, `avoid`) get the same rule before the
+first solve, so a rejected schedule never comes back.
 
 When nothing fits, `engine/relax.py` loosens one constraint at a time in the
 school's order and reports the first that gives schedules. Each chosen class
@@ -171,7 +173,10 @@ def solve(
     weights: Weights = DEFAULT_WEIGHTS,
     inputs: ScoreInputs | None = None,
     limits: Limits = Limits(),
+    avoid: Sequence[frozenset[str]] = (),
 ) -> list[Solution]:
+    """`avoid`: section-id sets of rejected schedules. Every result differs from
+    each of them by the same rule that keeps the results apart."""
     cands = pool.candidates
     if not cands:
         return []
@@ -255,6 +260,13 @@ def solve(
         objective -= per_minute * sum(_add_gap_terms(m, x, cands))
     m.maximize(objective)
 
+    index = {c.section.id: i for i, c in enumerate(cands)}
+    for rejected in avoid:
+        if rejected and rejected <= index.keys():
+            _forbid_similar(m, x, y, cands, [index[sid] for sid in rejected])
+        # A section that is no longer a candidate cannot be picked, so that
+        # schedule cannot come back: nothing to add.
+
     solver = cp_model.CpSolver()
     solver.parameters.max_time_in_seconds = time_limit_s
     solver.parameters.num_workers = 8
@@ -328,6 +340,7 @@ class _Run:
     prereqs: PrereqChecker | None
     rules: SchoolRules | None
     student: Student | None
+    avoid: tuple[frozenset[str], ...] = ()
 
     def pool(self, constraints: ConstraintSet) -> CandidatePool:
         return build_candidates(
@@ -341,7 +354,13 @@ class _Run:
         )
 
     def solve(
-        self, pool: CandidatePool, constraints: ConstraintSet, max_results: int, time_limit_s: float
+        self,
+        pool: CandidatePool,
+        constraints: ConstraintSet,
+        max_results: int,
+        time_limit_s: float,
+        *,
+        avoid: bool = True,
     ) -> list[Solution]:
         return solve(
             pool,
@@ -353,6 +372,7 @@ class _Run:
             weights=self.inputs.weights,
             inputs=self.inputs,
             limits=self.limits,
+            avoid=self.avoid if avoid else (),
         )
 
 
@@ -387,11 +407,16 @@ def build_schedules(
     prereqs: PrereqChecker | None = None,
     rules: SchoolRules | None = None,
     student: Student | None = None,
+    avoid_schedules: Iterable[Iterable[str]] = (),
 ) -> BuildSchedulesResponse:
     """Candidates, solve, score, backups, explain; relaxation when nothing fits.
 
     Same function behind the endpoint and the chat tool. With `rules`, the credit
     range, weights and limits come from the school config unless passed here.
+
+    `avoid_schedules` (ENG-07): section ids of each rejected schedule. No result
+    repeats one, and relaxation only counts schedules that are not rejected. When
+    nothing is left only because of them, the response says `exhausted`.
     """
     favorites = frozenset(favorite_professor_ids)
     if weights is None:
@@ -412,6 +437,7 @@ def build_schedules(
         prereqs=prereqs,
         rules=rules,
         student=student,
+        avoid=tuple(frozenset(ids) for ids in avoid_schedules if ids),
     )
 
     pool = run.pool(constraints)
@@ -458,8 +484,11 @@ def build_schedules(
         )
 
     relaxation = None
+    exhausted = False
+    relax_s = min(limit_s, RELAX_TIME_LIMIT_S)
+    if not schedules and run.avoid:
+        exhausted = bool(run.solve(pool, constraints, 1, relax_s, avoid=False))
     if not schedules and rules is not None:
-        relax_s = min(limit_s, RELAX_TIME_LIMIT_S)
 
         def count(patch: ConstraintSet) -> int:
             return len(run.solve(run.pool(patch), patch, max_results, relax_s))
@@ -473,5 +502,5 @@ def build_schedules(
             max_credit_limit=rules.max_credit_limit(),
         )
     return BuildSchedulesResponse(
-        schedules=schedules, excluded=pool.excluded, relaxation=relaxation
+        schedules=schedules, excluded=pool.excluded, relaxation=relaxation, exhausted=exhausted
     )

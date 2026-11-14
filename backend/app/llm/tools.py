@@ -160,7 +160,11 @@ class BuildIntakeArgs(_Args):
 
 class BuildSchedulesArgs(_Args):
     constraints: ConstraintSet
-    max_results: int = Field(ge=1, le=5)
+    # Required by the tool schema when the flag is off. With the flag on the schema
+    # has no max_results and the tool always builds exactly 1 (ENG-07).
+    max_results: int | None = Field(default=None, ge=1, le=5)
+    # ENG-07: section ids of each schedule the student rejected (flag on).
+    avoid_schedules: list[list[str]] = Field(default_factory=list, max_length=50)
     # Required by the tool schema when FEATURE_CONVERSATIONAL_PLANNER is on.
     intake: BuildIntakeArgs | None = None
 
@@ -306,10 +310,16 @@ def build_schedules(ctx: ToolContext, args: BuildSchedulesArgs) -> Json:
     conversational = config.FEATURE_CONVERSATIONAL_PLANNER
     if conversational:
         _intake_gate(ctx, args)
-    response = schedules_api.build_schedules(
-        BuildSchedulesRequest(constraints=args.constraints, max_results=args.max_results),
-        ctx.favorite_professor_ids,
-    )
+    if conversational:
+        # ENG-07: one schedule at a time; the model cannot ask for more.
+        request = BuildSchedulesRequest(
+            constraints=args.constraints, max_results=1, avoid_schedules=args.avoid_schedules
+        )
+    else:
+        request = BuildSchedulesRequest(
+            constraints=args.constraints, max_results=args.max_results or 3
+        )
+    response = schedules_api.build_schedules(request, ctx.favorite_professor_ids)
     ctx.constraints = args.constraints
     if conversational:
         intake_rules.mark_built(ctx.intake)
@@ -514,15 +524,32 @@ _INTAKE = _obj(
 )
 
 
+# ENG-07: one schedule per call, and rejected schedules never come back.
+_AVOID_SCHEDULES = {
+    "type": "array",
+    "description": "One entry per schedule the student rejected: the section ids of that "
+    "schedule, copied from earlier build_schedules results. Empty when none was rejected.",
+    "items": {"type": "array", "items": {"type": "string"}},
+}
+
+
 def _conversational_build_tool() -> Tool:
     base = TOOLS_BY_NAME["build_schedules"]
     return Tool(
         base.name,
-        "Build Winter 2027 schedules. Send the complete set of constraints the student "
-        "wants now, including earlier ones still in force. Returns an error starting "
+        "Build one Winter 2027 schedule. Send the complete set of constraints the student "
+        "wants now, including earlier ones still in force, and every schedule the student "
+        "rejected. Returns an error starting "
         '"not ready" when something must be asked first: then ask the student, do not '
-        "retry in the same turn.",
-        _obj({**base.input_schema["properties"], "intake": _INTAKE}),
+        "retry in the same turn. No schedules with exhausted true means every fitting "
+        "schedule was rejected: ask what to change.",
+        _obj(
+            {
+                "constraints": base.input_schema["properties"]["constraints"],
+                "avoid_schedules": _AVOID_SCHEDULES,
+                "intake": _INTAKE,
+            }
+        ),
         base.args_model,
         base.run,
     )
