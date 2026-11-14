@@ -13,7 +13,8 @@ export class ApiError extends Error {
   }
 }
 
-function baseUrl(): string {
+/** Backend origin: `VITE_API_BASE_URL`, or same origin (Vite proxies /api in dev). */
+export function apiBaseUrl(): string {
   const configured: string | undefined = import.meta.env.VITE_API_BASE_URL;
   return configured ? configured.replace(/\/$/, "") : window.location.origin;
 }
@@ -23,7 +24,7 @@ function baseUrl(): string {
  * OpenAPI types. `credentials: "include"` sends the anonymous `sid` session cookie.
  */
 export const api = createClient<paths>({
-  baseUrl: baseUrl(),
+  baseUrl: apiBaseUrl(),
   credentials: "include",
   // Look `fetch` up on every call, so tests can replace it.
   fetch: (request) => globalThis.fetch(request),

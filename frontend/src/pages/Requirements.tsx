@@ -91,6 +91,9 @@ export function Requirements() {
             Show all {all.length}
           </Button>
         )}
+        <Button variant="primary" className="self-start" onClick={() => navigate("/planner")}>
+          Plan my schedule
+        </Button>
       </section>
     );
   }

@@ -1,68 +1,67 @@
-import type { ReactNode, SVGProps } from "react";
+import { createElement, type SVGProps } from "react";
+import {
+  Check,
+  CircleAlert,
+  FileX,
+  Lock,
+  Send,
+  Trash2,
+  type LucideIcon,
+} from "lucide-react";
 
-// Lucide-style 2 px stroke icons, drawn inline (no icon package).
-const paths = {
-  lock: (
-    <>
-      <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
-      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-    </>
-  ),
-  send: (
-    <>
-      <path d="m22 2-7 20-4-9-9-4Z" />
-      <path d="M22 2 11 13" />
-    </>
-  ),
-  fileX: (
-    <>
-      <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
-      <path d="M14 2v4a2 2 0 0 0 2 2h4" />
-      <path d="m14.5 12.5-5 5" />
-      <path d="m9.5 12.5 5 5" />
-    </>
-  ),
-  trash: (
-    <>
-      <path d="M3 6h18" />
-      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-    </>
-  ),
-  alert: (
-    <>
-      <circle cx="12" cy="12" r="10" />
-      <line x1="12" x2="12" y1="8" y2="12" />
-      <line x1="12" x2="12.01" y1="16" y2="16" />
-    </>
-  ),
-  check: <path d="M20 6 9 17l-5-5" />,
-} satisfies Record<string, ReactNode>;
+// Lucide icons (lucide-react), same set and stroke as the Duo habit tracker.
+const icons = {
+  lock: Lock,
+  send: Send,
+  fileX: FileX,
+  trash: Trash2,
+  alert: CircleAlert,
+  check: Check,
+} satisfies Record<string, LucideIcon>;
 
-export type IconName = keyof typeof paths;
+export type IconName = keyof typeof icons;
 
-interface IconProps extends Omit<SVGProps<SVGSVGElement>, "name"> {
+export const ICON_STROKE = 2.25;
+
+interface IconProps extends Omit<SVGProps<SVGSVGElement>, "name" | "ref"> {
   name: IconName;
   size?: number;
 }
 
-/** Decorative by default (`aria-hidden`). */
+/** Decorative by default (`aria-hidden`). Color comes from `currentColor`. */
 export function Icon({ name, size = 18, ...rest }: IconProps) {
+  // createElement: the component comes from a lookup table, not defined per render.
+  return createElement(icons[name], {
+    size,
+    strokeWidth: ICON_STROKE,
+    "aria-hidden": true,
+    focusable: false,
+    ...rest,
+  });
+}
+
+const TILE = {
+  sm: { box: "size-8 rounded-lg", icon: 16 },
+  md: { box: "size-10 rounded-xl", icon: 20 },
+} as const;
+
+interface IconTileProps {
+  name: IconName;
+  size?: keyof typeof TILE;
+  /** A text color class; the tile is a 12% tint of the same color. */
+  className?: string;
+}
+
+/** The icon on a soft tile tinted with its own color, as in the Duo habit tracker. */
+export function IconTile({ name, size = "md", className = "" }: IconTileProps) {
+  const t = TILE[size];
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
+    <span
       aria-hidden="true"
-      focusable="false"
-      {...rest}
+      className={`relative flex shrink-0 items-center justify-center ${t.box} ${className}`}
     >
-      {paths[name]}
-    </svg>
+      <span className="absolute inset-0 rounded-[inherit] bg-current opacity-[0.12]" />
+      <Icon name={name} size={t.icon} className="relative" />
+    </span>
   );
 }
