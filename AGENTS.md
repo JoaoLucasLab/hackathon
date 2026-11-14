@@ -106,10 +106,11 @@ When you are asked to work on something:
 - Solver: Google OR-Tools CP-SAT.
 - Frontend: React + TypeScript, Vite, React Router, TanStack Query, Tailwind.
 - LLM: the Claude API through the official `anthropic` Python SDK, backend only.
-- Hosting: Render (static site + free web service) and Neon (Postgres) are the
-  primary target. A backup target runs the same app in Docker on a private WSL
-  server, published with Tailscale Funnel (`deploy/wsl/`). Every change must work
-  on both; see "Hosting compatibility" below.
+- Hosting: the primary target is the team's own server. The whole app (Postgres,
+  backend, web) runs in Docker on a private WSL server, published with Tailscale
+  Funnel (`deploy/wsl/`), and its Postgres is the database the demo uses. Render
+  (static site + free web service) and Neon (Postgres) are the backup target.
+  Every change must work on both; see "Hosting compatibility" below.
 
 Do not add a new framework, database or major dependency without asking.
 
@@ -139,7 +140,7 @@ fixtures/                  # audit.json, sections.json, courses.json, professors
 backend/Dockerfile         # backend image (context: repo root)
 frontend/Dockerfile        # build + nginx; proxies /api to the backend (context: repo root)
 frontend/nginx.conf.template
-deploy/wsl/                # backup host: compose.yaml, .env.example, push.sh, funnel.sh, README.md
+deploy/wsl/                # primary host: compose.yaml, .env.example, push.sh, funnel.sh, README.md
 docs/demo-script.md
 e2e/demo.spec.ts
 ```
@@ -182,8 +183,8 @@ the block noted; do not invent a different name.
 | `npm run gen:types` | Regenerates `frontend/src/api/types.ts` from `/openapi.json` | ENG-01 |
 | `npx tsc --noEmit` and `npx vitest run` | Frontend type check and tests | AI-01 |
 | `npx playwright test` | End-to-end demo test | AI-06 |
-| `docker compose -f deploy/wsl/compose.yaml --env-file deploy/wsl/.env up -d --build` | Runs the full app (db, backend, web) in Docker, as on the WSL backup host | Backup hosting |
-| `deploy/wsl/push.sh user@server` / `deploy/wsl/funnel.sh up` | Uploads and starts the stack on the WSL server / publishes it with Tailscale | Backup hosting |
+| `docker compose -f deploy/wsl/compose.yaml --env-file deploy/wsl/.env up -d --build` | Runs the full app (db, backend, web) in Docker, as on the WSL server (primary host) | Hosting |
+| `deploy/wsl/push.sh user@server` / `deploy/wsl/funnel.sh up` | Uploads and starts the stack on the WSL server / publishes it with Tailscale | Hosting |
 
 Before you say a task is done, run the linters, type checks and tests that cover
 what you changed, and report the real result. If something fails or you could not
@@ -193,13 +194,13 @@ run it, say so.
 
 The app runs in two places and every task must keep both working:
 
-| | Primary: Render + Neon | Backup: WSL server (`deploy/wsl/`) |
+| | Primary: WSL server (`deploy/wsl/`) | Backup: Render + Neon |
 | --- | --- | --- |
-| Frontend | Render static site (`npm run build`) | `web` container: nginx serves the build |
-| Backend | Render web service | `backend` container from `backend/Dockerfile` |
-| Database | Neon Postgres | `db` container, Postgres 18, Docker volume |
-| Public access | `*.onrender.com` | Tailscale Funnel :443 to `web` (optional :8443 to `backend`) |
-| Origins | Frontend and API on different origins | One origin: nginx proxies `/api`, `/admin`, `/health`, `/docs`, `/openapi.json` |
+| Frontend | `web` container: nginx serves the build | Render static site (`npm run build`) |
+| Backend | `backend` container from `backend/Dockerfile` | Render web service |
+| Database | `db` container, Postgres 18, Docker volume (the demo database) | Neon Postgres |
+| Public access | Tailscale Funnel :443 to `web` (optional :8443 to `backend`) | `*.onrender.com` |
+| Origins | One origin: nginx proxies `/api`, `/admin`, `/health`, `/docs`, `/openapi.json` | Frontend and API on different origins |
 
 Rules:
 

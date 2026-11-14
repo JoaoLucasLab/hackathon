@@ -1,8 +1,9 @@
-# Backup hosting: WSL server + Docker + Tailscale Funnel
+# Primary hosting: WSL server + Docker + Tailscale Funnel
 
-Render (frontend, backend) and Neon (Postgres) are the primary hosting
-(`plan.md`, "Hosting"). This folder is the backup: the same app in three Docker
-containers on a private WSL server, published through Tailscale.
+This folder is where the demo runs (`plan.md`, "Hosting"): the app in three Docker
+containers on a private WSL server, published through Tailscale. Its Postgres (`db`)
+is the demo database. Render (frontend, backend) and Neon (Postgres) run the same
+app as the backup.
 
 ```
 Browser ──https──> Tailscale Funnel :443 ──> 127.0.0.1:8080  web (nginx)
@@ -68,26 +69,49 @@ Check: `https://<machine>.<tailnet>.ts.net/` loads the app and
 
 ## Database
 
-- On the first start of an empty volume, Postgres runs `backend/app/db/schema.sql`.
-- Load the schedule data (needs `scripts/out/course_search_clean.json` on the
+The `db` container is the demo database. The backend does not start until it holds
+the schedule data (it restarts until then), so on a new volume load it with one-off
+backend containers (`run --rm`, not `exec`), from the repo root on the server:
+
+```bash
+C="docker compose -f deploy/wsl/compose.yaml --env-file deploy/wsl/.env"
+$C run --rm -T backend alembic upgrade head
+```
+
+Then load the data, either way:
+
+- **The demo snapshot** (DATA-06; the usual way). `push.sh` does not upload
+  `snapshots/`, so send it from your laptop:
+
+  ```bash
+  ssh user@server 'cd ~/course-planner && docker compose -f deploy/wsl/compose.yaml \
+    --env-file deploy/wsl/.env run --rm -T backend python -m app.db.snapshot restore -' \
+    < snapshots/demo.sql.gz
+  ```
+
+  It replaces the catalog, sections and professors, adds the cached topic tags, and
+  leaves student data alone. Load the same file into Neon for the backup:
+  `DATABASE_URL=<neon url> make restore-snapshot`.
+- **A fresh scrape load** (needs `scripts/out/course_search_clean.json` on the
   server; `push.sh` does not upload `scripts/out/`, copy it by hand):
 
   ```bash
   python3 scripts/populate_db.py --container course-planner-db
   ```
 
-- Connect from a teammate's machine in the tailnet:
-  host `<machine>.<tailnet>.ts.net`, port `5432`, user/db from `.env`.
+On the first start of an empty volume, Postgres also runs `backend/app/db/schema.sql`
+(the init mount in `compose.yaml`); the migrations accept the tables it creates.
+
+Connect from a teammate's machine in the tailnet: host
+`<machine>.<tailnet>.ts.net`, port `5432`, user/db from `.env`.
 
 ### Migrations
 
-When DATA-01 adds Alembic, run migrations inside the backend container:
+After pulling a change with a new migration:
 
 ```bash
-docker compose -f deploy/wsl/compose.yaml --env-file deploy/wsl/.env exec backend alembic upgrade head
+$C run --rm -T backend alembic upgrade head
 ```
-
-and remove the `schema.sql` init mount from `compose.yaml` in the same PR.
 
 ## Stop, reset, logs
 
