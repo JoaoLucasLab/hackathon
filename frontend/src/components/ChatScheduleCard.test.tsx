@@ -132,7 +132,7 @@ describe("one schedule in the chat", () => {
     expect(screen.getByLabelText(/what you want in your schedule/i)).toHaveFocus();
   });
 
-  it("collapses the older card to one line, expands it again, and marks the confirmed one with text", async () => {
+  it("collapses the older card to one line, expands it again, and swaps the chat for the confirmed plan", async () => {
     const calls = loopBackend([
       built(FIRST, 1),
       built(SECOND, 2),
@@ -161,18 +161,42 @@ describe("one schedule in the chat", () => {
     expect(await screen.findByRole("heading", { name: "Option 1" })).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "This works" }));
-    expect(await screen.findByText(/Saved as your Winter 2027 plan/)).toBeInTheDocument();
-    const confirmed = await screen.findByRole("article", { name: "Option 2" });
-    expect(await within(confirmed).findByText("Confirmed")).toBeInTheDocument();
-    // The question is answered: the two replies go away.
-    await waitFor(() =>
-      expect(screen.queryByRole("button", { name: "This works" })).not.toBeInTheDocument(),
-    );
+
+    // Once saved, the Plan tab shows the plan led by its week, and hides the chat.
+    expect(await screen.findByRole("heading", { name: "Winter 2027 plan" })).toBeInTheDocument();
+    expect(screen.getByRole("group", { name: "Week at a glance" })).toBeVisible();
+    expect(screen.getByLabelText(/what you want in your schedule/i)).not.toBeVisible();
+    expect(screen.queryByText(/Saved as your Winter 2027 plan/)).not.toBeVisible();
+    expect(screen.getByRole("button", { name: "Start a new plan" })).toBeInTheDocument();
+
+    // My plan shows the same week.
+    await user.click(screen.getByRole("link", { name: "My plan" }));
+    expect(await screen.findByRole("heading", { name: "Winter 2027 plan" })).toBeInTheDocument();
+    expect(screen.getByRole("group", { name: "Week at a glance" })).toBeInTheDocument();
     expect(calls.filter((c) => c.path === "/api/chat").map((c) => c.body)).toEqual([
       { message: "yes" },
       { message: "no classes on Friday" },
       { message: "This works" },
     ]);
+  });
+
+  it("Start a new plan clears the conversation and the plan on the server and opens an empty chat", async () => {
+    const calls = loopBackend([built(FIRST, 1)], {
+      "DELETE /api/chat/history": () => new Response(null, { status: 204 }),
+      "DELETE /api/plan": () => new Response(null, { status: 204 }),
+    });
+    const user = userEvent.setup();
+    const { queryClient } = renderApp("/planner");
+    queryClient.setQueryData(["audit"], { loaded: true });
+    await send(user, "yes");
+    await screen.findByRole("article", { name: "Option 1" });
+
+    await user.click(screen.getByRole("button", { name: "Start a new plan" }));
+    await waitFor(() => expect(screen.queryByRole("article")).not.toBeInTheDocument());
+    expect(screen.queryByText("yes")).not.toBeInTheDocument();
+    expect(screen.getByRole("list", { name: "Suggestions" })).toBeInTheDocument();
+    expect(calls.some((c) => c.path === "/api/chat/history" && c.method === "DELETE")).toBe(true);
+    expect(calls.some((c) => c.path === "/api/plan" && c.method === "DELETE")).toBe(true);
   });
 
   it("shows the no-fit hint with Apply this change, and no card", async () => {

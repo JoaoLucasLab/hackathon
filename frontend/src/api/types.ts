@@ -107,7 +107,12 @@ export interface paths {
         get: operations["chat_history_api_chat_history_get"];
         put?: never;
         post?: never;
-        delete?: never;
+        /**
+         * Clear Chat History
+         * @description Starts a new conversation: drops the transcript, what Claude saw and the rules.
+         *     The audit, favorites and the confirmed plan stay (they live outside the chat).
+         */
+        delete: operations["clear_chat_history_api_chat_history_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -1555,6 +1560,24 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ChatHistory"];
                 };
+            };
+        };
+    };
+    clear_chat_history_api_chat_history_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

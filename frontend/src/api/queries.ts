@@ -63,6 +63,23 @@ export async function fetchChatHistory(signal?: AbortSignal): Promise<ChatHistor
   return unwrap(await api.GET("/api/chat/history", { signal }));
 }
 
+/**
+ * Starts over: clears the conversation (`DELETE /api/chat/history`) and the
+ * confirmed plan (`DELETE /api/plan`). The audit and favorites stay.
+ */
+export function useStartOver() {
+  const queryClient = useQueryClient();
+  return useMutation<void>({
+    mutationFn: async () => {
+      unwrap(await api.DELETE("/api/chat/history"));
+      unwrap(await api.DELETE("/api/plan"));
+    },
+    onSuccess: () => {
+      queryClient.setQueryData(queryKeys.plan, null);
+    },
+  });
+}
+
 /** Records consent (`POST /api/session`), then loads the sample audit fixture. */
 export function useStartWithSampleAudit() {
   const queryClient = useQueryClient();

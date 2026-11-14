@@ -121,6 +121,20 @@ def test_delete_me_clears_the_plan_and_the_chat() -> None:
     assert client.put("/api/plan", json={"schedule_id": shown}).status_code == 409
 
 
+def test_clearing_the_chat_starts_over_and_keeps_the_plan() -> None:
+    shown = _show_a_schedule()
+    client.put("/api/plan", json={"schedule_id": shown})
+    session = chat_api._sessions[SID]
+    session.transcript.append(ChatTurn(role="student", text="12 to 15 credits"))
+    session.history.append({"role": "user", "content": "12 to 15 credits"})
+
+    assert client.delete("/api/chat/history").status_code == 204
+    assert client.get("/api/chat/history").json() == {"turns": []}
+    assert chat_api._sessions[SID].history == []  # Claude starts fresh too
+    # The confirmed plan is not part of the conversation: it stays until a new one.
+    assert client.get("/api/plan").json()["id"] == shown
+
+
 def _scripted(*responses: list[dict[str, Any]]) -> Any:
     calls = iter(responses)
 

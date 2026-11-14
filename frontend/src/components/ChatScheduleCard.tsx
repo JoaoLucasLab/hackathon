@@ -144,7 +144,7 @@ export function ChatScheduleCard({
       </header>
 
       <div id={bodyId} className="flex flex-col gap-4 px-4 py-4 md:px-5">
-        <WeekGlance schedule={schedule} reqNames={reqNames} />
+        <WeekGlance schedule={schedule} reqNames={reqNames} professors={byId} />
 
         {(schedule.warnings ?? []).length > 0 && (
           <section
