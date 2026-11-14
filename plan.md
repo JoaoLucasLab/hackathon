@@ -180,14 +180,14 @@ Tests: `test_http_client.py`, `test_request_log.py`, `test_public_access.py`.
 
 Turns Public Course Search pages into `Section` rows. It is developed against three pages saved by hand before the hackathon, so no live request is needed to finish it. Folders: `backend/app/schools/byui/schedule_importer.py`, `fixtures/html/course_search/`.
 
-Already built in `scripts/scrape_course_search.py` (see "Already done"): term and block mapping, seat status with `seats_as_of`, source URL and fetched-at on every row, skip-and-log with a run summary, `__VIEWSTATE` paging, subjects first, and a repeatable load (`scripts/populate_db.py`). What is left is moving it into `schools/byui/` and the tests below (DATA-02 was skipped, so there is no `PublicHttpClient` to switch to).
+**Status: done in a lean version (Nov 14, 2026).** The importer stays in `scripts/` (`scrape_course_search.py`, `data_cleaner.py`, `populate_db.py`; see "Already done") instead of moving to `schools/byui/`. Built here: real class times through ENG-02's `parse_meeting()` (`meetings.start_time` / `end_time` in the database; online and "Arranged" classes have none), three saved pages in `fixtures/html/course_search/` (results page 1, CSE 110-01 details, CSE 111-01 requisites), and `backend/tests/test_schedule_importer.py`. Skipped as not needed for the hackathon: moving the code into `schools/byui/`, results page 2 with a checked-in expected JSON, and a database idempotency test (CI has no Postgres; `populate_db.py` does a full refresh in one transaction). Known edge case, left as is: the scraper reads the requisites page once per course and copies it to that course's other sections. Course prerequisites are the same for every section, but a "Section Requirement" row (permission, online-only) could in theory differ; in the Nov 13 data all 19 copied section rules look correct (for example every MATH 499R section requires permission). Fetching per section would add about 10 minutes per run.
 
 Acceptance criteria:
 
-- [ ] From the saved pages (results page 1, results page 2, one section-details page) the parser produces rows that match a checked-in expected JSON: course, section, title, credits, meetings, class type, delivery method, instructors, seat status, department.
-- [ ] `CSE 110-01` with `TR 12:45-01:45PM (01/06/2027 - 04/08/2027) STC 231` is stored as course `CSE 110`, section `01`, one meeting on Tuesday and Thursday, 12:45 to 13:45, 2027-01-06 to 2027-04-08, room `STC 231`. The importer calls ENG-02's parser and has no parser of its own. (Course, section, days, dates and room are already stored this way; the times are still the raw `12:45-01:45PM` until ENG-02's parser is called.)
+- [ ] ~~From the saved pages (results page 1, results page 2, one section-details page) the parser produces rows that match a checked-in expected JSON: course, section, title, credits, meetings, class type, delivery method, instructors, seat status, department.~~ Skipped. The test checks these fields on results page 1 and the CSE 110-01 details page instead.
+- [x] `CSE 110-01` with `TR 12:45-01:45PM (01/06/2027 - 04/08/2027) STC 231` is stored as course `CSE 110`, section `01`, one meeting on Tuesday and Thursday, 12:45 to 13:45, 2027-01-06 to 2027-04-08, room `STC 231`. The importer calls ENG-02's parser and has no parser of its own.
 
-Tests: `test_schedule_importer.py` on the saved pages, including the idempotency run.
+Tests: `test_schedule_importer.py` on the saved pages (done; the idempotency run was skipped, see Status).
 
 ### DATA-04 · Catalog loader
 

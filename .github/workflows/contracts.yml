@@ -25,7 +25,32 @@ jobs:
       - run: pip install -e ".[dev]"
       - run: ruff check .
       - run: mypy backend
-      - run: pytest backend/tests/test_contracts.py backend/tests/test_fixtures_valid.py backend/tests/test_layering.py
+      # Tests marked `live` are skipped by pytest's addopts in pyproject.toml.
+      # Not listed yet: test_explain_grounded.py (AI-03). It fails on main: its recorded
+      # Claude replies are named stub-1..3, but ENG-03 now gives real schedule ids. The
+      # AI & Product owner re-records them (test_record_live_explanations, by hand with an
+      # API key); then replace this list with `pytest backend/tests`.
+      - run: >-
+          pytest
+          backend/tests/test_contracts.py
+          backend/tests/test_fixtures_valid.py
+          backend/tests/test_layering.py
+          backend/tests/test_schedule_importer.py
+          backend/tests/test_schedule_string.py
+          backend/tests/test_course_code.py
+          backend/tests/test_conflicts.py
+          backend/tests/test_candidates.py
+          backend/tests/test_solver_small.py
+          backend/tests/test_solver_properties.py
+          backend/tests/test_prereq_parser.py
+          backend/tests/test_prereq_evaluator.py
+          backend/tests/test_prereq_fallback.py
+          backend/tests/test_chat_loop.py
+          backend/tests/test_constraints_from_chat.py
+          backend/tests/test_grounding.py
+          backend/tests/test_llm_client.py
+          backend/tests/test_tools_schema.py
+          backend/tests/test_favorites.py
       - name: Generated TypeScript types are up to date
         working-directory: frontend
         run: |
