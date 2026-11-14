@@ -41,7 +41,10 @@ def _recording(name: str) -> dict[str, Any]:
 
 
 def _matches(*tags: str) -> list[MentorMatch]:
-    return mentors_api.rank_mentors(MentorSearchRequest(goal=MentorGoal.research, tags=list(tags)))
+    return mentors_api.find_mentors(
+        MentorSearchRequest(goal=MentorGoal.research, tags=list(tags)),
+        fixture_data.audit().model_copy(update={"courses": []}),
+    )
 
 
 def _reasons_reply(items: dict[str, str]) -> str:
@@ -76,15 +79,16 @@ def test_only_structured_facts_are_sent() -> None:
     hale = next(m for m in sent["matches"] if m["professor_id"] == "p-hale")
     assert set(hale) == {"professor_id", "name", "department", "reasons"}
     # Not the bio, not the winter courses: Claude cannot reword what it never sees.
+    # (CSE 450 is sent: ENG-06 lists it as a `teaches_winter` reason. CSE 212 is not.)
     body = json.dumps(sent)
-    assert "CSE 450" not in body
+    assert "CSE 212" not in body
     assert "neural networks" not in body
 
 
 @pytest.mark.parametrize(
     ("text", "problem"),
     [
-        ("Professor Hale teaches CSE 450 and studies machine learning.", "CSE 450"),
+        ("Professor Hale teaches CSE 212 and studies machine learning.", "CSE 212"),
         ("Professor Hale works on machine learning and neural networks.", "neural networks"),
         ("Like Professor Reyes, Professor Hale studies machine learning.", "another professor"),
         ("Professor Hale will accept you into his machine learning lab.", "promises"),
@@ -102,22 +106,22 @@ def test_bad_text_is_retried_once_with_the_error() -> None:
     good = "Professor Hale lists machine learning among his interests."
     caller = Recorded(
         [
-            _reasons_reply({"p-hale": "Professor Hale teaches CSE 450 and machine learning."}),
+            _reasons_reply({"p-hale": "Professor Hale teaches CSE 212 and machine learning."}),
             _reasons_reply({"p-hale": good}),
         ]
     )
     result = mentor_text.describe_matches(matches, caller=caller)
     assert result[0].reason_text == good
     assert len(caller.requests) == 2
-    assert "CSE 450" in caller.requests[1]["messages"][-1]["content"]
+    assert "CSE 212" in caller.requests[1]["messages"][-1]["content"]
 
 
 def test_two_failures_fall_back_to_the_structured_reasons() -> None:
     matches = _matches("machine learning")
-    bad = _reasons_reply({"p-hale": "Professor Hale teaches CSE 450."})
+    bad = _reasons_reply({"p-hale": "Professor Hale teaches CSE 212."})
     result = mentor_text.describe_matches(matches, caller=Recorded([bad, "not json"]))
     assert result[0].reason_text is None
-    assert [r.detail for r in result[0].reasons] == ["machine learning"]
+    assert result[0].reasons == matches[0].reasons
 
 
 def test_missing_or_extra_professor_is_rejected() -> None:
