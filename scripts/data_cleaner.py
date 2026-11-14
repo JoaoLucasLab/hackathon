@@ -31,7 +31,8 @@ How the rows become a tree:
 
 Usage:
     python3 scripts/data_cleaner.py
-    python3 scripts/data_cleaner.py --in scripts/out/course_search.json --out scripts/out/course_search_clean.json
+    python3 scripts/data_cleaner.py --in scripts/out/course_search.json \
+        --out scripts/out/course_search_clean.json
 """
 
 from __future__ import annotations
@@ -70,11 +71,18 @@ COURSE_TEXT = re.compile(
 
 
 def course_node(code: str, grade: str | None, concurrent_ok: bool) -> dict:
-    return {"type": "course", "course_code": code, "min_grade": grade, "concurrent_ok": concurrent_ok}
+    return {
+        "type": "course",
+        "course_code": code,
+        "min_grade": grade,
+        "concurrent_ok": concurrent_ok,
+    }
 
 
-def expand_wildcard(code: str, grade: str | None, concurrent_ok: bool, known: set[str]) -> dict | None:
-    """"MATH 221*" -> any of the known MATH 221x courses, plus a condition for the others.
+def expand_wildcard(
+    code: str, grade: str | None, concurrent_ok: bool, known: set[str]
+) -> dict | None:
+    """ "MATH 221*" -> any of the known MATH 221x courses, plus a condition for the others.
 
     The site uses * for "any characters": MATH 11*** is any MATH 11x course,
     MATH 221* is any version of MATH 221. Only courses that exist in our data are
@@ -88,7 +96,9 @@ def expand_wildcard(code: str, grade: str | None, concurrent_ok: bool, known: se
     label = f"{prefix}x" if len(m.group(2)) < 3 else prefix  # "MATH 11x", "MATH 221"
     other = "other " if matches else ""
     note = f"Any {other}{label} course ({code})" + (f", {grade} or better" if grade else "")
-    items = [course_node(c, grade, concurrent_ok) for c in matches] + [{"type": "condition", "text": note}]
+    items = [course_node(c, grade, concurrent_ok) for c in matches] + [
+        {"type": "condition", "text": note}
+    ]
     return combine("any", items)
 
 
@@ -97,8 +107,13 @@ def leaf(row: dict, known: set[str]) -> dict:
     text = row["text"]
     exam = EXAM.match(text)
     if exam:
-        name = next((short for full, short in EXAM_NAMES if exam.group(1).startswith(full)), exam.group(1))
-        return {"type": "condition", "text": f"{name} exam: {exam.group(2).upper()} >= {exam.group(3)}"}
+        name = next(
+            (short for full, short in EXAM_NAMES if exam.group(1).startswith(full)), exam.group(1)
+        )
+        return {
+            "type": "condition",
+            "text": f"{name} exam: {exam.group(2).upper()} >= {exam.group(3)}",
+        }
 
     code, grade = row.get("course"), row.get("min_grade")
     if not code:
@@ -162,21 +177,33 @@ def section_requirements(rows: list[dict]) -> list[str]:
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     ap.add_argument("--in", dest="src", default=str(OUT_DIR / "course_search.json"))
     ap.add_argument("--out", default=str(OUT_DIR / "course_search_clean.json"))
     args = ap.parse_args()
 
     data = json.loads(Path(args.src).read_text(encoding="utf-8"))
     if "courses" in data:
-        raise SystemExit(f"{args.src} is already a cleaned file. Run this on the scraper's course_search.json.")
+        raise SystemExit(
+            f"{args.src} is already a cleaned file. Run this on the scraper's course_search.json."
+        )
     # Real course codes in the data (offered sections + courses named in requisites),
     # used to expand wildcards such as MATH 221*.
     known = {s["course"] for s in data["sections"]}
-    known |= {r["course"] for s in data["sections"] for r in s.get("requisites") or [] if r.get("course")}
+    known |= {
+        r["course"] for s in data["sections"] for r in s.get("requisites") or [] if r.get("course")
+    }
     # Every original field stays as it is; each section only gains `prereq` and
     # `section_requirements`, placed right after its `requisites`.
-    counts = {"tree": 0, "none_listed": 0, "unreadable": 0, "with_unparsed": 0, "with_section_reqs": 0}
+    counts = {
+        "tree": 0,
+        "none_listed": 0,
+        "unreadable": 0,
+        "with_unparsed": 0,
+        "with_section_reqs": 0,
+    }
     sections = []
     for s in data["sections"]:
         rows = s.get("requisites")
@@ -205,7 +232,8 @@ def main() -> int:
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
     print(
-        f"{len(sections)} sections: {counts['tree']} with prerequisites, {counts['none_listed']} with none listed, "
+        f"{len(sections)} sections: {counts['tree']} with prerequisites, "
+        f"{counts['none_listed']} with none listed, "
         f"{counts['unreadable']} unreadable, {counts['with_unparsed']} with an unparsed part, "
         f"{counts['with_section_reqs']} with section requirements. Wrote {out}"
     )

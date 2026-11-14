@@ -37,7 +37,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 URL = "https://student.byui.edu/ICS/Class_Schedule/"
@@ -113,7 +113,9 @@ class Session:
             raise StopScrape(f"Redirected to a login page ({resp.geturl()}). Stopping.")
         text = resp.read().decode("utf-8", "replace")
         if "<title>\n Guest Home" in text or "Guest Home - Main View" in text:
-            raise StopScrape("The site returned Guest Home instead of Course Search (session lost).")
+            raise StopScrape(
+                "The site returned Guest Home instead of Course Search (session lost)."
+            )
         return text
 
 
@@ -168,7 +170,10 @@ def select_options(page: str, name: str) -> list[tuple[str, str]]:
     m = re.search(rf'<select\b[^>]*name="{re.escape(name)}"[^>]*>(.*?)</select>', page, re.S)
     if not m:
         return []
-    return [(html.unescape(v), clean(t)) for v, t in re.findall(r'<option[^>]*value="([^"]*)"[^>]*>([^<]*)', m.group(1))]
+    return [
+        (html.unescape(v), clean(t))
+        for v, t in re.findall(r'<option[^>]*value="([^"]*)"[^>]*>([^<]*)', m.group(1))
+    ]
 
 
 # ---------------------------------------------------------------------------- parsing
@@ -217,20 +222,28 @@ def parse_list(page: str) -> list[dict]:
             )
         block = re.search(r"class='subsess'>(.*?)</div>", tr, re.S)
         block_label = clean(block.group(1)) if block else None
-        remarks = [clean(r) for r in re.findall(r"class='remark'[^>]*>(.*?)</", tr, re.S) if clean(r)]
+        remarks = [
+            clean(r) for r in re.findall(r"class='remark'[^>]*>(.*?)</", tr, re.S) if clean(r)
+        ]
         rows.append(
             {
-                "_target": link.group(1).replace("_", "$"),  # pg0_V_rptCourses_ctl01_lnkCourse -> pg0$V$...
+                "_target": link.group(1).replace(
+                    "_", "$"
+                ),  # pg0_V_rptCourses_ctl01_lnkCourse -> pg0$V$...
                 "course": course,
                 "section": section,
                 "title": clean(tds[2]) if len(tds) > 2 else "",
-                "credits": float(clean(tds[3])) if len(tds) > 3 and re.match(r"^\d", clean(tds[3])) else None,
+                "credits": float(clean(tds[3]))
+                if len(tds) > 3 and re.match(r"^\d", clean(tds[3]))
+                else None,
                 "meetings": meetings,
                 "block": block_label,
                 "class_type": clean(re.search(r'litSubProgValue">(.*?)</td>', tr, re.S).group(1))
                 if "litSubProgValue" in tr
                 else None,
-                "delivery_method": clean(re.search(r'litLocatioonValue">(.*?)</td>', tr, re.S).group(1))
+                "delivery_method": clean(
+                    re.search(r'litLocatioonValue">(.*?)</td>', tr, re.S).group(1)
+                )
                 if "litLocatioonValue" in tr
                 else None,
                 "remarks": remarks,
@@ -280,7 +293,8 @@ def parse_detail(page: str) -> dict:
 
 
 REQ_COURSE = re.compile(
-    r"Course\s+([A-Z]+)\s+(\d+[A-Z]?)\s+must be taken(?:\s+with a grade of\s+(\S+)\s+or better)?", re.I
+    r"Course\s+([A-Z]+)\s+(\d+[A-Z]?)\s+must be taken(?:\s+with a grade of\s+(\S+)\s+or better)?",
+    re.I,
 )
 
 
@@ -369,8 +383,13 @@ def back_to_list(session: Session, page: str) -> str:
     raise LostList("could not get back to the results list")
 
 
-def scrape_subject(term: str, subject: str, limit: int | None, requisites: dict[str, dict], stats: dict) -> list[dict]:
-    """Scrape one subject. `requisites` is shared across subjects: course code -> parsed requisites."""
+def scrape_subject(
+    term: str, subject: str, limit: int | None, requisites: dict[str, dict], stats: dict
+) -> list[dict]:
+    """Scrape one subject.
+
+    `requisites` is shared across subjects: course code -> parsed requisites.
+    """
     session = Session()
     list_page = search(session, term, subject)
     rows = parse_list(list_page)
@@ -386,7 +405,7 @@ def scrape_subject(term: str, subject: str, limit: int | None, requisites: dict[
     for i, row in enumerate(rows, 1):
         target = row.pop("_target")
         key = f"{row['course']}-{row['section']}"
-        fetched_at: str | None = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        fetched_at: str | None = datetime.now(UTC).isoformat(timespec="seconds")
         try:
             detail_page = session.fetch(postback(current, target))
             back_from = detail_page
@@ -421,7 +440,8 @@ def scrape_subject(term: str, subject: str, limit: int | None, requisites: dict[
                 **detail,
                 "seats_as_of": fetched_at if detail.get("status_raw") else None,
                 "source_url": URL,
-                "source_note": f"Public Course Search, term {term}, subject {subject}, section {row['course']}-{row['section']}",
+                "source_note": f"Public Course Search, term {term}, subject {subject}, "
+                f"section {row['course']}-{row['section']}",
                 "fetched_at": fetched_at,
             }
         )
@@ -432,11 +452,19 @@ def scrape_subject(term: str, subject: str, limit: int | None, requisites: dict[
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--term", default="2027;WI", help="term code (default 2027;WI; includes both blocks)")
-    ap.add_argument("--subjects", nargs="+", default=SUBJECTS, help="override SUBJECTS; ALL for every subject")
+    ap = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    ap.add_argument(
+        "--term", default="2027;WI", help="term code (default 2027;WI; includes both blocks)"
+    )
+    ap.add_argument(
+        "--subjects", nargs="+", default=SUBJECTS, help="override SUBJECTS; ALL for every subject"
+    )
     ap.add_argument("--limit", type=int, help="max sections per subject (for quick tests)")
-    ap.add_argument("--out", default=str(Path(__file__).resolve().parent / "out" / "course_search.json"))
+    ap.add_argument(
+        "--out", default=str(Path(__file__).resolve().parent / "out" / "course_search.json")
+    )
     args = ap.parse_args()
     # Show progress lines right away, even when output is not a terminal (IDE run panel, pipe).
     sys.stdout.reconfigure(line_buffering=True)  # type: ignore[union-attr]
@@ -449,7 +477,7 @@ def main() -> int:
     stats = {"ok": 0, "failed": 0, "requests": 0, "requisite_pages": 0}
     requisites: dict[str, dict] = {}
     sections: list[dict] = []
-    started = datetime.now(timezone.utc)
+    started = datetime.now(UTC)
     print(f"Term {args.term}, subjects: {' '.join(subjects)}", flush=True)
     for subject in subjects:
         try:
@@ -479,7 +507,8 @@ def main() -> int:
     )
     print(
         f"Done: {stats['ok']} sections parsed, {stats['failed']} failed, "
-        f"{stats['requisite_pages']} requisite pages fetched, {stats['requests']} requests. Wrote {out}"
+        f"{stats['requisite_pages']} requisite pages fetched, {stats['requests']} requests. "
+        f"Wrote {out}"
     )
     return 0
 

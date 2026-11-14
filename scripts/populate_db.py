@@ -32,7 +32,14 @@ OUT_DIR = Path(__file__).resolve().parent / "out"
 
 UNIVERSITY = ("byui", "Brigham Young University-Idaho")
 SEASONS = {"WI": "Winter", "SP": "Spring", "FA": "Fall"}
-BLOCK_KINDS = {"W1": "first", "W2": "second", "S1": "first", "S2": "second", "F1": "first", "F2": "second"}
+BLOCK_KINDS = {
+    "W1": "first",
+    "W2": "second",
+    "S1": "first",
+    "S2": "second",
+    "F1": "first",
+    "F2": "second",
+}
 
 # Same pattern as the CHECK on courses.code and CourseCode in the contracts.
 COURSE_CODE = re.compile(r"^[A-Z]{2,5} \d{3}[A-Z]?$")
@@ -41,8 +48,15 @@ SECTION_TYPE = "Section Requirement"  # requisite rows about the section, not th
 
 # Every table this script owns. All of them are emptied and reloaded on each run.
 TABLES = [
-    "universities", "scrape_runs", "terms", "courses", "course_requisites",
-    "sections", "meetings", "professors", "section_instructors",
+    "universities",
+    "scrape_runs",
+    "terms",
+    "courses",
+    "course_requisites",
+    "sections",
+    "meetings",
+    "professors",
+    "section_instructors",
 ]
 
 
@@ -67,6 +81,13 @@ def text_array(values: list[str]) -> str:
 
 def jsonb(value: object) -> str:
     return "NULL" if value is None else lit(json.dumps(value, ensure_ascii=False)) + "::jsonb"
+
+
+def insert(table: str, row: dict[str, str], suffix: str = "") -> str:
+    """INSERT statement from {column: SQL expression}; the values must already be SQL
+    (lit(), text_array(), jsonb() or a subquery)."""
+    end = f" {suffix}" if suffix else ""
+    return f"INSERT INTO {table} ({', '.join(row)}) VALUES ({', '.join(row.values())}){end};"
 
 
 # Subqueries that look rows up by their natural key, so no ids are hard-coded.
@@ -102,8 +123,17 @@ def term_rows(term_codes: set[str], block_labels: dict[str, str]) -> list[str]:
         kind = BLOCK_KINDS.get(block[0], "full") if block else "full"
         parent = term_id(f"{year};{season}") if block else "NULL"
         sql.append(
-            "INSERT INTO terms (university_id, code, name, block_kind, block_label, parent_term_id) "
-            f"VALUES ({UNI}, {lit(code)}, {lit(name)}, {lit(kind)}, {lit(block_labels.get(code))}, {parent});"
+            insert(
+                "terms",
+                {
+                    "university_id": UNI,
+                    "code": lit(code),
+                    "name": lit(name),
+                    "block_kind": lit(kind),
+                    "block_label": lit(block_labels.get(code)),
+                    "parent_term_id": parent,
+                },
+            )
         )
     return sql
 
@@ -112,18 +142,39 @@ def course_rows(code: str, s: dict) -> list[str]:
     """One course from its first section: title, department, description, areas and
     prerequisites are the same for every section of a course."""
     sql = [
-        "INSERT INTO courses (university_id, code, title, department, description, course_areas, prereq, source_url) "
-        f"VALUES ({UNI}, {lit(code)}, {lit(s['title'])}, {lit(s['department'])}, {lit(s['description'] or '')}, "
-        f"{text_array(s['course_areas'])}, {jsonb(s['prereq'])}, {lit(s['source_url'])});"
+        insert(
+            "courses",
+            {
+                "university_id": UNI,
+                "code": lit(code),
+                "title": lit(s["title"]),
+                "department": lit(s["department"]),
+                "description": lit(s["description"] or ""),
+                "course_areas": text_array(s["course_areas"]),
+                "prereq": jsonb(s["prereq"]),
+                "source_url": lit(s["source_url"]),
+            },
+        )
     ]
-    # Section Requirement rows belong to the section (sections.section_requirements), not the course.
+    # Section Requirement rows belong to the section (sections.section_requirements),
+    # not the course.
     course_requisites = [r for r in s.get("requisites") or [] if r["type"] != SECTION_TYPE]
     for pos, r in enumerate(course_requisites):
         sql.append(
-            "INSERT INTO course_requisites (course_id, position, connector_before, condition, group_code, "
-            "requisite_type, text, required_course_code, min_grade) "
-            f"VALUES ({course_id(code)}, {pos}, {lit(r['connector_before'])}, {lit(r['condition'])}, "
-            f"{lit(r['group'])}, {lit(r['type'])}, {lit(r['text'])}, {lit(r['course'])}, {lit(r['min_grade'])});"
+            insert(
+                "course_requisites",
+                {
+                    "course_id": course_id(code),
+                    "position": str(pos),
+                    "connector_before": lit(r["connector_before"]),
+                    "condition": lit(r["condition"]),
+                    "group_code": lit(r["group"]),
+                    "requisite_type": lit(r["type"]),
+                    "text": lit(r["text"]),
+                    "required_course_code": lit(r["course"]),
+                    "min_grade": lit(r["min_grade"]),
+                },
+            )
         )
     return sql
 
@@ -138,22 +189,50 @@ def split_name(full_name: str) -> tuple[str, str | None, str | None]:
 def section_rows(s: dict, run: str) -> list[str]:
     sid = section_id(s["term_code"], s["course"], s["section"])
     sql = [
-        "INSERT INTO sections (university_id, term_id, course_id, scrape_run_id, section, credits, class_type, "
-        "delivery_method, grading, remarks, note, section_requirements, status, status_raw, seats_open, "
-        "seats_total, seats_as_of, source_url, source_note, fetched_at) "
-        f"VALUES ({UNI}, {term_id(s['term_code'])}, {course_id(s['course'])}, {run}, {lit(s['section'])}, "
-        f"{lit(s['credits'])}, {lit(s['class_type'])}, {lit(s['delivery_method'])}, {lit(s['grading'])}, "
-        f"{text_array(s['remarks'])}, {lit(s['note'])}, {text_array(s['section_requirements'])}, "
-        f"{lit(s['status'])}, {lit(s['status_raw'])}, {lit(s['seats_open'])}, {lit(s['seats_total'])}, "
-        f"{lit(s['seats_as_of'])}, {lit(s['source_url'])}, {lit(s['source_note'])}, {lit(s['fetched_at'])});"
+        insert(
+            "sections",
+            {
+                "university_id": UNI,
+                "term_id": term_id(s["term_code"]),
+                "course_id": course_id(s["course"]),
+                "scrape_run_id": run,
+                "section": lit(s["section"]),
+                "credits": lit(s["credits"]),
+                "class_type": lit(s["class_type"]),
+                "delivery_method": lit(s["delivery_method"]),
+                "grading": lit(s["grading"]),
+                "remarks": text_array(s["remarks"]),
+                "note": lit(s["note"]),
+                "section_requirements": text_array(s["section_requirements"]),
+                "status": lit(s["status"]),
+                "status_raw": lit(s["status_raw"]),
+                "seats_open": lit(s["seats_open"]),
+                "seats_total": lit(s["seats_total"]),
+                "seats_as_of": lit(s["seats_as_of"]),
+                "source_url": lit(s["source_url"]),
+                "source_note": lit(s["source_note"]),
+                "fetched_at": lit(s["fetched_at"]),
+            },
+        )
     ]
     # meetings[i] and locations[i] describe the same meeting.
     for pos, m in enumerate(s["meetings"]):
         location = s["locations"][pos]["location"] if pos < len(s["locations"]) else None
         sql.append(
-            "INSERT INTO meetings (section_id, position, raw, days, time_raw, start_date, end_date, room, location) "
-            f"VALUES ({sid}, {pos}, {lit(m['raw'])}, {lit(m['days'] or '')}, {lit(m['time_raw'])}, "
-            f"{lit(m['start_date'])}, {lit(m['end_date'])}, {lit(m['room'])}, {lit(location)});"
+            insert(
+                "meetings",
+                {
+                    "section_id": sid,
+                    "position": str(pos),
+                    "raw": lit(m["raw"]),
+                    "days": lit(m["days"] or ""),
+                    "time_raw": lit(m["time_raw"]),
+                    "start_date": lit(m["start_date"]),
+                    "end_date": lit(m["end_date"]),
+                    "room": lit(m["room"]),
+                    "location": lit(location),
+                },
+            )
         )
     for pos, name in enumerate(s["instructors"]):
         last, first, middle = split_name(name)
@@ -165,10 +244,22 @@ def section_rows(s: dict, run: str) -> list[str]:
             # One row per name and department: a professor teaching several sections is
             # inserted once, and the same name in another department stays a different
             # professor (AGENTS.md).
-            "INSERT INTO professors (university_id, full_name, last_name, first_name, middle_name, department) "
-            f"VALUES ({UNI}, {lit(name)}, {lit(last)}, {lit(first)}, {lit(middle)}, {lit(s['department'])}) "
-            "ON CONFLICT (university_id, full_name, department) DO NOTHING;",
-            f"INSERT INTO section_instructors (section_id, professor_id, position) VALUES ({sid}, {prof}, {pos});",
+            insert(
+                "professors",
+                {
+                    "university_id": UNI,
+                    "full_name": lit(name),
+                    "last_name": lit(last),
+                    "first_name": lit(first),
+                    "middle_name": lit(middle),
+                    "department": lit(s["department"]),
+                },
+                suffix="ON CONFLICT (university_id, full_name, department) DO NOTHING",
+            ),
+            insert(
+                "section_instructors",
+                {"section_id": sid, "professor_id": prof, "position": str(pos)},
+            ),
         ]
     return sql
 
@@ -176,7 +267,8 @@ def section_rows(s: dict, run: str) -> list[str]:
 def build_sql(data: dict) -> str:
     sections = data["sections"]
     run = (
-        f"(SELECT id FROM scrape_runs WHERE university_id = {UNI} AND source_url = {lit(data['source'])} "
+        f"(SELECT id FROM scrape_runs WHERE university_id = {UNI} "
+        f"AND source_url = {lit(data['source'])} "
         f"AND scraped_at = {lit(data['scraped_at'])})"
     )
     block_labels = {s["term_code"]: s["block"] for s in sections if s["block"]}
@@ -190,10 +282,18 @@ def build_sql(data: dict) -> str:
         # a student's favorites) ever points at these rows, the refresh stops with an
         # error instead of silently deleting that data too.
         f"TRUNCATE {', '.join(TABLES)} RESTART IDENTITY;",
-        f"INSERT INTO universities (short_code, name) VALUES ({lit(UNIVERSITY[0])}, {lit(UNIVERSITY[1])});",
-        "INSERT INTO scrape_runs (university_id, source_url, term_code, subjects, scraped_at, section_count) "
-        f"VALUES ({UNI}, {lit(data['source'])}, {lit(data['term'])}, {text_array(data['subjects'])}, "
-        f"{lit(data['scraped_at'])}, {lit(data['count'])});",
+        insert("universities", {"short_code": lit(UNIVERSITY[0]), "name": lit(UNIVERSITY[1])}),
+        insert(
+            "scrape_runs",
+            {
+                "university_id": UNI,
+                "source_url": lit(data["source"]),
+                "term_code": lit(data["term"]),
+                "subjects": text_array(data["subjects"]),
+                "scraped_at": lit(data["scraped_at"]),
+                "section_count": lit(data["count"]),
+            },
+        ),
     ]
     sql += term_rows({data["term"]} | {s["term_code"] for s in sections}, block_labels)
     for code, s in first_section.items():
@@ -216,7 +316,9 @@ def check(data: dict) -> list[str]:
     for s in data["sections"]:
         key = f"{s['course']}-{s['section']}"
         if "prereq" not in s:
-            problems.append(f"{key}: no 'prereq' field (load the file from data_cleaner.py, not the scraper's)")
+            problems.append(
+                f"{key}: no 'prereq' field (load the file from data_cleaner.py, not the scraper's)"
+            )
         for m in s["meetings"]:
             if not m["start_date"] or not m["end_date"]:
                 problems.append(f"{key}: a meeting has no dates")
@@ -227,13 +329,28 @@ def check(data: dict) -> list[str]:
 
 
 def psql(args: argparse.Namespace, sql: str) -> str:
-    cmd = ["docker", "exec", "-i", args.container, "psql", "-U", args.user, "-d", args.database,
-           "-v", "ON_ERROR_STOP=1", "-X", "-A", "-t", "-q"]
+    cmd = [
+        "docker",
+        "exec",
+        "-i",
+        args.container,
+        "psql",
+        "-U",
+        args.user,
+        "-d",
+        args.database,
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-X",
+        "-A",
+        "-t",
+        "-q",
+    ]
     result = subprocess.run(cmd, input=sql, text=True, capture_output=True)
     if result.returncode != 0:
         raise SystemExit(
-            f"psql failed. Nothing changed: the old data is still there (the refresh runs in one transaction).\n"
-            f"{result.stderr.strip()}"
+            "psql failed. Nothing changed: the old data is still there "
+            f"(the refresh runs in one transaction).\n{result.stderr.strip()}"
         )
     return result.stdout
 
@@ -245,7 +362,9 @@ def counts(args: argparse.Namespace) -> dict[str, int]:
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     ap.add_argument("--in", dest="src", default=str(OUT_DIR / "course_search_clean.json"))
     ap.add_argument("--container", default="my-postgres-myplan")
     ap.add_argument("--user", default="app_user")
@@ -256,8 +375,12 @@ def main() -> int:
     data = json.loads(Path(args.src).read_text(encoding="utf-8"))
     problems = check(data)
     if problems:
-        print("Not loading, the file has problems (the database was not touched):", *problems, sep="\n  ",
-              file=sys.stderr)
+        print(
+            "Not loading, the file has problems (the database was not touched):",
+            *problems,
+            sep="\n  ",
+            file=sys.stderr,
+        )
         return 1
     sql = build_sql(data)
 
