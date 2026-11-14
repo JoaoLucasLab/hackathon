@@ -1,0 +1,11 @@
+# `docker compose up` from the repo root: the local Postgres 18 of
+# backend/compose/compose.yaml, with its settings from backend/.env (see backend/README.md).
+# Then `make migrate` creates the tables.
+#
+# The project is named "compose", like backend/compose/compose.yaml (named after its
+# folder), so both commands manage the same container and the same data volume.
+name: compose
+
+include:
+  - path: backend/compose/compose.yaml
+    env_file: backend/.env

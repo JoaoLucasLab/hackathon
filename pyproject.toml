@@ -1,10 +1,10 @@
-# Minimal version created by ENG-01 because the DATA-01 skeleton was not merged yet.
-# DATA-01 owns this file and adds the database dependencies.
+# DATA-01 owns this file. ENG-01 created the first version.
 [project]
 name = "course-planner"
 version = "0.1.0"
 requires-python = ">=3.12"
 dependencies = [
+  "alembic>=1.16,<2",
   "anthropic>=2.8,<3",
   # Read-only access to the catalog in Postgres (app/api/catalog_data.py).
   "psycopg[binary]>=3.2,<4",
@@ -13,6 +13,8 @@ dependencies = [
   "pydantic>=2.9",
   "python-multipart>=0.0.9",
   "pyyaml>=6",
+  # Students and sessions (app/db/). The driver is psycopg, picked in app/db/engine.py.
+  "sqlalchemy>=2.0,<3",
   "uvicorn>=0.30",
 ]
 
@@ -34,6 +36,11 @@ include = ["app*"]
 [tool.setuptools.package-data]
 app = ["llm/prompts/*.md", "schools/byui/*.yaml"]
 
+# `alembic upgrade head` / `alembic downgrade base`, run from the repo root (`make migrate`)
+# or from /app in the backend container. The database comes from DATABASE_URL (env.py).
+[tool.alembic]
+script_location = "%(here)s/backend/app/db/migrations"
+
 [tool.pytest.ini_options]
 pythonpath = ["backend"]
 testpaths = ["backend/tests"]
@@ -46,6 +53,10 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+# Migrations hold SQL with aligned end-of-line comments (moved as is from schema.sql).
+"backend/app/db/migrations/versions/*" = ["E501"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["app"]

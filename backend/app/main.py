@@ -1,17 +1,17 @@
 """FastAPI app.
 
-Minimal version created by ENG-01 because the DATA-01 skeleton was not merged yet.
-DATA-01 owns this file (health check, session cookie, CORS) and may extend it.
+DATA-01 owns this file (health check, session cookie, CORS); ENG-01 created it.
 This is the one place allowed to wire `schools/byui` in, through `register_school`.
 """
 
 from typing import Any
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from pydantic.json_schema import models_json_schema
 
-from app import contracts
+from app import config, contracts
 from app.api import catalog_data, routers
 from app.contracts import ChatEvent
 from app.schools.base import School, register_school
@@ -35,6 +35,17 @@ def _register_schools() -> None:
 _register_schools()
 
 app = FastAPI(title="Course planner API", version="0.1.0")
+
+# Render: the frontend is on another origin and sends the `sid` cookie with every call.
+# WSL and local dev are one origin, where CORS does not apply. Only FRONTEND_ORIGIN.
+if config.FRONTEND_ORIGIN:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[config.FRONTEND_ORIGIN],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 for router in routers:
     app.include_router(router)
