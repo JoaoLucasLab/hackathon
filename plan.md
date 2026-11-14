@@ -150,7 +150,7 @@ Acceptance criteria:
 - [x] Every catalog, schedule and professor table has a non-null `university_id` (course\_requisites, meetings and section\_instructors through their parent row).
 - [x] `alembic upgrade head` followed by `alembic downgrade base` both pass in CI (steps in `ci.yml`; passes locally, first GitHub run pending).
 - [x] A first request with no cookie gets a signed, HttpOnly `sid` cookie. A second request with it reaches the same `students` row. No name, email or password is asked anywhere.
-- [ ] `GET /health` on the deployed backend returns `{"status":"ok","db":"ok"}`. (Works locally; test after the Render deploy.)
+- [ ] `GET /health` on the deployed backend returns `{"status":"ok","db":"ok"}`, on the WSL server first, then on the Render backup. (Works locally and on the compose stack.)
 - [x] CI runs ruff, mypy, pytest, tsc and vitest in under 3 minutes (`ci.yml`). CI skips the tests that already fail on main: `test_explain_grounded.py` and 5 vitest files, owned by AI & Product.
 - [x] `.env.example` lists every variable, and a secret-scan step in CI passes (gitleaks with `.gitleaks.toml`).
 
@@ -234,7 +234,7 @@ Acceptance criteria:
 - [ ] Chat is limited to 20 messages per 5 minutes per session and upload to 5 per hour. Over the limit returns 429 with a readable message.
 - [ ] CORS allows only `FRONTEND_ORIGIN`. A request from another origin gets no CORS header.
 - [ ] `make snapshot` writes `snapshots/demo.sql.gz` with catalog, sections and professors and no student data. `make restore-snapshot` on an empty database gives the same row counts.
-- [ ] The production database is loaded from the snapshot by Hour 9.5.
+- [ ] The demo database (Postgres on the WSL server) is loaded from the snapshot by Hour 9.5, and the backup database (Neon) from the same snapshot.
 
 Tests: `test_crypto.py`, `test_delete_me.py`, `test_upload_limits.py`, `test_cors.py`.
 
@@ -708,7 +708,23 @@ Never cut: chat to schedules on a calendar, the prerequisite check and the conse
 
 ## Hosting
 
-Two free accounts cover everything: Render for the frontend and backend, Neon for Postgres. Limits below were read on Nov 13, 2026; check them again the week of the hackathon.
+The demo runs on the team's own server: the whole app in Docker on a private WSL server, published with Tailscale Funnel, and its Postgres is the database the demo uses. Render and Neon run the same app as a backup. Both databases are loaded from the same snapshot (DATA-06), so either host shows the same catalog.
+
+### Primary hosting: WSL server with Docker and Tailscale Funnel
+
+The same app runs on a team member's private WSL server. Everything is in `deploy/wsl/` (see its README) and is owned by Data.
+
+| Part | Container | Published as |
+| --- | --- | --- |
+| Frontend | `web`: nginx serving the Vite build, proxying `/api`, `/admin`, `/health`, `/docs`, `/openapi.json` | Tailscale Funnel `https://<machine>.<tailnet>.ts.net` (port 443) |
+| Backend | `backend`, from `backend/Dockerfile` | Behind `web`; optionally Funnel port 8443 |
+| Postgres | `db`, Postgres 18 on a Docker volume: the demo database | `tailscale serve` TCP 5432, tailnet only. Never on Funnel. |
+
+The server has no sleep and no free-tier limits, so it needs no health ping. It shares one origin for the app and the API, while Render uses two; the rules in `AGENTS.md` ("Hosting compatibility") keep both working. Every block that touches the backend's start-up, env vars, routes, dependencies or the frontend build must pass on the compose stack. The demo snapshot (DATA-06) must restore into either database.
+
+### Backup hosting: Render and Neon
+
+If the server or its network fails, the same app runs on two free accounts: Render for the frontend and backend, Neon for Postgres. Limits below were read on Nov 13, 2026; check them again the week of the hackathon.
 
 | Part | Service | Free-tier limit that matters | What the plan does about it |
 | --- | --- | --- | --- |
@@ -716,19 +732,7 @@ Two free accounts cover everything: Render for the frontend and backend, Neon fo
 | Backend (FastAPI + OR-Tools) | Render free web service | Sleeps after 15 minutes without traffic and takes about 1 minute to wake; 750 instance hours per month ([Render](https://render.com/articles/platforms-with-a-real-free-tier-for-developers-in-2026)) | Health ping every 5 minutes during judging |
 | Postgres | Neon Free plan | 1 GB storage per project, 100 compute hours per month, suspends after 5 minutes idle ([Neon](https://neon.com/faqs/free-plan-limits-and-quotas)) | Snapshot is far below 1 GB; the same health ping keeps it awake |
 
-Render's own free Postgres is not used because it expires 30 days after creation. I could not confirm the memory of Render's free instance, so the practice deploy in the prep list must run a small OR-Tools solve on it.
-
-### Backup hosting: WSL server with Docker and Tailscale Funnel
-
-If Render or Neon fails (sleeping instance, memory limit, a broken deploy), the same app runs on a team member's private WSL server. Everything is in `deploy/wsl/` (see its README) and is owned by Data next to the Render deploy.
-
-| Part | Container | Published as |
-| --- | --- | --- |
-| Frontend | `web`: nginx serving the Vite build, proxying `/api`, `/admin`, `/health`, `/docs`, `/openapi.json` | Tailscale Funnel `https://<machine>.<tailnet>.ts.net` (port 443) |
-| Backend | `backend`, from `backend/Dockerfile` | Behind `web`; optionally Funnel port 8443 |
-| Postgres | `db`, Postgres 18 on a Docker volume | `tailscale serve` TCP 5432, tailnet only. Never on Funnel. |
-
-The backup host has no sleep and no free-tier limits, so it needs no health ping. It shares one origin for the app and the API, while Render uses two; the rules in `AGENTS.md` ("Hosting compatibility") keep both working. Every block that touches the backend's start-up, env vars, routes, dependencies or the frontend build must still pass on the compose stack. The demo snapshot (DATA-06) must restore into either database.
+Render's own free Postgres is not used because it expires 30 days after creation. I could not confirm the memory of Render's free instance, so the practice deploy in the prep list must run a small OR-Tools solve on it. Open the Render URL a few minutes before presenting, so the backup is awake if it is needed.
 
 ## Risks
 
@@ -746,7 +750,7 @@ The three risks most likely to hurt the demo are a late critical-path block, an 
 | Solver returns nothing or runs long | 3-second cap, relaxation hint, property tests. | ENG-03, ENG-05 |
 | Claude API cost or rate limits | Cache by input hash, per-session rate limits, recorded responses in CI, a spend limit on the API key. | AI-02, DATA-06 |
 | Message Batches are too slow for a 12-hour event: a batch can take up to 24 hours, though most finish within 1 hour ([Claude docs](https://platform.claude.com/docs/en/build-with-claude/batch-processing)) | Run the bulk Haiku jobs as direct calls with caching. The volumes are small (20 to 40 prerequisite texts, about 30 professors). Move to Batches after the hackathon. | ENG-04, DATA-05 |
-| The free backend sleeps or the last deploy fails | Deploy at Hour 1.5, auto-deploy on every merge, health ping, backup video. Backup host: the Docker stack on the WSL server via Tailscale Funnel (`deploy/wsl/`). | DATA-01 |
+| The server, its network or the last deploy fails | The demo runs on the WSL server (`deploy/wsl/`); backup host: Render and Neon, loaded from the same snapshot, with auto-deploy on every merge and a health ping so it is awake. | DATA-01, DATA-06 |
 | AI & Product is still the heaviest lane | The Engine owner pairs on it from Hour 9.5. Cut-list items 5 to 7 all lighten it. | Cut list |
 
 ## Working rules
@@ -770,8 +774,8 @@ When a block is blocked:
 - [ ] Collect 3 degree-audit PDFs with consent, remove personal details, and hand-check the expected JSON for each.
 - [ ] Create the accounts: GitHub repo, Render, Neon, and a Claude API key with a spend limit.
 - [ ] Look up BYU-Idaho's school id on Rate My Professors in a browser and put it in config.
-- [ ] Practice deploy: FastAPI with OR-Tools on the free instance, solving a toy model.
-- [ ] Practice backup deploy: `deploy/wsl/push.sh` to the WSL server, `deploy/wsl/funnel.sh up`, open the ts.net URL from a phone off the tailnet.
+- [ ] Practice deploy: `deploy/wsl/push.sh` to the WSL server, `deploy/wsl/funnel.sh up`, open the ts.net URL from a phone off the tailnet.
+- [ ] Practice backup deploy: FastAPI with OR-Tools on Render's free instance, solving a toy model.
 - [ ] Decide the three owners, the contact email and the demo persona.
 
 ## Name ideas
