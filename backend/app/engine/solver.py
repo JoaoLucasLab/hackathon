@@ -1,13 +1,21 @@
-"""Scheduler core (ENG-03): Google OR-Tools CP-SAT.
+"""Scheduler (ENG-03 core, ENG-05 rules and scoring): Google OR-Tools CP-SAT.
 
 One boolean per candidate section. Hard constraints: at most one section per
 course, no time conflict, total credits inside the range, included courses taken
-when offered, at least one class. The objective rewards filled requirements
-first and credits second. ENG-05 adds full scoring, school rules, relaxation and
-backups on top of this.
+when offered, at least one class. With school rules: at most N religion courses
+and at most M waitlisted credits.
+
+The objective is the score in `engine/scoring.py`: requirements filled, credits,
+favorite professors, open seats, prerequisite unlocks, minus idle time between
+classes. The reported score is recomputed exactly from the final picks, and the
+schedules are ranked by it.
 
 Results come back one at a time: after each solve, a constraint forces the next
 schedule to differ by at least one course or by the sections of two courses.
+
+When nothing fits, `engine/relax.py` loosens one constraint at a time in the
+school's order and reports the first that gives schedules. Each chosen class
+gets up to 2 backup sections from `engine/backups.py`.
 """
 
 from __future__ import annotations
@@ -15,7 +23,7 @@ from __future__ import annotations
 import hashlib
 import math
 from collections import defaultdict
-from collections.abc import Iterable, Sequence
+from collections.abc import Callable, Iterable, Sequence
 from dataclasses import dataclass
 
 from ortools.sat.python import cp_model
@@ -27,22 +35,52 @@ from app.contracts import (
     DegreeAudit,
     Schedule,
     ScheduledClass,
+    ScheduleWarning,
+    ScheduleWhy,
     Section,
+    Student,
 )
+from app.engine.backups import backup_sections
 from app.engine.candidates import Candidate, CandidatePool, build_candidates
 from app.engine.conflicts import sections_conflict
 from app.engine.explain import explain, section_warnings
 from app.engine.prereqs.evaluator import PrereqChecker
+from app.engine.relax import find_relaxation
+from app.engine.scoring import (
+    HALVES,
+    ScoreInputs,
+    Weights,
+    day_slots,
+    open_share,
+    score_schedule,
+    unlock_counts,
+)
+from app.schools.base import SchoolRules
 
 CREDIT_SCALE = 10  # credits are floats like 2.5; CP-SAT wants integers
+OBJ_SCALE = 100  # objective points -> integer coefficients
+DEFAULT_CREDIT_RANGE = (12.0, 15.0)  # only when no school rules are given
+RELAX_TIME_LIMIT_S = 1.0  # cap per relaxation solve, so trying options stays fast
+DEFAULT_WEIGHTS = Weights()
+
+__all__ = ["Limits", "Solution", "Weights", "build_schedules", "schedules_differ", "solve"]
 
 
 @dataclass(frozen=True)
-class Weights:
-    """Objective weights. ENG-05 reads these from the school config."""
+class Limits:
+    """Per-schedule school limits. None means no limit."""
 
-    requirement: int = 100  # per unmet requirement filled
-    credit: int = 1  # per credit
+    max_religion: int | None = None
+    is_religion: Callable[[str], bool] = lambda _code: False
+    max_waitlisted_credits: float | None = None
+
+    @classmethod
+    def from_rules(cls, rules: SchoolRules) -> Limits:
+        return cls(
+            max_religion=rules.max_religion_courses_at_registration(),
+            is_religion=rules.is_religion_course,
+            max_waitlisted_credits=rules.max_waitlisted_credits(),
+        )
 
 
 @dataclass(frozen=True)
@@ -73,6 +111,55 @@ def _requirement_slots(pool: CandidatePool, audit: DegreeAudit) -> dict[str, int
     }
 
 
+def effective_credit_range(
+    constraints: ConstraintSet, default: tuple[float, float]
+) -> tuple[float, float]:
+    """The student's own bounds win; a default bound gives way to them.
+
+    "At most 9 credits" with a school default of 12 to 15 means 9 at most (and
+    at least as many as fit under 9), not an impossible 12 to 9.
+    """
+    lo, hi = default
+    if constraints.credit_min is not None:
+        lo = constraints.credit_min
+        if constraints.credit_max is None:
+            hi = max(hi, lo)
+    if constraints.credit_max is not None:
+        hi = constraints.credit_max
+        if constraints.credit_min is None:
+            lo = min(lo, hi)
+    return lo, hi
+
+
+def _add_gap_terms(
+    m: cp_model.CpModel, x: list[cp_model.IntVar], cands: Sequence[Candidate]
+) -> list[cp_model.IntVar]:
+    """Span (first start to last end) per weekday and semester half. With no
+    overlaps, span minus class minutes is the idle time, and class minutes are
+    fixed by the picks, so minimizing spans minimizes gaps."""
+    members: dict[tuple[object, int], list[tuple[int, int, int]]] = defaultdict(list)
+    for i, c in enumerate(cands):
+        for d, p, start, end in day_slots(c.section):
+            members[(d, p)].append((i, start, end))
+    spans: list[cp_model.IntVar] = []
+    for key, items in members.items():
+        if len({i for i, _, _ in items}) < 2:
+            continue  # one possible class that day: never a gap
+        first = m.new_int_var(0, 24 * 60, f"first_{key}")
+        last = m.new_int_var(0, 24 * 60, f"last_{key}")
+        used = m.new_bool_var(f"used_{key}")
+        for i, start, end in items:
+            m.add(first <= start).only_enforce_if(x[i])
+            m.add(last >= end).only_enforce_if(x[i])
+            m.add_implication(x[i], used)
+        m.add(last >= first)
+        m.add(last == first).only_enforce_if(used.Not())
+        span = m.new_int_var(0, 24 * 60, f"span_{key}")
+        m.add(span == last - first)
+        spans.append(span)
+    return spans
+
+
 def solve(
     pool: CandidatePool,
     audit: DegreeAudit,
@@ -81,18 +168,17 @@ def solve(
     credit_range: tuple[float, float],
     max_results: int,
     time_limit_s: float,
-    weights: Weights = Weights(),
+    weights: Weights = DEFAULT_WEIGHTS,
+    inputs: ScoreInputs | None = None,
+    limits: Limits = Limits(),
 ) -> list[Solution]:
     cands = pool.candidates
     if not cands:
         return []
-    lo, hi = credit_range
-    if constraints.credit_min is not None:
-        lo = constraints.credit_min
-    if constraints.credit_max is not None:
-        hi = constraints.credit_max
+    lo, hi = effective_credit_range(constraints, credit_range)
     if lo > hi:
         return []
+    inputs = inputs or ScoreInputs(weights=weights)
 
     m = cp_model.CpModel()
     x = [m.new_bool_var(f"x{i}") for i in range(len(cands))]
@@ -121,6 +207,18 @@ def solve(
         if code in y:
             m.add(y[code] >= 1)
 
+    if limits.max_religion is not None:
+        religion = [x[i] for i, c in enumerate(cands) if limits.is_religion(c.section.course_code)]
+        if religion:
+            m.add(sum(religion) <= limits.max_religion)
+    if limits.max_waitlisted_credits is not None:
+        waitlisted = [(i, c) for i, c in enumerate(cands) if c.waitlisted]
+        if waitlisted:
+            m.add(
+                sum(_scaled(c.section.credits) * x[i] for i, c in waitlisted)
+                <= _scaled(limits.max_waitlisted_credits)
+            )
+
     by_req: dict[str, set[str]] = defaultdict(set)
     for c in cands:
         for rid in c.requirement_ids:
@@ -135,7 +233,27 @@ def solve(
         for rid, codes in by_req.items():
             m.add(sum(y[code] for code in codes) <= slots[rid])
 
-    m.maximize(weights.requirement * CREDIT_SCALE * sum(filled) + weights.credit * credits)
+    w = inputs.weights
+    per_class = [
+        round(
+            OBJ_SCALE
+            * (
+                w.credit * c.section.credits
+                + w.favorite_professor * inputs.is_favorite_class(c.section)
+                + w.open_seats * open_share(c.section)
+                + w.unlocks * inputs.unlock_count(c.section.course_code)
+            )
+        )
+        for c in cands
+    ]
+    objective = round(OBJ_SCALE * w.requirement) * sum(filled) + sum(
+        k * x[i] for i, k in enumerate(per_class)
+    )
+    if w.gap_per_hour > 0:
+        # Spans are per semester half; the score averages the two halves.
+        per_minute = round(OBJ_SCALE * w.gap_per_hour / 60 / len(HALVES))
+        objective -= per_minute * sum(_add_gap_terms(m, x, cands))
+    m.maximize(objective)
 
     solver = cp_model.CpSolver()
     solver.parameters.max_time_in_seconds = time_limit_s
@@ -151,7 +269,7 @@ def solve(
         solutions.append(
             Solution(
                 picks=tuple(cands[i] for i in chosen),
-                score=solver.objective_value / CREDIT_SCALE,
+                score=solver.objective_value / OBJ_SCALE,
                 optimal=status == cp_model.OPTIMAL,
             )
         )
@@ -197,6 +315,65 @@ def _schedule_id(sections: Iterable[Section]) -> str:
     return "sch-" + hashlib.sha256(key.encode()).hexdigest()[:12]
 
 
+@dataclass(frozen=True)
+class _Run:
+    """Everything one build needs besides the constraints, so relaxation can rerun it."""
+
+    audit: DegreeAudit
+    sections: tuple[Section, ...]
+    credit_range: tuple[float, float]
+    favorites: frozenset[str]
+    inputs: ScoreInputs
+    limits: Limits
+    prereqs: PrereqChecker | None
+    rules: SchoolRules | None
+    student: Student | None
+
+    def pool(self, constraints: ConstraintSet) -> CandidatePool:
+        return build_candidates(
+            self.audit,
+            self.sections,
+            constraints,
+            self.prereqs,
+            rules=self.rules,
+            student=self.student,
+            favorite_professor_ids=self.favorites,
+        )
+
+    def solve(
+        self, pool: CandidatePool, constraints: ConstraintSet, max_results: int, time_limit_s: float
+    ) -> list[Solution]:
+        return solve(
+            pool,
+            self.audit,
+            constraints,
+            credit_range=self.credit_range,
+            max_results=max_results,
+            time_limit_s=time_limit_s,
+            weights=self.inputs.weights,
+            inputs=self.inputs,
+            limits=self.limits,
+        )
+
+
+def _religion_warning(
+    rules: SchoolRules | None, sections: Sequence[Section]
+) -> list[ScheduleWarning]:
+    if rules is None:
+        return []
+    religion = [s for s in sections if rules.is_religion_course(s.course_code)]
+    if not religion:
+        return []
+    return [
+        ScheduleWarning(
+            kind="religion_limit",
+            message=rules.religion_note(),
+            course_code=religion[0].course_code,
+            section_id=religion[0].id,
+        )
+    ]
+
+
 def build_schedules(
     audit: DegreeAudit,
     sections: Iterable[Section],
@@ -206,31 +383,60 @@ def build_schedules(
     credit_range: tuple[float, float] | None = None,
     time_limit_s: float | None = None,
     favorite_professor_ids: Iterable[str] = (),
-    weights: Weights = Weights(),
+    weights: Weights | None = None,
     prereqs: PrereqChecker | None = None,
+    rules: SchoolRules | None = None,
+    student: Student | None = None,
 ) -> BuildSchedulesResponse:
-    """Candidates, solve, explain. Same function behind the endpoint and the chat tool."""
-    pool = build_candidates(audit, sections, constraints, prereqs)
-    favorites = set(favorite_professor_ids)
-    solutions = solve(
-        pool,
-        audit,
-        constraints,
-        credit_range=credit_range or (config.CREDIT_DEFAULT_MIN, config.CREDIT_DEFAULT_MAX),
-        max_results=max_results,
-        time_limit_s=config.SOLVER_TIME_LIMIT_S if time_limit_s is None else time_limit_s,
-        weights=weights,
+    """Candidates, solve, score, backups, explain; relaxation when nothing fits.
+
+    Same function behind the endpoint and the chat tool. With `rules`, the credit
+    range, weights and limits come from the school config unless passed here.
+    """
+    favorites = frozenset(favorite_professor_ids)
+    if weights is None:
+        weights = Weights.from_mapping(rules.scoring_weights()) if rules else Weights()
+    if credit_range is None:
+        credit_range = rules.default_credit_range() if rules else DEFAULT_CREDIT_RANGE
+    limit_s = config.SOLVER_TIME_LIMIT_S if time_limit_s is None else time_limit_s
+    unlocks = None
+    if prereqs is not None and weights.unlocks:
+        unlocks = unlock_counts(audit, prereqs.expression)
+    run = _Run(
+        audit=audit,
+        sections=tuple(sections),
+        credit_range=credit_range,
+        favorites=favorites,
+        inputs=ScoreInputs(weights=weights, favorite_professor_ids=favorites, unlocks=unlocks),
+        limits=Limits.from_rules(rules) if rules else Limits(),
+        prereqs=prereqs,
+        rules=rules,
+        student=student,
     )
-    ordered = sorted(solutions, key=lambda s: -s.score)  # stable: ties keep solve order
+
+    pool = run.pool(constraints)
+    solutions = run.solve(pool, constraints, max_results, limit_s)
+
+    scored: list[tuple[float, int, Solution, ScheduleWhy]] = []
+    for order, sol in enumerate(solutions):
+        secs = [c.section for c in sol.picks]
+        why = explain(secs, constraints, favorites)
+        filled = len({rid for c in sol.picks for rid in c.requirement_ids})
+        score = score_schedule(secs, filled, len(why.preferences_met), run.inputs)
+        scored.append((score, order, sol, why))
+    scored.sort(key=lambda t: (-t[0], t[1]))  # ties keep solve order
+
     schedules: list[Schedule] = []
-    for rank, sol in enumerate(ordered, start=1):
+    for rank, (score, _, sol, why) in enumerate(scored, start=1):
         picks = sorted(sol.picks, key=lambda c: c.section.id)
         secs = [c.section for c in picks]
+        backups = backup_sections(picks, pool.candidates, run.limits.max_waitlisted_credits)
         classes = [
             ScheduledClass(
                 section=c.section,
                 requirement_ids=list(c.requirement_ids),
                 waitlisted=c.waitlisted,
+                backups=backups.get(c.section.id, []),
                 warnings=[*section_warnings(c.section), *c.warnings],
             )
             for c in picks
@@ -239,12 +445,33 @@ def build_schedules(
             Schedule(
                 id=_schedule_id(secs),
                 rank=rank,
-                score=sol.score,
+                score=score,
                 total_credits=sum(s.credits for s in secs),
                 optimal=sol.optimal,
                 classes=classes,
-                why=explain(secs, constraints, favorites),
-                warnings=[w for c in classes for w in c.warnings],
+                why=why,
+                warnings=[
+                    *(w for c in classes for w in c.warnings),
+                    *_religion_warning(rules, secs),
+                ],
             )
         )
-    return BuildSchedulesResponse(schedules=schedules, excluded=pool.excluded)
+
+    relaxation = None
+    if not schedules and rules is not None:
+        relax_s = min(limit_s, RELAX_TIME_LIMIT_S)
+
+        def count(patch: ConstraintSet) -> int:
+            return len(run.solve(run.pool(patch), patch, max_results, relax_s))
+
+        relaxation = find_relaxation(
+            constraints,
+            rules.relaxation_order(),
+            count,
+            sections=run.sections,
+            credit_range=effective_credit_range(constraints, credit_range),
+            max_credit_limit=rules.max_credit_limit(),
+        )
+    return BuildSchedulesResponse(
+        schedules=schedules, excluded=pool.excluded, relaxation=relaxation
+    )

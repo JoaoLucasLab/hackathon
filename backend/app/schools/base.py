@@ -8,7 +8,7 @@ BYU-Idaho implements them in `schools/byui/` and is wired in at startup through
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, field
 from datetime import date
 
@@ -102,7 +102,19 @@ class SchoolRules(ABC):
     def max_religion_courses_at_registration(self) -> int: ...
 
     @abstractmethod
+    def religion_note(self) -> str:
+        """Shown on a schedule that holds a religion course (the limit and when it lifts)."""
+
+    @abstractmethod
     def max_waitlisted_credits(self) -> float: ...
+
+    @abstractmethod
+    def max_credit_limit(self) -> float:
+        """Highest credit maximum the relaxation step may suggest."""
+
+    @abstractmethod
+    def scoring_weights(self) -> Mapping[str, float]:
+        """Score weights by name (see `engine/scoring.py` for the names)."""
 
     @abstractmethod
     def relaxation_order(self) -> list[str]:
@@ -133,6 +145,13 @@ _SCHOOLS: dict[str, School] = {}
 
 def register_school(school: School) -> None:
     _SCHOOLS[school.university_id] = school
+
+
+def default_school() -> School:
+    """The school the app serves. Scope is one school, so it is the first registered."""
+    if not _SCHOOLS:
+        raise LookupError("No school registered; app.main registers it at startup")
+    return next(iter(_SCHOOLS.values()))
 
 
 def get_school(university_id: str) -> School:
