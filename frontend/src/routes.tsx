@@ -5,6 +5,7 @@ import { AuditUpload } from "./pages/AuditUpload";
 import { Consent } from "./pages/Consent";
 import { Planner } from "./pages/Planner";
 import { MentorFinder } from "./pages/MentorFinder";
+import { Professor } from "./pages/Professor";
 import { PlanningState } from "./pages/PlanningState";
 import { Requirements } from "./pages/Requirements";
 
@@ -22,6 +23,7 @@ export function AppRoutes() {
         </Route>
       <Route path="/consent" element={<Consent />} />
       <Route path="/professors" element={<MentorFinder />} />
+      <Route path="/professors/:professorId" element={<Professor />} />
       <Route path="/audit" element={<AuditUpload />} />
       <Route path="/audit/confirm" element={<AuditConfirm />} />
       <Route path="/requirements" element={<Requirements />} />

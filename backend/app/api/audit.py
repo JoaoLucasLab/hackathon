@@ -23,7 +23,7 @@ from starlette.concurrency import run_in_threadpool
 from starlette.datastructures import UploadFile
 from starlette.formparsers import MultiPartParser
 
-from app.api import audit_store, fixture_data
+from app.api import audit_store, catalog_data, fixture_data
 from app.api import chat as chat_api
 from app.api.audit_validation import with_flags
 from app.contracts import AuditRequirement, DegreeAudit
@@ -55,11 +55,10 @@ NOT_PDF = "This file is not a PDF. Download your degree audit as a PDF and uploa
 
 @cache
 def known_course_codes() -> set[str]:
-    """This semester's course codes. The fixtures for now: the app has no code that
-    reads the catalog DATA-04 loads into Postgres yet (that read belongs to the Data
-    owner). Swap this one function when it exists."""
-    return {c.code for c in fixture_data.courses()} | {
-        s.course_code for s in fixture_data.sections()
+    """This semester's course codes, from `catalog_data` (Postgres when
+    `DATABASE_URL` is set, else the fixtures)."""
+    return {c.code for c in catalog_data.courses()} | {
+        s.course_code for s in catalog_data.sections()
     }
 
 

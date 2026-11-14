@@ -5,15 +5,15 @@ eligible for are left out with a reason, and conditions to verify become warning
 School rules (track, religion, waitlist cap, credit range, score weights,
 relaxation order) come from the registered school's `SchoolRules`.
 
-The audit is the fixture audit until AI-04 stores the session's own audit, and
-sections come from the fixtures until DATA-03 loads them into the database.
+The audit is the fixture audit until AI-04 stores the session's own audit.
+Courses and sections come from `catalog_data`: Postgres when `DATABASE_URL` is set.
 """
 
 from collections.abc import Iterable
 
 from fastapi import APIRouter, Request
 
-from app.api import fixture_data
+from app.api import catalog_data, fixture_data
 from app.api import professors as professors_api
 from app.contracts import (
     BuildSchedulesRequest,
@@ -31,7 +31,7 @@ router = APIRouter(prefix="/api", tags=["schedules"])
 
 def prereq_checker(audit: DegreeAudit) -> PrereqChecker:
     """Catalog trees first; text without a tree goes through the parser + Haiku fallback."""
-    return PrereqChecker(fixture_data.courses(), audit.courses, parse=parse_with_fallback)
+    return PrereqChecker(catalog_data.courses(), audit.courses, parse=parse_with_fallback)
 
 
 def build_schedules(
@@ -44,7 +44,7 @@ def build_schedules(
     audit = fixture_data.audit()
     return solver.build_schedules(
         audit,
-        fixture_data.sections(),
+        catalog_data.sections(),
         constraints,
         max_results=body.max_results,
         favorite_professor_ids=favorite_professor_ids,

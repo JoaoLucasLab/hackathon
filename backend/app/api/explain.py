@@ -9,8 +9,8 @@ from __future__ import annotations
 
 from fastapi import APIRouter, Request
 
+from app.api import catalog_data
 from app.api import chat as chat_api
-from app.api import fixture_data
 from app.contracts import ExplainScheduleRequest, ScheduleExplanation
 from app.llm import explain as llm_explain
 
@@ -21,5 +21,5 @@ router = APIRouter(prefix="/api", tags=["schedules"])
 def explain_schedule(body: ExplainScheduleRequest, request: Request) -> ScheduleExplanation:
     audit = chat_api.get_session(request).ctx.audit
     requirement_names = {r.id: r.name for r in audit.requirements}
-    professor_names = {p.id: f"{p.first_name} {p.last_name}" for p in fixture_data.professors()}
+    professor_names = {p.id: f"{p.first_name} {p.last_name}" for p in catalog_data.professors()}
     return llm_explain.explain_schedule(body.schedule, requirement_names, professor_names)

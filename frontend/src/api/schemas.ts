@@ -22,3 +22,7 @@ export type Professor = Schemas["Professor"];
 export type FavoriteProfessor = Schemas["FavoriteProfessor"];
 export type ScheduleExplanation = Schemas["ScheduleExplanation"];
 export type Relaxation = Schemas["Relaxation"];
+export type MentorGoal = Schemas["MentorGoal"];
+export type MentorMatch = Schemas["MentorMatch"];
+export type EmailDraft = Schemas["EmailDraft"];
+export type ProfessorSource = Schemas["ProfessorSource"];

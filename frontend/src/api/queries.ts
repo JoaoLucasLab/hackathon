@@ -19,6 +19,8 @@ export const queryKeys = {
   auditDraft: ["audit", "draft"] as const,
   remaining: ["requirements", "remaining"] as const,
   professors: ["professors"] as const,
+  /** Starts with `professors`, so invalidating the list refreshes it too. */
+  professor: (id: string) => ["professors", "detail", id] as const,
   explanation: (schedule: Schedule) =>
     [
       "schedule-explanation",
@@ -91,6 +93,19 @@ export function useProfessors() {
   });
 }
 
+/** One professor with sources and `is_favorite` (`GET /api/professors/{id}`). */
+export function useProfessor(professorId: string) {
+  return useQuery<Professor>({
+    queryKey: queryKeys.professor(professorId),
+    queryFn: async () =>
+      unwrap(
+        await api.GET("/api/professors/{professor_id}", {
+          params: { path: { professor_id: professorId } },
+        }),
+      ),
+  });
+}
+
 /**
  * Stars or unstars a professor (`PUT /api/professors/{id}/favorite`). The star
  * flips at once and flips back if the request fails. Stored per session on the
@@ -102,7 +117,7 @@ export function useToggleFavorite() {
     FavoriteProfessor,
     Error,
     { professorId: string; favorite: boolean },
-    { previous?: Professor[] }
+    { previous?: Professor[]; previousOne?: Professor }
   >({
     mutationFn: async ({ professorId, favorite }) =>
       unwrap(
@@ -114,13 +129,19 @@ export function useToggleFavorite() {
     onMutate: async ({ professorId, favorite }) => {
       await queryClient.cancelQueries({ queryKey: queryKeys.professors });
       const previous = queryClient.getQueryData<Professor[]>(queryKeys.professors);
+      const previousOne = queryClient.getQueryData<Professor>(queryKeys.professor(professorId));
       queryClient.setQueryData<Professor[]>(queryKeys.professors, (list) =>
         list?.map((p) => (p.id === professorId ? { ...p, is_favorite: favorite } : p)),
       );
-      return { previous };
+      queryClient.setQueryData<Professor>(queryKeys.professor(professorId), (one) =>
+        one ? { ...one, is_favorite: favorite } : one,
+      );
+      return { previous, previousOne };
     },
-    onError: (_error, _vars, context) => {
+    onError: (_error, { professorId }, context) => {
       if (context?.previous) queryClient.setQueryData(queryKeys.professors, context.previous);
+      if (context?.previousOne)
+        queryClient.setQueryData(queryKeys.professor(professorId), context.previousOne);
     },
     onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.professors }),
   });

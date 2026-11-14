@@ -88,6 +88,10 @@ class MentorMatch(Contract):
     professor: Professor
     score: float
     reasons: list[MentorReason]
+    reason_text: str | None = Field(
+        default=None,
+        description="Claude's rewording of `reasons` (AI-05). None: show the structured reasons.",
+    )
 
 
 class MentorSearchRequest(Contract):
@@ -95,9 +99,27 @@ class MentorSearchRequest(Contract):
     tags: list[str] = Field(min_length=1)
 
 
+class MentorTopicRequest(Contract):
+    """What the student typed. Mapped to existing topic tags only (AI-05)."""
+
+    topic: str = Field(min_length=1, max_length=200, examples=["AI and neural nets"])
+
+
+class MentorTopicMatch(Contract):
+    topic: str
+    tags: list[str] = Field(
+        default_factory=list,
+        description="Existing professor topic tags only. Empty: ask the student to rephrase.",
+    )
+
+
 class EmailDraftRequest(Contract):
     goal: MentorGoal
     mention_grade: bool = False
+    tags: list[str] = Field(
+        default_factory=list,
+        description="Topic tags from the search. Only the professor's own tags are used.",
+    )
 
 
 class EmailDraft(Contract):
@@ -106,3 +128,7 @@ class EmailDraft(Contract):
     professor_id: str
     subject: str
     body: str
+    class_named: CourseCode | None = Field(
+        default=None, description="The class the student took with this professor, if any."
+    )
+    written_by: Literal["claude", "template"] = "template"

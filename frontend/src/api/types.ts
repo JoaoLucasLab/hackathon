@@ -145,6 +145,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/mentors/topic": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Topic Tags
+         * @description The student's topic as existing tags. Empty `tags`: ask the student to rephrase.
+         */
+        post: operations["topic_tags_api_mentors_topic_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/mentors/{professor_id}/email-draft": {
         parameters: {
             query?: never;
@@ -580,10 +600,21 @@ export interface components {
         EmailDraft: {
             /** Body */
             body: string;
+            /**
+             * Class Named
+             * @description The class the student took with this professor, if any.
+             */
+            class_named?: string | null;
             /** Professor Id */
             professor_id: string;
             /** Subject */
             subject: string;
+            /**
+             * Written By
+             * @default template
+             * @enum {string}
+             */
+            written_by: "claude" | "template";
         };
         /** EmailDraftRequest */
         EmailDraftRequest: {
@@ -593,6 +624,11 @@ export interface components {
              * @default false
              */
             mention_grade: boolean;
+            /**
+             * Tags
+             * @description Topic tags from the search. Only the professor's own tags are used.
+             */
+            tags?: string[];
         };
         /** Excluded */
         Excluded: {
@@ -677,6 +713,11 @@ export interface components {
         /** MentorMatch */
         MentorMatch: {
             professor: components["schemas"]["Professor"];
+            /**
+             * Reason Text
+             * @description Claude's rewording of `reasons` (AI-05). None: show the structured reasons.
+             */
+            reason_text?: string | null;
             /** Reasons */
             reasons: components["schemas"]["MentorReason"][];
             /** Score */
@@ -703,6 +744,27 @@ export interface components {
             goal: components["schemas"]["MentorGoal"];
             /** Tags */
             tags: string[];
+        };
+        /** MentorTopicMatch */
+        MentorTopicMatch: {
+            /**
+             * Tags
+             * @description Existing professor topic tags only. Empty: ask the student to rephrase.
+             */
+            tags?: string[];
+            /** Topic */
+            topic: string;
+        };
+        /**
+         * MentorTopicRequest
+         * @description What the student typed. Mapped to existing topic tags only (AI-05).
+         */
+        MentorTopicRequest: {
+            /**
+             * Topic
+             * @example AI and neural nets
+             */
+            topic: string;
         };
         /** PrereqAll */
         PrereqAll: {
@@ -1457,6 +1519,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MentorMatch"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    topic_tags_api_mentors_topic_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MentorTopicRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MentorTopicMatch"];
                 };
             };
             /** @description Validation Error */
