@@ -32,6 +32,7 @@ from app.contracts import (
 from app.engine.candidates import Candidate, CandidatePool, build_candidates
 from app.engine.conflicts import sections_conflict
 from app.engine.explain import explain, section_warnings
+from app.engine.prereqs.evaluator import PrereqChecker
 
 CREDIT_SCALE = 10  # credits are floats like 2.5; CP-SAT wants integers
 
@@ -206,9 +207,10 @@ def build_schedules(
     time_limit_s: float | None = None,
     favorite_professor_ids: Iterable[str] = (),
     weights: Weights = Weights(),
+    prereqs: PrereqChecker | None = None,
 ) -> BuildSchedulesResponse:
     """Candidates, solve, explain. Same function behind the endpoint and the chat tool."""
-    pool = build_candidates(audit, sections, constraints)
+    pool = build_candidates(audit, sections, constraints, prereqs)
     favorites = set(favorite_professor_ids)
     solutions = solve(
         pool,
@@ -229,7 +231,7 @@ def build_schedules(
                 section=c.section,
                 requirement_ids=list(c.requirement_ids),
                 waitlisted=c.waitlisted,
-                warnings=section_warnings(c.section),
+                warnings=[*section_warnings(c.section), *c.warnings],
             )
             for c in picks
         ]

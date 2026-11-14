@@ -22,7 +22,7 @@ from typing import Any
 
 from anthropic.types import ToolParam
 from fastapi import HTTPException
-from pydantic import BaseModel, ConfigDict, Field, ValidationError
+from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, ValidationError
 
 from app.api import audit as audit_api
 from app.api import fixture_data
@@ -33,12 +33,12 @@ from app.contracts import (
     BuildSchedulesRequest,
     ConstraintSet,
     CourseCode,
-    CourseRecordStatus,
     DegreeAudit,
     DeliveryMethod,
     EmailDraftRequest,
     MentorGoal,
     MentorSearchRequest,
+    PrereqExpression,
 )
 
 
@@ -215,41 +215,39 @@ def search_sections(ctx: ToolContext, args: SearchSectionsArgs) -> Json:
 
 
 def check_prerequisites(ctx: ToolContext, args: CheckPrerequisitesArgs) -> Json:
-    courses = {c.code: c for c in fixture_data.courses()}
-    record = [
-        {
-            "course_code": c.course_code,
-            "status": c.status.value,
-            "grade": c.grade,
-            "pending_grade": c.status == CourseRecordStatus.in_progress,
-        }
-        for c in ctx.audit.courses
-    ]
+    checker = schedules_api.prereq_checker(ctx.audit)
     results: list[Json] = []
     not_found: list[str] = []
     for code in args.course_codes:
-        course = courses.get(code)
+        course = checker.courses.get(code)
         if course is None:
             not_found.append(code)
             continue
+        expr = checker.expression(code)
+        assert expr is not None  # the course is in the catalog
+        result = checker.check(code)
         results.append(
             {
                 "course_code": code,
                 "prereq_text": course.prereq_text,
-                "prereq": _dump(course.prereq) if course.prereq is not None else None,
-                "parsed": course.prereq is not None,
+                "prereq": TypeAdapter(PrereqExpression).dump_python(expr, mode="json"),
+                "status": result.status.value,
+                "needs": list(result.missing),
+                "check_before_registering": [
+                    n.message for n in result.notes if n.kind != "pending_grade"
+                ],
+                "pending_grade": [n.message for n in result.notes if n.kind == "pending_grade"],
             }
         )
     return {
         "courses": results,
         "not_found": not_found,
-        "student_record": record,
-        # ENG-04 (evaluator) is not merged yet: report the rule, never a verdict.
-        "evaluated": False,
+        "evaluated": True,
         "note": (
-            "Eligibility is not evaluated yet. Show the prerequisite text and say to "
-            "check it before registering. If prereq is null it was not parsed: that "
-            "does NOT mean there are no prerequisites."
+            "status is met, met_with_warnings or not_met, checked against the student's "
+            "record. met_with_warnings means the student must check the listed items "
+            "before registering. Unreadable prerequisite text is a warning: it does NOT "
+            "mean there are no prerequisites. Never promise a seat or admission."
         ),
     }
 
@@ -351,8 +349,9 @@ TOOLS: tuple[Tool, ...] = (
     ),
     Tool(
         "check_prerequisites",
-        "Prerequisite rules for the given courses and the student's course record "
-        "(in-progress courses count, labeled pending grade).",
+        "Check the given courses' prerequisites against the student's course record: "
+        "met, met_with_warnings (items to check before registering) or not_met (what is "
+        "missing). In-progress courses count, labeled pending grade.",
         _obj({"course_codes": {**_COURSE_CODES, "description": "1 to 10 course codes."}}),
         CheckPrerequisitesArgs,
         check_prerequisites,

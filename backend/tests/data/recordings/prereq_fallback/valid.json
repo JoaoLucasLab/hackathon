@@ -1,0 +1,6 @@
+{
+  "text": "Completion of CSE 212; or both CSE 210 and MATH 112 (C or better)",
+  "replies": [
+    "{\"type\": \"all\", \"items\": [{\"type\": \"any\", \"items\": [{\"type\": \"course\", \"course_code\": \"CSE 212\", \"min_grade\": null, \"concurrent_ok\": false}, {\"type\": \"all\", \"items\": [{\"type\": \"course\", \"course_code\": \"CSE 210\", \"min_grade\": null, \"concurrent_ok\": false}, {\"type\": \"course\", \"course_code\": \"MATH 112\", \"min_grade\": \"C\", \"concurrent_ok\": false}]}]}]}"
+  ]
+}

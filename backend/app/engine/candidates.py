@@ -4,8 +4,10 @@ Starts from the audit's unmet requirements and every offered section, drops
 courses the student has done or is taking, then applies the student's hard
 constraints. Every section dropped by a constraint carries an `Excluded` reason.
 
-School rules (track, religion, waitlist credit cap) are ENG-05 and prerequisites
-are ENG-04; both plug in here later.
+Prerequisites (ENG-04) are checked when a `PrereqChecker` is passed: `not_met`
+drops the section with "prerequisite: needs <...>"; `met_with_warnings` keeps it
+and carries the "Check this before registering" items. School rules (track,
+religion, waitlist credit cap) are ENG-05 and plug in here later.
 """
 
 from __future__ import annotations
@@ -22,9 +24,11 @@ from app.contracts import (
     Excluded,
     ExclusionReason,
     RequirementStatus,
+    ScheduleWarning,
     SeatStatus,
     Section,
 )
+from app.engine.prereqs.evaluator import PrereqChecker, PrereqStatus
 
 
 @dataclass(frozen=True)
@@ -32,6 +36,8 @@ class Candidate:
     section: Section
     requirement_ids: tuple[str, ...]  # unmet AuditRequirement ids this class fills
     waitlisted: bool = False
+    # Prerequisite items to check before registering. Not part of equality/hash.
+    warnings: tuple[ScheduleWarning, ...] = field(default=(), compare=False, hash=False)
 
 
 @dataclass
@@ -105,7 +111,10 @@ def _constraint_exclusion(
 
 
 def build_candidates(
-    audit: DegreeAudit, sections: Iterable[Section], constraints: ConstraintSet
+    audit: DegreeAudit,
+    sections: Iterable[Section],
+    constraints: ConstraintSet,
+    prereqs: PrereqChecker | None = None,
 ) -> CandidatePool:
     fills: dict[str, list[str]] = {}
     for r in remaining_requirements(audit):
@@ -118,13 +127,27 @@ def build_candidates(
         if s.course_code in done:
             continue  # already on the record: not a choice, not an exclusion
         req_ids = tuple(fills.get(s.course_code, ()))
+        warnings: tuple[ScheduleWarning, ...] = ()
+        if prereqs is not None:
+            result = prereqs.check(s.course_code)
+            if result.status == PrereqStatus.not_met:
+                pool.excluded.append(
+                    Excluded(
+                        section_id=s.id, reason=ExclusionReason.prerequisite, detail=result.reason
+                    )
+                )
+                continue
+            warnings = tuple(result.warnings(s.course_code, s.id))
         excluded = _constraint_exclusion(s, constraints, req_ids)
         if excluded is not None:
             pool.excluded.append(excluded)
             continue
         pool.candidates.append(
             Candidate(
-                section=s, requirement_ids=req_ids, waitlisted=s.seats.status != SeatStatus.open
+                section=s,
+                requirement_ids=req_ids,
+                waitlisted=s.seats.status != SeatStatus.open,
+                warnings=warnings,
             )
         )
     return pool
