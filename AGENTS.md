@@ -105,7 +105,10 @@ When you are asked to work on something:
 - Solver: Google OR-Tools CP-SAT.
 - Frontend: React + TypeScript, Vite, React Router, TanStack Query, Tailwind.
 - LLM: the Claude API through the official `anthropic` Python SDK, backend only.
-- Hosting: Render (static site + free web service) and Neon (Postgres).
+- Hosting: Render (static site + free web service) and Neon (Postgres) are the
+  primary target. A backup target runs the same app in Docker on a private WSL
+  server, published with Tailscale Funnel (`deploy/wsl/`). Every change must work
+  on both; see "Hosting compatibility" below.
 
 Do not add a new framework, database or major dependency without asking.
 
@@ -132,6 +135,10 @@ frontend/
   src/pages/  src/components/
 fixtures/                  # audit.json, sections.json, courses.json, professors.json,
                            # catalog_seed.json, html/, audits/
+backend/Dockerfile         # backend image (context: repo root)
+frontend/Dockerfile        # build + nginx; proxies /api to the backend (context: repo root)
+frontend/nginx.conf.template
+deploy/wsl/                # backup host: compose.yaml, .env.example, push.sh, funnel.sh, README.md
 docs/demo-script.md
 e2e/demo.spec.ts
 ```
@@ -173,10 +180,70 @@ the block noted; do not invent a different name.
 | `npm run gen:types` | Regenerates `frontend/src/api/types.ts` from `/openapi.json` | ENG-01 |
 | `npx tsc --noEmit` and `npx vitest run` | Frontend type check and tests | AI-01 |
 | `npx playwright test` | End-to-end demo test | AI-06 |
+| `docker compose -f deploy/wsl/compose.yaml --env-file deploy/wsl/.env up -d --build` | Runs the full app (db, backend, web) in Docker, as on the WSL backup host | Backup hosting |
+| `deploy/wsl/push.sh user@server` / `deploy/wsl/funnel.sh up` | Uploads and starts the stack on the WSL server / publishes it with Tailscale | Backup hosting |
 
 Before you say a task is done, run the linters, type checks and tests that cover
 what you changed, and report the real result. If something fails or you could not
 run it, say so.
+
+## Hosting compatibility (two targets)
+
+The app runs in two places and every task must keep both working:
+
+| | Primary: Render + Neon | Backup: WSL server (`deploy/wsl/`) |
+| --- | --- | --- |
+| Frontend | Render static site (`npm run build`) | `web` container: nginx serves the build |
+| Backend | Render web service | `backend` container from `backend/Dockerfile` |
+| Database | Neon Postgres | `db` container, Postgres 18, Docker volume |
+| Public access | `*.onrender.com` | Tailscale Funnel :443 to `web` (optional :8443 to `backend`) |
+| Origins | Frontend and API on different origins | One origin: nginx proxies `/api`, `/admin`, `/health`, `/docs`, `/openapi.json` |
+
+Rules:
+
+- Configuration comes only from environment variables, with the same names on
+  both hosts. Never hard-code a host name, URL, port or `onrender.com` /
+  `ts.net` address. A new env var goes into `.env.example`, `deploy/wsl/.env.example`,
+  `deploy/wsl/compose.yaml` and the Render settings in the same PR.
+- The backend reads the database from `DATABASE_URL` and must accept a plain
+  `postgresql://` URL (Neon and the compose file both give one); pick the driver
+  in code, not in the URL.
+- The backend listens on `0.0.0.0:$PORT` and sits behind a TLS-terminating proxy
+  (Render or Tailscale + nginx). Trust `X-Forwarded-Proto`; do not build URLs from
+  the request scheme by hand.
+- The frontend reaches the API only through `apiBaseUrl()` in
+  `frontend/src/api/client.ts`. Empty `VITE_API_BASE_URL` means same origin (WSL,
+  local dev); Render sets it to the backend URL. Never hard-code an API URL.
+- The session cookie must work same-origin and cross-origin: `Secure`, `HttpOnly`,
+  `SameSite` from `COOKIE_SAMESITE` (`none` on Render, `lax` on WSL). CORS allows
+  only `FRONTEND_ORIGIN`.
+- New backend routes live under `/api` (or `/admin`). A route outside those
+  prefixes must also be added to `frontend/nginx.conf.template`.
+- Streaming (chat SSE) must work through nginx: keep `proxy_buffering off` on the
+  `/api` block; do not add response middleware that buffers the stream.
+- Uploads: nginx `client_max_body_size` must stay above the app's own limit
+  (10 MB) so the app, not nginx, answers 413.
+- Files the backend needs at runtime (fixtures, prompts) must be copied by
+  `backend/Dockerfile`. Do not write app state to the container's disk; state
+  lives in Postgres. (The audit PDF is never written to disk anyway.)
+- Migrations and seed commands must also run inside the container
+  (`docker compose ... exec backend <command>`), so do not depend on tools that
+  exist only on a laptop.
+- No new service (queue, cache, worker) without a matching container in
+  `deploy/wsl/compose.yaml` and a Render equivalent; and the "no Redis" rule still
+  stands.
+- The database is never published with Tailscale Funnel (public internet). Only
+  `tailscale serve` (tailnet only). All compose ports bind to `127.0.0.1`.
+- `LIVE_SOURCES` stays empty on both hosts. Secrets live only in the host's env
+  (Render settings, or `deploy/wsl/.env` on the server, which is git-ignored and
+  never uploaded by `push.sh`). No secret in a `VITE_*` variable or a Docker image.
+- Images must build on linux/amd64 (the WSL server) and arm64 (team laptops).
+  `push.sh` builds on the server.
+- Before saying a change that touches the backend's startup, env, routes,
+  dependencies or the frontend build is done, run
+  `docker compose -f deploy/wsl/compose.yaml --env-file deploy/wsl/.env up -d --build`
+  (any test `.env` works) and check that `/`, a deep link and one `/api` call
+  answer through the `web` container. Report it if you could not run Docker.
 
 ## Using the Claude API inside the app
 

@@ -3,6 +3,9 @@
 How to run the Postgres database in Docker, create its tables and fill it with
 the Winter 2027 class schedule. Run every command from the repository root.
 
+To run the whole app (database, backend and frontend) in Docker, as on the WSL
+backup host, see `deploy/wsl/README.md`.
+
 ## What you need
 
 - Docker Desktop, running

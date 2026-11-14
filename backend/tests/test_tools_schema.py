@@ -147,10 +147,16 @@ def test_build_schedules_stores_constraints(ctx: tools.ToolContext) -> None:
     )
 
 
-def test_prerequisites_never_claim_a_verdict(ctx: tools.ToolContext) -> None:
-    result = tools.run_tool(ctx, "check_prerequisites", {"course_codes": ["CSE 212"]})
-    assert result["evaluated"] is False
+def test_prerequisites_are_evaluated_against_the_record(ctx: tools.ToolContext) -> None:
+    result = tools.run_tool(ctx, "check_prerequisites", {"course_codes": ["CSE 212", "CSE 270"]})
+    assert result["evaluated"] is True
     assert "does NOT mean there are no prerequisites" in result["note"]
+    by_code = {c["course_code"]: c for c in result["courses"]}
+    # CSE 210 is in progress on the fixture audit: counts, labeled pending grade.
+    assert by_code["CSE 212"]["status"] == "met"
+    assert any("pending grade" in m for m in by_code["CSE 212"]["pending_grade"])
+    assert by_code["CSE 270"]["status"] == "not_met"
+    assert by_code["CSE 270"]["needs"] == ["CSE 212"]
 
 
 def test_unknown_professor_is_execution_error(ctx: tools.ToolContext) -> None:
