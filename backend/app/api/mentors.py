@@ -1,54 +1,71 @@
-"""STUB (ENG-01). Real code: ENG-06 (ranking) and AI-05 (reasons text, email draft).
+"""Mentor search (ENG-06) and email drafts (STUB until AI-05).
 
-The stub scores topic-tag overlap only, so the frontend has realistic data.
+Ranking is `engine/mentors.py`: a deterministic score with structured reasons. The
+student free text (reworded reasons, the email) is AI-05's job in `llm/`.
+
+Professors and sections come from the fixtures until DATA-05 / DATA-03 load them
+into the database; the audit is the session's confirmed audit (or the sample).
 """
 
-from fastapi import APIRouter, HTTPException
+from collections.abc import Iterable
 
-from app.api import fixture_data
+from fastapi import APIRouter, HTTPException, Request
+
+from app.api import audit_store, fixture_data
+from app.api import professors as professors_api
 from app.contracts import (
+    DegreeAudit,
     EmailDraft,
     EmailDraftRequest,
     MentorMatch,
-    MentorReason,
     MentorSearchRequest,
-    SourceRef,
 )
+from app.engine.mentors import MentorSettings, rank_mentors
+from app.schools.base import default_school
 
 router = APIRouter(prefix="/api", tags=["mentors"])
 
 
-@router.post("/mentors/search", response_model=list[MentorMatch])
-def search_mentors(body: MentorSearchRequest) -> list[MentorMatch]:
-    wanted = {t.lower() for t in body.tags}
-    matches: list[MentorMatch] = []
-    for prof in fixture_data.professors():
-        overlap = sorted(wanted & {t.lower() for t in prof.topic_tags})
-        if not overlap:
-            continue
-        interests = next((s for s in prof.sources if s.kind == "interests"), None)
-        reasons = [
-            MentorReason(
-                kind="topic_overlap",
-                points=1.0,
-                detail=tag,
-                source=SourceRef(
-                    kind="profile",
-                    ref="interests",
-                    url=interests.source_url if interests else None,
-                ),
-            )
-            for tag in overlap
-        ]
-        matches.append(
-            MentorMatch(professor=prof, score=sum(r.points for r in reasons), reasons=reasons)
+def find_mentors(
+    body: MentorSearchRequest, audit: DegreeAudit, favorite_professor_ids: Iterable[str] = ()
+) -> list[MentorMatch]:
+    """Same function behind the endpoint and the `find_mentors` chat tool."""
+    rules = default_school().rules
+    if rules is None:
+        raise RuntimeError("The registered school has no rules")
+    matches = rank_mentors(
+        body.goal,
+        body.tags,
+        fixture_data.professors(),
+        audit.courses,
+        fixture_data.sections(),
+        fixture_data.courses(),
+        MentorSettings.from_rules(rules, body.goal),
+    )
+    favorites = set(favorite_professor_ids)
+    return [
+        m.model_copy(
+            update={
+                "professor": m.professor.model_copy(
+                    update={"is_favorite": m.professor.id in favorites}
+                )
+            }
         )
-    matches.sort(key=lambda m: (-m.score, m.professor.last_name))
-    return matches[:5]
+        for m in matches
+    ]
+
+
+@router.post("/mentors/search", response_model=list[MentorMatch])
+def search_mentors(body: MentorSearchRequest, request: Request) -> list[MentorMatch]:
+    audit = audit_store.get(audit_store.session_id(request))
+    favorites = professors_api.favorites_for(professors_api.session_id(request))
+    return find_mentors(body, audit, favorites)
 
 
 @router.post("/mentors/{professor_id}/email-draft", response_model=EmailDraft)
 def email_draft(professor_id: str, body: EmailDraftRequest) -> EmailDraft:
+    # STUB (ENG-01). AI-05 writes the real draft in `llm/`. (A comment, not a
+    # docstring: FastAPI would put a docstring in the OpenAPI spec.)
     prof = fixture_data.professor_by_id().get(professor_id)
     if prof is None:
         raise HTTPException(status_code=404, detail="Professor not found")

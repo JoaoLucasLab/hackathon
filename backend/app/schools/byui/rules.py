@@ -123,3 +123,18 @@ class ByuiRules(SchoolRules):
 
     def audit_max_age_days(self) -> int:
         return int(self.config["audit_max_age_days"])
+
+    # --- mentors (ENG-06) ---------------------------------------------------------
+
+    def mentor_weights(self, goal: str) -> Mapping[str, float]:
+        by_goal: Mapping[str, Mapping[str, Any]] = self.config["mentors"]["weights"]
+        return {str(k): float(v) for k, v in by_goal[goal].items()}
+
+    def mentor_min_grade(self) -> str:
+        return str(self.config["mentors"]["min_grade"])
+
+    def grade_scale(self) -> list[str]:
+        return [str(g) for g in self.config["mentors"]["grade_scale"]]
+
+    def mentor_max_results(self) -> int:
+        return int(self.config["mentors"]["max_results"])
