@@ -1,0 +1,153 @@
+"""Pydantic contracts shared by the backend, the frontend (via OpenAPI) and fixtures.
+
+Change these only through a "contract" PR that also regenerates
+`frontend/src/api/types.ts` and updates the fixtures.
+"""
+
+from pydantic import BaseModel
+
+from app.contracts.catalog import (
+    Block,
+    Course,
+    CourseCode,
+    PrereqAll,
+    PrereqAny,
+    PrereqCondition,
+    PrereqCourse,
+    PrereqExpression,
+    PrereqUnparsed,
+    Term,
+)
+from app.contracts.common import (
+    BlockKind,
+    Contract,
+    Day,
+    DeliveryMethod,
+    RequirementStatus,
+    SeatStatus,
+    Track,
+)
+from app.contracts.ops import (
+    ChatEvent,
+    ChatRequest,
+    RequestLogEntry,
+    SessionRequest,
+    SessionResponse,
+)
+from app.contracts.professors import (
+    EmailDraft,
+    EmailDraftRequest,
+    FavoriteProfessor,
+    FavoriteUpdate,
+    MentorGoal,
+    MentorMatch,
+    MentorReason,
+    MentorSearchRequest,
+    Professor,
+    ProfessorSource,
+    ProfessorSourceKind,
+    SourceRef,
+    TopicTags,
+)
+from app.contracts.schedules import (
+    ADVISING_NOTE,
+    BuildSchedulesRequest,
+    BuildSchedulesResponse,
+    ConstraintSet,
+    Excluded,
+    ExclusionReason,
+    Relaxation,
+    Schedule,
+    ScheduledClass,
+    ScheduleWarning,
+    ScheduleWhy,
+)
+from app.contracts.sections import Meeting, SeatInfo, Section
+from app.contracts.students import (
+    AuditCourse,
+    AuditRequirement,
+    CourseRecordStatus,
+    DegreeAudit,
+    Student,
+    ValidationFlag,
+)
+
+# The models plan.md (ENG-01) requires to exist and export JSON Schema.
+# PrereqExpression is a union, so it is exported through PrereqAll/PrereqAny.
+REQUIRED_MODELS: dict[str, type[BaseModel]] = {
+    "Student": Student,
+    "DegreeAudit": DegreeAudit,
+    "AuditRequirement": AuditRequirement,
+    "Course": Course,
+    "Term": Term,
+    "Block": Block,
+    "Section": Section,
+    "Meeting": Meeting,
+    "ConstraintSet": ConstraintSet,
+    "Schedule": Schedule,
+    "Professor": Professor,
+    "ProfessorSource": ProfessorSource,
+    "FavoriteProfessor": FavoriteProfessor,
+    "MentorMatch": MentorMatch,
+    "TopicTags": TopicTags,
+    "RequestLogEntry": RequestLogEntry,
+}
+
+__all__ = [
+    "ADVISING_NOTE",
+    "REQUIRED_MODELS",
+    "AuditCourse",
+    "AuditRequirement",
+    "Block",
+    "BlockKind",
+    "BuildSchedulesRequest",
+    "BuildSchedulesResponse",
+    "ChatEvent",
+    "ChatRequest",
+    "ConstraintSet",
+    "Contract",
+    "Course",
+    "CourseCode",
+    "CourseRecordStatus",
+    "Day",
+    "DegreeAudit",
+    "DeliveryMethod",
+    "EmailDraft",
+    "EmailDraftRequest",
+    "Excluded",
+    "ExclusionReason",
+    "FavoriteProfessor",
+    "FavoriteUpdate",
+    "Meeting",
+    "MentorGoal",
+    "MentorMatch",
+    "MentorReason",
+    "MentorSearchRequest",
+    "PrereqAll",
+    "PrereqAny",
+    "PrereqCondition",
+    "PrereqCourse",
+    "PrereqExpression",
+    "PrereqUnparsed",
+    "Professor",
+    "ProfessorSource",
+    "ProfessorSourceKind",
+    "Relaxation",
+    "RequestLogEntry",
+    "RequirementStatus",
+    "Schedule",
+    "ScheduleWhy",
+    "ScheduledClass",
+    "SeatInfo",
+    "SeatStatus",
+    "Section",
+    "SessionRequest",
+    "SessionResponse",
+    "SourceRef",
+    "Student",
+    "Term",
+    "TopicTags",
+    "Track",
+    "ValidationFlag",
+    "ScheduleWarning",
+]

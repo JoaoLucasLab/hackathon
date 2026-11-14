@@ -1,0 +1,37 @@
+# ENG-01: contract checks. Kept separate from DATA-01's ci.yml to avoid merge
+# conflicts; DATA-01 may fold these steps into ci.yml.
+name: contracts
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: pip install -e ".[dev]"
+      - run: ruff check .
+      - run: mypy backend
+      - run: pytest backend/tests/test_contracts.py backend/tests/test_fixtures_valid.py backend/tests/test_layering.py
+      - name: Generated TypeScript types are up to date
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run gen:types
+          git diff --exit-code -- src/api/types.ts || {
+            echo "::error::frontend/src/api/types.ts is out of date. Run 'npm run gen:types' and commit it."
+            exit 1
+          }

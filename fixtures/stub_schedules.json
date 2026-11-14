@@ -1,0 +1,50 @@
+[
+  {
+    "id": "stub-1",
+    "section_ids": [
+      "2027;WI|CSE 212-02",
+      "2027;WI|CSE 310-02",
+      "2027;WI|MATH 113-02",
+      "2027;WI|WDD 231-01",
+      "2027;WI|REL 275-01",
+      "2027;WI|CIT 225-01"
+    ],
+    "preferences_met": [
+      "earliest_start",
+      "credit_range"
+    ],
+    "preferences_missed": []
+  },
+  {
+    "id": "stub-2",
+    "section_ids": [
+      "2027;WI|CSE 212-03",
+      "2027;WI|MATH 113-03",
+      "2027;WI|CSE 310-02",
+      "2027;WI|CIT 225-01",
+      "2027;WI|REL 275-02"
+    ],
+    "preferences_met": [
+      "earliest_start",
+      "credit_range",
+      "days_off:F"
+    ],
+    "preferences_missed": []
+  },
+  {
+    "id": "stub-3",
+    "section_ids": [
+      "2027;WI;W2|CSE 212-04",
+      "2027;WI;W2|CSE 310-03",
+      "2027;WI|MATH 221A-01",
+      "2027;WI|WDD 231-01",
+      "2027;WI|REL 275-01",
+      "2027;WI|CIT 225-01"
+    ],
+    "preferences_met": [
+      "earliest_start",
+      "credit_range"
+    ],
+    "preferences_missed": []
+  }
+]

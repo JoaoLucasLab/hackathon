@@ -1,0 +1,31 @@
+[
+  {
+    "code": "2027;WI",
+    "name": "Winter 2027",
+    "start_date": "2027-01-06",
+    "end_date": "2027-04-08",
+    "blocks": [
+      {
+        "kind": "full",
+        "term_code": "2027;WI",
+        "label": "Full semester",
+        "start_date": "2027-01-06",
+        "end_date": "2027-04-08"
+      },
+      {
+        "kind": "first",
+        "term_code": "2027;WI;W1",
+        "label": "First Block",
+        "start_date": "2027-01-06",
+        "end_date": "2027-02-23"
+      },
+      {
+        "kind": "second",
+        "term_code": "2027;WI;W2",
+        "label": "Second Block",
+        "start_date": "2027-02-24",
+        "end_date": "2027-04-08"
+      }
+    ]
+  }
+]
