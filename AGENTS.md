@@ -23,7 +23,7 @@ The work is 18 blocks in `plan.md`, 6 per concern:
 
 | Concern | Block IDs | Owns |
 | --- | --- | --- |
-| Data & Integrations | DATA-01 to DATA-06 | Repo, CI, database, deploy, HTTP client, request log, importers, professors, privacy, snapshot |
+| Data & Integrations | DATA-01 to DATA-06 | Repo, CI, database, deploy, importers, professors, privacy, snapshot (DATA-02, HTTP client and request log, was skipped) |
 | Planning Engine | ENG-01 to ENG-06 | Contracts, fixtures, parsers, conflict checker, scheduler, prerequisites, school rules, mentor ranking |
 | AI & Product Experience | AI-01 to AI-06 | Claude prompts and tools, chat, audit parsing, the React app, demo hardening |
 
@@ -45,9 +45,11 @@ When you are asked to work on something:
 - Never sign in to any BYU-Idaho system. Never ask for or handle BYU-Idaho
   usernames or passwords. Never open pages behind a login.
 - Never bypass CAPTCHAs, rate limits or other access controls.
-- All outbound HTTP from importers goes through `PublicHttpClient`
-  (`backend/app/http/client.py`). Do not import `requests` or `httpx` directly in
-  `importers/` or `schools/`.
+- There is no shared HTTP client: DATA-02 (`PublicHttpClient`) was skipped. Any
+  code that fetches from BYU-Idaho applies these rules itself, as
+  `scripts/scrape_course_search.py` does: wait between requests (at least 2
+  seconds, 10 on `www.byui.edu`), and stop on a 401 or 403 or a redirect to a
+  login page.
 - Never send an `Authorization` header or a login cookie to `*.byui.edu`. The only
   cookie allowed is the anonymous `ASP.NET_SessionId` that the public Course Search
   page (`student.byui.edu/ICS/Class_Schedule/`) gives every visitor; its search
@@ -58,8 +60,9 @@ When you are asked to work on something:
   on the team asks you to in this session. Never run one in CI or in tests.
 - The course catalog comes from our own script and our own database, loaded
   from `fixtures/catalog_seed.json`. We do not use Kuali or its API.
-- Honor `Crawl-delay: 10` on `www.byui.edu`. Cache every response; fetch each page
-  once per term.
+- Honor `Crawl-delay: 10` on `www.byui.edu`. Responses are not cached: each scraper
+  run downloads everything again (about 25 minutes for CSE, CIT and MATH), so run
+  it only when the data needs refreshing, and run one copy at a time.
 - Rate My Professors: the backend sends no requests to ratemyprofessors.com and
   the app shows none of its data. Only build a plain link that opens in the
   student's browser. Do not add the `RateMyProfessorAPI` package.
@@ -116,7 +119,7 @@ backend/
     api/                   # FastAPI routers
     contracts/             # Pydantic schemas (contract PRs only)
     db/                    # SQLAlchemy models + Alembic migrations (Data owner)
-    http/                  # PublicHttpClient, request log
+    http/                  # empty: DATA-02 (PublicHttpClient, request log) was skipped
     engine/                # conflicts, prereqs, candidates, solver, mentors
     llm/                   # Claude client, tools, prompts
     schools/
@@ -229,11 +232,17 @@ run it, say so.
 
 ## Importer rules
 
-- Idempotent: re-running updates rows (upsert) and never duplicates them.
-- Raw first: store the raw response before parsing it.
+- Idempotent: re-running never duplicates rows. `scripts/populate_db.py` does a
+  full refresh (deletes and reloads in one transaction); a loader that must keep
+  other rows (for example student data) updates rows (upsert) instead.
+- Raw pages are not kept: the scraper parses each page in memory and writes only
+  the JSON. To debug a parser, re-run the scraper with `--limit` on a few sections.
 - Provenance: every stored fact keeps its source URL and fetched-at time.
 - One bad page is logged and skipped; the run prints succeeded / failed / skipped.
-- Develop and test parsers on the saved pages in `fixtures/html/`, not on live sites.
+- There are no saved pages in `fixtures/html/` yet, so parsers cannot be tested
+  offline. Until someone saves pages there, check a parser change with a short
+  live run (`--limit`), and only when a human on the team asks for it. Tests and
+  CI never fetch live pages.
 
 ## Frontend rules
 
