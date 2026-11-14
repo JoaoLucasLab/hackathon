@@ -1,0 +1,7 @@
+{
+  "text": "Completion of CSE 212; or both CSE 210 and MATH 112 (C or better)",
+  "replies": [
+    "{\"type\": \"all\", \"items\": [{\"type\": \"course\", \"course_code\": \"cse212\"}]}",
+    "{\"type\": \"maybe\", \"items\": []}"
+  ]
+}
