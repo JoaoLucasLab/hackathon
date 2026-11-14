@@ -9,7 +9,7 @@ export function NavBar() {
   const links = [{ to: "/", label: "Plan" }, { to: "/schedules", label: "Schedules" }, { to: "/professors", label: "Professors" }];
   return (
     <header className="sticky top-4 z-20 mx-auto mt-4 w-full max-w-[1168px] px-5 md:px-6">
-      <nav aria-label="Main" className="relative flex min-h-[62px] items-center justify-between rounded-nav px-[18px]">
+      <nav aria-label="Main" className="relative flex min-h-[62px] items-center justify-between rounded-nav border border-line bg-surface px-[18px]">
         <Link to="/" className="flex min-h-11 items-center gap-2.5 rounded-btn font-semibold" onClick={() => setOpen(false)}>
           <span aria-hidden="true" className="grid size-7 place-items-center rounded-[7px] bg-ink text-surface"><LayoutDashboard size={17} /></span>
           {APP_NAME}

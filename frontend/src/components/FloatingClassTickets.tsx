@@ -27,10 +27,10 @@ export function FloatingClassTickets({ audit }: { audit?: DegreeAudit }) {
   const tickets = [...varied, ...requirements.filter((course) => !varied.includes(course))].slice(0, 4);
 
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-0 hidden h-full w-[calc(100vw_-_80px)] max-w-[1168px] -translate-x-1/2 min-[1100px]:block" data-testid="floating-class-tickets">
+    <div aria-hidden="true" className="class-tickets pointer-events-none absolute left-1/2 top-0 hidden h-full w-[calc(100vw_-_80px)] max-w-[1168px] -translate-x-1/2 min-[1100px]:block" data-testid="floating-class-tickets">
       {tickets.map((ticket, index) => (
         <div key={ticket.code} className={`slip-wrap absolute w-[164px] ${positions[index]}`}>
-          <div className="slip [--cut:79px]">
+          <div className="slip ticket-enter [--cut:79px]" style={{ animationDelay: `${150 + index * 65}ms` }}>
             <div className="flex h-[79px] flex-col justify-center gap-1 px-4">
               <p className="text-sm font-semibold">{ticket.code}</p>
               <p className="line-clamp-2 text-xs leading-[1.35] text-muted">{ticket.name}</p>

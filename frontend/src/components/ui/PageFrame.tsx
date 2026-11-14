@@ -23,14 +23,14 @@ export function PageFrame({ title, lead, footnote, children, home = false, wide 
   const { setResults, setDraft, clearChat } = usePlanningState();
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className={`flex min-h-screen flex-col ${home && !wide ? "plan-entry" : ""}`}>
       <NavBar />
       <main className={`relative mx-auto flex w-full flex-1 flex-col gap-8 px-5 pb-10 md:px-6 ${wide ? "max-w-grid" : "max-w-content"} ${home && !wide ? "pt-20 md:pt-24" : "pt-14 md:pt-16"}`}>
         {title && <div className={`flex flex-col gap-6 ${home ? "items-center text-center" : ""}`}>
-          <h1 className={`${wide ? "max-w-full" : "max-w-[17ch]"} font-serif font-normal leading-[1.04] tracking-[-0.025em] ${home && !wide ? "text-[42px] md:text-[68px]" : "text-[36px] md:text-[56px]"}`}>
+          <h1 className={`page-title ${wide ? "max-w-full" : "max-w-[17ch]"} font-serif font-normal leading-[1.04] tracking-[-0.025em] ${home && !wide ? "text-[42px] md:text-[68px]" : "text-[36px] md:text-[56px]"}`}>
             {title}
           </h1>
-          {lead && <p className="max-w-[60ch] text-[17px] leading-[1.5] text-muted">{lead}</p>}
+          {lead && <p className="page-lead max-w-[60ch] text-[17px] leading-[1.5] text-muted">{lead}</p>}
         </div>}
         {children}
       </main>

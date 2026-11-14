@@ -155,7 +155,7 @@ export function ChatPanel({ onEvent, beforeSend }: ChatPanelProps) {
       {sendError && <p role="alert" className="text-sm">{sendError}</p>}
       <form
         onSubmit={onSubmit}
-        className="rounded-card border border-line bg-surface shadow-[0_0_0_6px_var(--halo)] transition-colors duration-150 focus-within:border-ink"
+        className="chat-composer rounded-card border border-line bg-surface shadow-[0_0_0_6px_var(--halo)] transition-colors duration-150 focus-within:border-ink"
       >
         <label htmlFor={inputId} className="sr-only">
           Tell the assistant what you want in your schedule
@@ -191,9 +191,9 @@ export function ChatPanel({ onEvent, beforeSend }: ChatPanelProps) {
         </div>
       </form>
 
-      <p className="text-center text-[13px] text-muted">No audit yet? <Link to="/consent" className="text-ink underline underline-offset-2">Try the sample audit</Link></p>
+      <p className="chat-audit-hint text-center text-[13px] text-muted">No audit yet? <Link to="/consent" className="text-ink underline underline-offset-2">Try the sample audit</Link></p>
       {turns.length === 0 && (
-        <ul aria-label="Suggestions" className="flex flex-wrap justify-center gap-x-7 gap-y-2 pt-8 md:pt-10">
+        <ul aria-label="Suggestions" className="chat-starters flex flex-wrap justify-center gap-x-7 gap-y-2 pt-8 md:pt-10">
           {STARTERS.map((s, i) => (
             <li key={s.label}>
               <button
