@@ -79,7 +79,6 @@ export function Consent() {
 
       <div className="flex flex-wrap items-center gap-3">
         {FEATURES.auditUpload && (
-          // AI-04 adds the upload route behind FEATURE_AUDIT_UPLOAD.
           <Button variant="primary" disabled={!agreed} onClick={() => navigate("/audit")}>
             Upload my audit
           </Button>

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { api, unwrap } from "./client";
+import { api, ApiError, unwrap } from "./client";
 import { forgetPlanningSetup, rememberPlanningSetup } from "./planningSetup";
 import type {
   AuditRequirement,
@@ -15,6 +15,8 @@ import type {
 
 export const queryKeys = {
   audit: ["audit"] as const,
+  /** The parsed audit waiting for the student to confirm it. Memory only. */
+  auditDraft: ["audit", "draft"] as const,
   remaining: ["requirements", "remaining"] as const,
   professors: ["professors"] as const,
   explanation: (schedule: Schedule) =>
@@ -135,4 +137,46 @@ export function useScheduleExplanation(schedule: Schedule) {
       unwrap(await api.POST("/api/schedules/explain", { body: { schedule } })),
     staleTime: Infinity,
   });
+}
+
+/**
+ * Records consent, then sends the audit PDF to `POST /api/audit` to be read once.
+ * The parsed audit is kept in memory as the draft for the confirm screen; nothing
+ * is saved until the student confirms. Errors are `ApiError`s with the status:
+ * 413 too large, 415 not a PDF, 422 could not be read.
+ */
+export function useUploadAudit() {
+  const queryClient = useQueryClient();
+  return useMutation<DegreeAudit, Error, File>({
+    mutationFn: async (file) => {
+      unwrap(await api.POST("/api/session", { body: { consent: true } }));
+      const result = await api.POST("/api/audit", {
+        body: { file: "" },
+        bodySerializer: () => {
+          const form = new FormData();
+          form.append("file", file, file.name);
+          return form;
+        },
+      });
+      return unwrap(result);
+    },
+    onSuccess: (audit) => queryClient.setQueryData(queryKeys.auditDraft, audit),
+  });
+}
+
+/** Saves the audit the student confirmed (`PUT /api/audit`). */
+export function useConfirmAudit() {
+  const queryClient = useQueryClient();
+  return useMutation<DegreeAudit, Error, DegreeAudit>({
+    mutationFn: async (audit) => unwrap(await api.PUT("/api/audit", { body: audit })),
+    onSuccess: (audit) => {
+      queryClient.setQueryData(queryKeys.audit, audit);
+      queryClient.removeQueries({ queryKey: queryKeys.auditDraft, exact: true });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.remaining });
+    },
+  });
+}
+
+export function errorStatus(error: unknown): number | null {
+  return error instanceof ApiError ? error.status : null;
 }

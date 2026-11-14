@@ -15,6 +15,7 @@ from app import contracts
 from app.api import fixture_data, routers
 from app.contracts import ChatEvent
 from app.schools.base import School, register_school
+from app.schools.byui.audit_parser import ByuiAuditParser
 from app.schools.byui.rules import ByuiRules
 
 
@@ -22,7 +23,12 @@ def _register_schools() -> None:
     # Religion courses: subjects from config.yaml plus the catalog's `is_religion` flag.
     rules = ByuiRules(courses=fixture_data.courses())
     register_school(
-        School(university_id=rules.config["university_id"], name="BYU-Idaho", rules=rules)
+        School(
+            university_id=rules.config["university_id"],
+            name="BYU-Idaho",
+            rules=rules,  # ENG-05
+            audit_parser=ByuiAuditParser(),  # AI-04
+        )
     )
 
 

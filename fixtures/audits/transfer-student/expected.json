@@ -1,0 +1,149 @@
+{
+  "audit_date": "2026-11-05",
+  "catalog_year": "2025-2026",
+  "major": "Computer Science (BS)",
+  "minor": null,
+  "track": "winter_spring",
+  "total_credits_required": 120.0,
+  "total_credits_earned": 13.0,
+  "courses": [
+    {
+      "course_code": "CS 142",
+      "title": "Intro to Computer Programming (transfer)",
+      "credits": 3.0,
+      "grade": "B",
+      "term": "Fall 2024",
+      "status": "transfer",
+      "equivalent_of": "CSE 110",
+      "instructor": null
+    },
+    {
+      "course_code": "MATH 112",
+      "title": "Calculus I (AP Calculus AB)",
+      "credits": 4.0,
+      "grade": "P",
+      "term": "Spring 2024",
+      "status": "transfer",
+      "equivalent_of": "MATH 112",
+      "instructor": null
+    },
+    {
+      "course_code": "ENG 150",
+      "title": "Writing and Reasoning Foundations",
+      "credits": 3.0,
+      "grade": "A",
+      "term": "Winter 2026",
+      "status": "complete",
+      "equivalent_of": null,
+      "instructor": null
+    },
+    {
+      "course_code": "CSE 111",
+      "title": "Programming with Functions",
+      "credits": 2.0,
+      "grade": "A-",
+      "term": "Winter 2026",
+      "status": "complete",
+      "equivalent_of": null,
+      "instructor": "Hale, Marcus"
+    },
+    {
+      "course_code": "CSE 210",
+      "title": "Programming with Classes",
+      "credits": 2.0,
+      "grade": null,
+      "term": "Fall 2026",
+      "status": "in_progress",
+      "equivalent_of": null,
+      "instructor": null
+    }
+  ],
+  "requirements": [
+    {
+      "id": "major-core-1",
+      "group": "Major Core",
+      "name": "Introduction to Programming",
+      "status": "complete",
+      "credits_required": 2.0,
+      "credits_needed": 0.0,
+      "options": [],
+      "courses_counted": [
+        "CS 142"
+      ]
+    },
+    {
+      "id": "major-core-2",
+      "group": "Major Core",
+      "name": "Programming with Functions",
+      "status": "complete",
+      "credits_required": 2.0,
+      "credits_needed": 0.0,
+      "options": [],
+      "courses_counted": [
+        "CSE 111"
+      ]
+    },
+    {
+      "id": "major-core-3",
+      "group": "Major Core",
+      "name": "Programming with Classes",
+      "status": "in_progress",
+      "credits_required": 2.0,
+      "credits_needed": 0.0,
+      "options": [],
+      "courses_counted": [
+        "CSE 210"
+      ]
+    },
+    {
+      "id": "major-core-4",
+      "group": "Major Core",
+      "name": "Programming with Data Structures",
+      "status": "not_met",
+      "credits_required": 2.0,
+      "credits_needed": 2.0,
+      "options": [
+        "CSE 212"
+      ],
+      "courses_counted": []
+    },
+    {
+      "id": "mathematics-1",
+      "group": "Mathematics",
+      "name": "Calculus I",
+      "status": "complete",
+      "credits_required": 4.0,
+      "credits_needed": 0.0,
+      "options": [],
+      "courses_counted": [
+        "MATH 112"
+      ]
+    },
+    {
+      "id": "mathematics-2",
+      "group": "Mathematics",
+      "name": "Statistics",
+      "status": "not_met",
+      "credits_required": 3.0,
+      "credits_needed": 3.0,
+      "options": [
+        "MATH 221A",
+        "MATH 325"
+      ],
+      "courses_counted": []
+    },
+    {
+      "id": "foundations-1",
+      "group": "Foundations",
+      "name": "Writing and Reasoning Foundations",
+      "status": "complete",
+      "credits_required": 3.0,
+      "credits_needed": 0.0,
+      "options": [],
+      "courses_counted": [
+        "ENG 150"
+      ]
+    }
+  ],
+  "validation_flags": []
+}

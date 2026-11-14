@@ -1,0 +1,356 @@
+{
+  "readable": true,
+  "audit": {
+    "audit_date": "2026-11-10",
+    "catalog_year": "2024-2025",
+    "major": "Computer Science (BS)",
+    "minor": null,
+    "track": "fall_winter",
+    "total_credits_required": 120,
+    "total_credits_earned": 15,
+    "courses": [
+      {
+        "course_code": "CSE110",
+        "title": "Introduction to Programming",
+        "credits": 2,
+        "grade": "A",
+        "term": "Fall 2025",
+        "status": "complete",
+        "equivalent_of": null,
+        "instructor": "Barros, Tiago"
+      },
+      {
+        "course_code": "WDD 130",
+        "title": "Web Fundamentals",
+        "credits": 2,
+        "grade": "A-",
+        "term": "Fall 2025",
+        "status": "complete",
+        "equivalent_of": null,
+        "instructor": "Okafor, Ruth A."
+      },
+      {
+        "course_code": "ENG 150",
+        "title": "Writing and Reasoning Foundations",
+        "credits": 3,
+        "grade": "B+",
+        "term": "Fall 2025",
+        "status": "complete",
+        "equivalent_of": null,
+        "instructor": "Adeyemi, Grace"
+      },
+      {
+        "course_code": "CSE 111-01",
+        "title": "Programming with Functions",
+        "credits": 2,
+        "grade": "B+",
+        "term": "Winter 2026",
+        "status": "complete",
+        "equivalent_of": null,
+        "instructor": "Hale, Marcus"
+      },
+      {
+        "course_code": "MATH 112",
+        "title": "Calculus I",
+        "credits": 4,
+        "grade": "B",
+        "term": "Winter 2026",
+        "status": "complete",
+        "equivalent_of": null,
+        "instructor": "Nakamura, Ken"
+      },
+      {
+        "course_code": "REL 250",
+        "title": "Jesus Christ and the Everlasting Gospel",
+        "credits": 2,
+        "grade": "A",
+        "term": "Winter 2026",
+        "status": "complete",
+        "equivalent_of": null,
+        "instructor": "Smith, John T."
+      },
+      {
+        "course_code": "CSE 210",
+        "title": "Programming with Classes",
+        "credits": 2,
+        "grade": null,
+        "term": "Fall 2026",
+        "status": "in_progress",
+        "equivalent_of": null,
+        "instructor": "Lindqvist, Anna"
+      },
+      {
+        "course_code": "WDD 131",
+        "title": "Dynamic Web Fundamentals",
+        "credits": 2,
+        "grade": null,
+        "term": "Fall 2026",
+        "status": "in_progress",
+        "equivalent_of": null,
+        "instructor": "Okafor, Ruth A."
+      },
+      {
+        "course_code": "CIT 111",
+        "title": "Introduction to Databases",
+        "credits": 3,
+        "grade": null,
+        "term": "Fall 2026",
+        "status": "in_progress",
+        "equivalent_of": null,
+        "instructor": "Whitfield, Daniel"
+      }
+    ],
+    "requirements": [
+      {
+        "id": "req",
+        "group": "Major Core",
+        "name": "Introduction to Programming",
+        "status": "complete",
+        "credits_required": 2,
+        "credits_needed": 0,
+        "options": [
+          "CSE 110"
+        ],
+        "courses_counted": [
+          "CSE 110"
+        ]
+      },
+      {
+        "id": "req",
+        "group": "Major Core",
+        "name": "Programming with Functions",
+        "status": "complete",
+        "credits_required": 2,
+        "credits_needed": 0,
+        "options": [
+          "CSE 111"
+        ],
+        "courses_counted": [
+          "CSE 111"
+        ]
+      },
+      {
+        "id": "req",
+        "group": "Major Core",
+        "name": "Programming with Classes",
+        "status": "in_progress",
+        "credits_required": 2,
+        "credits_needed": 0,
+        "options": [
+          "CSE 210"
+        ],
+        "courses_counted": [
+          "CSE 210"
+        ]
+      },
+      {
+        "id": "req",
+        "group": "Major Core",
+        "name": "Programming with Data Structures",
+        "status": "not_met",
+        "credits_required": 2,
+        "credits_needed": 2,
+        "options": [
+          "CSE212"
+        ],
+        "courses_counted": []
+      },
+      {
+        "id": "req",
+        "group": "Major Core",
+        "name": "Software Testing",
+        "status": "not_met",
+        "credits_required": 2,
+        "credits_needed": 2,
+        "options": [
+          "CSE 270"
+        ],
+        "courses_counted": []
+      },
+      {
+        "id": "req",
+        "group": "Major Core",
+        "name": "Applied Programming",
+        "status": "not_met",
+        "credits_required": 3,
+        "credits_needed": 3,
+        "options": [
+          "CSE 310"
+        ],
+        "courses_counted": []
+      },
+      {
+        "id": "req",
+        "group": "Major Core",
+        "name": "Web Backend",
+        "status": "not_met",
+        "credits_required": 3,
+        "credits_needed": 3,
+        "options": [
+          "CSE 340",
+          "CSE 341"
+        ],
+        "courses_counted": []
+      },
+      {
+        "id": "req",
+        "group": "Web Foundations",
+        "name": "Web Fundamentals",
+        "status": "complete",
+        "credits_required": 2,
+        "credits_needed": 0,
+        "options": [
+          "WDD 130"
+        ],
+        "courses_counted": [
+          "WDD 130"
+        ]
+      },
+      {
+        "id": "req",
+        "group": "Web Foundations",
+        "name": "Dynamic Web Fundamentals",
+        "status": "in_progress",
+        "credits_required": 2,
+        "credits_needed": 0,
+        "options": [
+          "WDD 131"
+        ],
+        "courses_counted": [
+          "WDD 131"
+        ]
+      },
+      {
+        "id": "req",
+        "group": "Web Foundations",
+        "name": "Web Frontend Development",
+        "status": "not_met",
+        "credits_required": 2,
+        "credits_needed": 2,
+        "options": [
+          "WDD 231"
+        ],
+        "courses_counted": []
+      },
+      {
+        "id": "req",
+        "group": "Databases",
+        "name": "Introduction to Databases",
+        "status": "in_progress",
+        "credits_required": 3,
+        "credits_needed": 0,
+        "options": [
+          "CIT 111"
+        ],
+        "courses_counted": [
+          "CIT 111"
+        ]
+      },
+      {
+        "id": "req",
+        "group": "Databases",
+        "name": "Database Design",
+        "status": "not_met",
+        "credits_required": 3,
+        "credits_needed": 3,
+        "options": [
+          "CIT 225"
+        ],
+        "courses_counted": []
+      },
+      {
+        "id": "req",
+        "group": "Mathematics",
+        "name": "Calculus I",
+        "status": "complete",
+        "credits_required": 4,
+        "credits_needed": 0,
+        "options": [
+          "MATH 112"
+        ],
+        "courses_counted": [
+          "MATH 112"
+        ]
+      },
+      {
+        "id": "req",
+        "group": "Mathematics",
+        "name": "Calculus II",
+        "status": "not_met",
+        "credits_required": 3,
+        "credits_needed": 3,
+        "options": [
+          "MATH 113"
+        ],
+        "courses_counted": []
+      },
+      {
+        "id": "req",
+        "group": "Mathematics",
+        "name": "Statistics",
+        "status": "not_met",
+        "credits_required": 3,
+        "credits_needed": 3,
+        "options": [
+          "MATH 221A",
+          "MATH 325"
+        ],
+        "courses_counted": []
+      },
+      {
+        "id": "req",
+        "group": "Major Electives",
+        "name": "Computer Science Elective",
+        "status": "not_met",
+        "credits_required": 3,
+        "credits_needed": 3,
+        "options": [
+          "CSE 325",
+          "CSE 381",
+          "CSE 450"
+        ],
+        "courses_counted": []
+      },
+      {
+        "id": "req",
+        "group": "Religion Cornerstones",
+        "name": "Jesus Christ and the Everlasting Gospel",
+        "status": "complete",
+        "credits_required": 2,
+        "credits_needed": 0,
+        "options": [
+          "REL 250"
+        ],
+        "courses_counted": [
+          "REL 250"
+        ]
+      },
+      {
+        "id": "req",
+        "group": "Religion Cornerstones",
+        "name": "Teachings and Doctrine of the Book of Mormon",
+        "status": "not_met",
+        "credits_required": 2,
+        "credits_needed": 2,
+        "options": [
+          "REL 275"
+        ],
+        "courses_counted": []
+      },
+      {
+        "id": "req",
+        "group": "Foundations",
+        "name": "Writing and Reasoning Foundations",
+        "status": "complete",
+        "credits_required": 3,
+        "credits_needed": 0,
+        "options": [
+          "ENG 150"
+        ],
+        "courses_counted": [
+          "ENG 150"
+        ]
+      }
+    ]
+  }
+}

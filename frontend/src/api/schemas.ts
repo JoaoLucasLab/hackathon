@@ -6,6 +6,9 @@ type Schemas = components["schemas"];
 
 export type AuditRequirement = Schemas["AuditRequirement"];
 export type DegreeAudit = Schemas["DegreeAudit"];
+export type AuditCourse = Schemas["AuditCourse"];
+export type ValidationFlag = Schemas["ValidationFlag"];
+export type Track = Schemas["Track"];
 export type SessionResponse = Schemas["SessionResponse"];
 export type BuildSchedulesResponse = Schemas["BuildSchedulesResponse"];
 export type ChatEvent = Schemas["ChatEvent"];

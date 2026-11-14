@@ -46,7 +46,10 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        /** Update Audit */
+        /**
+         * Update Audit
+         * @description Saves the audit the student confirmed. Flags are recomputed, not trusted.
+         */
         put: operations["update_audit_api_audit_put"];
         /** Upload Audit */
         post: operations["upload_audit_api_audit_post"];
@@ -380,11 +383,6 @@ export interface components {
          * @enum {string}
          */
         BlockKind: "full" | "first" | "second";
-        /** Body_upload_audit_api_audit_post */
-        Body_upload_audit_api_audit_post: {
-            /** File */
-            file: string;
-        };
         /** BuildSchedulesRequest */
         BuildSchedulesRequest: {
             /** @description None: use the session's saved constraints. */
@@ -1269,7 +1267,10 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "multipart/form-data": components["schemas"]["Body_upload_audit_api_audit_post"];
+                "multipart/form-data": {
+                    /** Format: binary */
+                    file: string;
+                };
             };
         };
         responses: {
@@ -1282,14 +1283,33 @@ export interface operations {
                     "application/json": components["schemas"]["DegreeAudit"];
                 };
             };
-            /** @description Validation Error */
+            /** @description Audit upload is turned off (FEATURE_AUDIT_UPLOAD). */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The file is larger than 10 MB. */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The file is not a PDF. */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description We couldn't read this audit. */
             422: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
+                content?: never;
             };
         };
     };

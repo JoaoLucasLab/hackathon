@@ -24,7 +24,6 @@ from anthropic.types import ToolParam
 from fastapi import HTTPException
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, ValidationError
 
-from app.api import audit as audit_api
 from app.api import fixture_data
 from app.api import mentors as mentors_api
 from app.api import professors as professors_api
@@ -40,6 +39,7 @@ from app.contracts import (
     MentorSearchRequest,
     PrereqExpression,
 )
+from app.engine.candidates import remaining_requirements as unmet_requirements
 
 
 class ToolInputError(ValueError):
@@ -182,7 +182,8 @@ def get_remaining_requirements(ctx: ToolContext, _: NoArgs) -> Json:
     return {
         "track": ctx.audit.track.value if ctx.audit.track else None,
         "track_known": ctx.audit.track is not None,
-        "requirements": [_dump(r) for r in audit_api.remaining_requirements()],
+        # Same function as GET /api/requirements/remaining, on this session's audit.
+        "requirements": [_dump(r) for r in unmet_requirements(ctx.audit)],
     }
 
 

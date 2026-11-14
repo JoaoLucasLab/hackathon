@@ -145,12 +145,13 @@ def test_stub_endpoint_validates(
     TypeAdapter(model).validate_python(response.json())
 
 
-def test_audit_upload_stub() -> None:
+def test_audit_upload_is_off_by_default() -> None:
+    # The real upload (AI-04) sits behind FEATURE_AUDIT_UPLOAD; it is tested on
+    # recorded replies in test_audit_no_pdf_kept.py.
     response = client.post(
         "/api/audit", files={"file": ("audit.pdf", b"%PDF-1.4 fake", "application/pdf")}
     )
-    assert response.status_code == 200
-    DegreeAudit.model_validate(response.json())
+    assert response.status_code == 404
 
 
 def test_audit_put_echoes() -> None:

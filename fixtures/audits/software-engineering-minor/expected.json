@@ -1,0 +1,172 @@
+{
+  "audit_date": "2026-11-02",
+  "catalog_year": "2025-2026",
+  "major": "Software Engineering (BS)",
+  "minor": "Mathematics",
+  "track": null,
+  "total_credits_required": 120.0,
+  "total_credits_earned": 10.0,
+  "courses": [
+    {
+      "course_code": "CSE 110",
+      "title": "Introduction to Programming",
+      "credits": 2.0,
+      "grade": "A-",
+      "term": "Winter 2026",
+      "status": "complete",
+      "equivalent_of": null,
+      "instructor": null
+    },
+    {
+      "course_code": "MATH 112",
+      "title": "Calculus I",
+      "credits": 4.0,
+      "grade": "B+",
+      "term": "Winter 2026",
+      "status": "complete",
+      "equivalent_of": null,
+      "instructor": null
+    },
+    {
+      "course_code": "CIT 111",
+      "title": "Introduction to Databases",
+      "credits": 3.0,
+      "grade": "A",
+      "term": "Spring 2026",
+      "status": "complete",
+      "equivalent_of": null,
+      "instructor": null
+    },
+    {
+      "course_code": "REL 250",
+      "title": "Jesus Christ and the Everlasting Gospel",
+      "credits": 1.0,
+      "grade": "A",
+      "term": "Spring 2026",
+      "status": "complete",
+      "equivalent_of": null,
+      "instructor": null
+    },
+    {
+      "course_code": "CSE 111",
+      "title": "Programming with Functions",
+      "credits": 2.0,
+      "grade": null,
+      "term": "Fall 2026",
+      "status": "in_progress",
+      "equivalent_of": null,
+      "instructor": null
+    }
+  ],
+  "requirements": [
+    {
+      "id": "major-core-1",
+      "group": "Major Core",
+      "name": "Introduction to Programming",
+      "status": "complete",
+      "credits_required": 2.0,
+      "credits_needed": 0.0,
+      "options": [],
+      "courses_counted": [
+        "CSE 110"
+      ]
+    },
+    {
+      "id": "major-core-2",
+      "group": "Major Core",
+      "name": "Programming with Functions",
+      "status": "in_progress",
+      "credits_required": 2.0,
+      "credits_needed": 0.0,
+      "options": [],
+      "courses_counted": [
+        "CSE 111"
+      ]
+    },
+    {
+      "id": "major-core-3",
+      "group": "Major Core",
+      "name": "Programming with Classes",
+      "status": "not_met",
+      "credits_required": 2.0,
+      "credits_needed": 2.0,
+      "options": [
+        "CSE 210"
+      ],
+      "courses_counted": []
+    },
+    {
+      "id": "major-core-4",
+      "group": "Major Core",
+      "name": "Software Testing",
+      "status": "not_met",
+      "credits_required": 2.0,
+      "credits_needed": 2.0,
+      "options": [
+        "CSE 270"
+      ],
+      "courses_counted": []
+    },
+    {
+      "id": "databases-1",
+      "group": "Databases",
+      "name": "Introduction to Databases",
+      "status": "complete",
+      "credits_required": 3.0,
+      "credits_needed": 0.0,
+      "options": [],
+      "courses_counted": [
+        "CIT 111"
+      ]
+    },
+    {
+      "id": "databases-2",
+      "group": "Databases",
+      "name": "Database Design",
+      "status": "not_met",
+      "credits_required": 3.0,
+      "credits_needed": 3.0,
+      "options": [
+        "CIT 225"
+      ],
+      "courses_counted": []
+    },
+    {
+      "id": "mathematics-minor-1",
+      "group": "Mathematics Minor",
+      "name": "Calculus I",
+      "status": "complete",
+      "credits_required": 4.0,
+      "credits_needed": 0.0,
+      "options": [],
+      "courses_counted": [
+        "MATH 112"
+      ]
+    },
+    {
+      "id": "mathematics-minor-2",
+      "group": "Mathematics Minor",
+      "name": "Calculus II",
+      "status": "not_met",
+      "credits_required": 3.0,
+      "credits_needed": 3.0,
+      "options": [
+        "MATH 113"
+      ],
+      "courses_counted": []
+    },
+    {
+      "id": "mathematics-minor-3",
+      "group": "Mathematics Minor",
+      "name": "Linear Algebra",
+      "status": "not_met",
+      "credits_required": 3.0,
+      "credits_needed": 3.0,
+      "options": [
+        "MATH 215"
+      ],
+      "courses_counted": []
+    }
+  ],
+  "validation_flags": []
+}
