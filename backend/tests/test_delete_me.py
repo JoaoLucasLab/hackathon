@@ -84,3 +84,18 @@ def test_the_store_survives_a_restart_until_deleted(monkeypatch: pytest.MonkeyPa
     history = client.get("/api/chat/history").json()["turns"]
     assert [t["role"] for t in history] == ["student", "assistant"]
     assert any(p["is_favorite"] for p in client.get("/api/professors").json())
+
+
+def test_clearing_the_chat_also_clears_what_is_stored(monkeypatch: pytest.MonkeyPatch) -> None:
+    """DELETE /api/chat/history (AI-08) on a stored session: the messages and rules are
+    deleted, not only forgotten in memory, so they do not come back after a restart."""
+    from app.api import chat
+
+    client, student_id = _fill(monkeypatch)
+    assert client.delete("/api/chat/history").status_code == 204
+    assert row_count("chats", student_id) == 0
+    assert row_count("constraints", student_id) == 0
+    assert row_count("audits", student_id) == 1  # the audit and favorites stay
+    assert row_count("favorites", student_id) == 1
+    chat.forget(client.cookies["sid"])  # as after a restart
+    assert client.get("/api/chat/history").json() == {"turns": []}

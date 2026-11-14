@@ -86,6 +86,15 @@ def chat_messages(student_id: uuid.UUID) -> list[tuple[str, str]]:
     return messages
 
 
+def clear_chat(student_id: uuid.UUID) -> None:
+    """Deletes the stored chat messages and constraints (a new conversation). The audit
+    and favorites stay."""
+    with engine.session() as db:
+        db.execute(delete(Chat).where(Chat.student_id == student_id))
+        db.execute(delete(Constraints).where(Constraints.student_id == student_id))
+        db.commit()
+
+
 def save_constraints(student_id: uuid.UUID, value: dict[str, Any]) -> None:
     with engine.session() as db:
         row = db.get(Constraints, student_id)

@@ -13,7 +13,7 @@ import uuid
 from collections.abc import Iterator
 from typing import Any
 
-from fastapi import APIRouter, Request, Response, Depends
+from fastapi import APIRouter, Depends, Request, Response
 from fastapi.responses import StreamingResponse
 from pydantic import ValidationError
 
@@ -154,8 +154,13 @@ def chat_history(request: Request) -> ChatHistory:
 @router.delete("/chat/history", status_code=204, response_class=Response)
 def clear_chat_history(request: Request) -> Response:
     """Starts a new conversation: drops the transcript, what Claude saw and the rules.
-    The audit, favorites and the confirmed plan stay (they live outside the chat)."""
-    forget(request.cookies.get("sid", "local"))
+    The audit, favorites and the confirmed plan stay (they live outside the chat).
+    The stored messages and rules go too (DATA-06), or a restart would bring them back."""
+    sid = request.cookies.get("sid", "local")
+    student_id = session_api.stored_student(sid)
+    if student_id is not None:
+        student_store.clear_chat(student_id)
+    forget(sid)
     return Response(status_code=204)
 
 

@@ -10,8 +10,10 @@ It is written with psycopg instead of pg_dump, so it needs no Postgres client to
 (the backend image has none) and works with any server version.
 
 Restore replaces those tables in one transaction and checks the row counts in the
-file's header before it commits: a failed restore changes nothing. The tables must
-exist first (`alembic upgrade head`; the Makefile target runs it).
+file's header before it commits: a failed restore changes nothing. llm_cache is the
+exception: its rows are added to the ones already there (a cached result never goes
+stale, and replacing it would throw away paid Claude calls). The tables must exist
+first (`alembic upgrade head`; the Makefile target runs it).
 """
 
 from __future__ import annotations
@@ -46,6 +48,9 @@ TABLES = (
     "professor_sources",
     "llm_cache",
 )
+# Merged into the target instead of replaced (see above). Loaded through a temporary
+# table named snapshot_<table>.
+MERGED = frozenset({"llm_cache"})
 # Never in a snapshot (AGENTS.md, "Student privacy").
 STUDENT_TABLES = frozenset({"students", "audits", "constraints", "favorites", "chats"})
 
@@ -118,21 +123,28 @@ def write(out: _Writable) -> dict[str, int]:
         for table, count in counts.items():
             line(f"-- rows {table} {count}")
         line("BEGIN;")
-        line(f"TRUNCATE {', '.join(TABLES)};")
+        line(f"TRUNCATE {', '.join(t for t in TABLES if t not in MERGED)};")
         cur = conn.cursor()
         for table in TABLES:
-            columns = _columns(conn, table)
-            copy_from = sql.SQL("COPY {} ({}) FROM stdin;").format(
-                sql.Identifier(table), sql.SQL(", ").join(map(sql.Identifier, columns))
-            )
+            columns = sql.SQL(", ").join(map(sql.Identifier, _columns(conn, table)))
+            target = sql.Identifier(f"snapshot_{table}" if table in MERGED else table)
+            if table in MERGED:
+                temp = sql.SQL("CREATE TEMP TABLE {} (LIKE {}) ON COMMIT DROP;").format(
+                    target, sql.Identifier(table)
+                )
+                line(temp.as_string(conn))
+            copy_from = sql.SQL("COPY {} ({}) FROM stdin;").format(target, columns)
             line(copy_from.as_string(conn))
-            copy_to = sql.SQL("COPY {} ({}) TO STDOUT").format(
-                sql.Identifier(table), sql.SQL(", ").join(map(sql.Identifier, columns))
-            )
+            copy_to = sql.SQL("COPY {} ({}) TO STDOUT").format(sql.Identifier(table), columns)
             with cur.copy(copy_to) as copy:
                 for data in copy:
                     out.write(bytes(data))
             line("\\.")
+            if table in MERGED:
+                merge = sql.SQL(
+                    "INSERT INTO {} ({}) SELECT {} FROM {} ON CONFLICT DO NOTHING;"
+                ).format(sql.Identifier(table), columns, columns, target)
+                line(merge.as_string(conn))
         for table in TABLES:
             for column in _identity_columns(conn, table):
                 line(
@@ -165,7 +177,8 @@ def statements(lines: list[bytes]) -> Iterator[tuple[str, bytes | None]]:
             continue
         match = _COPY.match(text)
         if match:
-            if match[1] in STUDENT_TABLES or match[1] not in TABLES:
+            table = match[1].removeprefix("snapshot_")
+            if table in STUDENT_TABLES or table not in TABLES:
                 raise SystemExit(f"snapshot has an unexpected table: {match[1]}")
             data = bytearray()
             for row in it:
@@ -180,8 +193,9 @@ def statements(lines: list[bytes]) -> Iterator[tuple[str, bytes | None]]:
 
 
 def restore(lines: list[bytes]) -> dict[str, int]:
-    """Replaces the snapshot's tables with its rows, in one transaction. Raises
-    SystemExit (and changes nothing) when the row counts differ from the header."""
+    """Replaces the snapshot's tables with its rows (merges llm_cache), in one
+    transaction. Raises SystemExit (and changes nothing) when a row count differs from
+    the header: a merged table may have more rows than the snapshot, never fewer."""
     expected = expected_counts(lines)
     if set(expected) != set(TABLES):
         raise SystemExit("not a demo snapshot: the header does not list every table's rows")
@@ -196,7 +210,12 @@ def restore(lines: list[bytes]) -> dict[str, int]:
                 with cur.copy(statement.encode()) as copy:
                     copy.write(data)
         counts = row_counts(conn)
-        if counts != expected:
+        short = {
+            t: counts[t]
+            for t in TABLES
+            if counts[t] < expected[t] or (counts[t] != expected[t] and t not in MERGED)
+        }
+        if short:
             conn.rollback()
             raise SystemExit(f"row counts differ, nothing restored: {counts} != {expected}")
         conn.commit()

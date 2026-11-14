@@ -30,6 +30,14 @@ def test_no_student_table_is_snapshotted() -> None:
     assert not set(snapshot.TABLES) & snapshot.STUDENT_TABLES
 
 
+def test_restore_refuses_a_student_table_even_as_a_temp_table() -> None:
+    lines = io.BytesIO(
+        HEADER + b'COPY "snapshot_audits" ("id") FROM stdin;\n1\n\\.\n'
+    ).readlines()
+    with pytest.raises(SystemExit, match="unexpected table: snapshot_audits"):
+        list(snapshot.statements(lines))
+
+
 def test_restore_refuses_a_student_table() -> None:
     lines = io.BytesIO(
         HEADER + b"COPY students (id) FROM stdin;\n00000000-0000-0000-0000-000000000000\n\\.\n"
@@ -135,7 +143,14 @@ def test_restore_replaces_the_catalog_and_keeps_students(db: psycopg.Connection)
     out = io.BytesIO()
     snapshot.write(out)
     db.execute("UPDATE courses SET title = 'changed'")
+    # A topic tag cached after the snapshot was written: kept, not thrown away.
+    db.execute(
+        "INSERT INTO llm_cache (key, namespace, model, value) "
+        "VALUES ('topic_tags:newer', 'topic_tags', 'test-model', '[\"sql\"]')"
+    )
     snapshot.restore(io.BytesIO(out.getvalue()).readlines())
+    keys = {r[0] for r in db.execute("SELECT key FROM llm_cache").fetchall()}
+    assert keys == {"topic_tags:abc", "topic_tags:newer"}
     titles = {r[0] for r in db.execute("SELECT title FROM courses").fetchall()}
     assert "changed" not in titles
     assert db.execute("SELECT count(*) FROM students").fetchone() == (1,)
