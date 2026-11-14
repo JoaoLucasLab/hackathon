@@ -3,7 +3,8 @@
 
 The one script to schedule. It runs, in order:
 
-1. scrape_course_search.py  downloads the class schedule (about 25 minutes)
+1. scrape_course_search.py  downloads the class schedule (the major subjects:
+                            a few hours; --subjects DEMO: about 25 minutes)
 2. data_cleaner.py          adds prerequisite trees and class times
 3. populate_db.py           loads the class schedule and the course catalog
 
@@ -13,7 +14,8 @@ load succeeds. If any step fails, it stops: the database and the old files stay
 as they were.
 
 Before loading, it refuses a scrape that looks incomplete: the scraper stopped or
-a subject failed (exit code 1), a subject has no sections, or the file has far
+a subject failed (exit code 1), a subject has no sections that the scraper did
+not report as empty, or the file has far
 fewer sections than the last good one (--min-ratio, 0.8 by default). A real drop
 in sections can be loaded with --force.
 
@@ -24,6 +26,8 @@ once a day), never in CI or tests, and keep the scraper's delays (AGENTS.md).
 Usage:
     python3 scripts/refresh_data.py
     python3 scripts/refresh_data.py --skip-scrape          # clean and load the last scrape again
+    python3 scripts/refresh_data.py --subjects DEMO        # only CSE, CIT and MATH
+    python3 scripts/refresh_data.py --subjects ALL         # every subject (many hours)
     python3 scripts/refresh_data.py --container course-planner-db --user app --database app
 
 Schedule (cron, every day at 03:00; use the full path to the Python that has the
@@ -69,9 +73,13 @@ def scrape_problems(new: Path, last: Path, min_ratio: float) -> list[str]:
     data = json.loads(new.read_text(encoding="utf-8"))
     sections = data["sections"]
     problems = []
-    by_subject = {s["course"].split()[0] for s in sections}
+    # Older files have no sections_by_subject; their codes match the course prefix.
+    counts = data.get("sections_by_subject") or {
+        s: sum(x["course"].split()[0] == s for x in sections) for s in data["subjects"]
+    }
+    empty = set(data.get("empty_subjects", []))
     for subject in data["subjects"]:
-        if subject not in by_subject:
+        if not counts.get(subject) and subject not in empty:
             problems.append(f"subject {subject} has no sections")
     if last.exists():
         before = len(json.loads(last.read_text(encoding="utf-8"))["sections"])
@@ -90,6 +98,7 @@ def main() -> int:
     ap.add_argument("--skip-scrape", action="store_true", help="reuse the last scrape")
     ap.add_argument("--force", action="store_true", help="load even if sections dropped")
     ap.add_argument("--min-ratio", type=float, default=0.8)
+    ap.add_argument("--subjects", nargs="+", help="passed to the scraper (ALL, DEMO or codes)")
     ap.add_argument("--container", default="my-postgres-myplan")
     ap.add_argument("--user", default="app_user")
     ap.add_argument("--database", default="app_db")
@@ -107,7 +116,10 @@ def main() -> int:
             raw = RAW
         else:
             raw = RAW_NEW
-            if not run("scrape", str(SCRIPTS / "scrape_course_search.py"), "--out", str(raw)):
+            scraper = [str(SCRIPTS / "scrape_course_search.py")]
+            if args.subjects:  # otherwise the scraper's default, MAJOR_SUBJECTS
+                scraper += ["--subjects", *args.subjects]
+            if not run("scrape", *scraper, "--out", str(raw)):
                 log("the scrape is incomplete; the database was not touched")
                 return 1
             problems = scrape_problems(raw, RAW, args.min_ratio)
