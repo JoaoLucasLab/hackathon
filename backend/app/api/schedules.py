@@ -1,46 +1,29 @@
-"""STUB (ENG-01). Real code: ENG-03 (solver) and ENG-05 (rules, relaxation, backups)."""
+"""Schedule building (ENG-03). ENG-05 adds school rules, relaxation and backups.
+
+The audit is the fixture audit until AI-04 stores the session's own audit, and
+sections come from the fixtures until DATA-03 loads them into the database.
+"""
 
 from fastapi import APIRouter
 
+from app import config
 from app.api import fixture_data
-from app.contracts import (
-    BuildSchedulesRequest,
-    BuildSchedulesResponse,
-    Schedule,
-    ScheduledClass,
-    ScheduleWhy,
-)
+from app.contracts import BuildSchedulesRequest, BuildSchedulesResponse, ConstraintSet
+from app.engine import solver
 
 router = APIRouter(prefix="/api", tags=["schedules"])
 
 
 @router.post("/schedules/build", response_model=BuildSchedulesResponse)
 def build_schedules(body: BuildSchedulesRequest) -> BuildSchedulesResponse:
-    sections = fixture_data.section_by_id()
-    requirements = fixture_data.audit().requirements
-    schedules: list[Schedule] = []
-    for rank, stub in enumerate(fixture_data.stub_schedules()[: body.max_results], start=1):
-        classes = [
-            ScheduledClass(
-                section=sections[sid],
-                requirement_ids=[
-                    r.id for r in requirements if sections[sid].course_code in r.options
-                ],
-            )
-            for sid in stub.section_ids
-        ]
-        schedules.append(
-            Schedule(
-                id=stub.id,
-                rank=rank,
-                score=float(100 - rank),
-                total_credits=sum(c.section.credits for c in classes),
-                optimal=True,
-                classes=classes,
-                why=ScheduleWhy(
-                    preferences_met=stub.preferences_met,
-                    preferences_missed=stub.preferences_missed,
-                ),
-            )
-        )
-    return BuildSchedulesResponse(schedules=schedules)
+    # TODO(AI-02): None should mean the session's saved constraints; the chat tool
+    # always sends them, so until the endpoint can see the session it uses defaults.
+    constraints = body.constraints or ConstraintSet()
+    return solver.build_schedules(
+        fixture_data.audit(),
+        fixture_data.sections(),
+        constraints,
+        max_results=body.max_results,
+        credit_range=(config.CREDIT_DEFAULT_MIN, config.CREDIT_DEFAULT_MAX),
+        time_limit_s=config.SOLVER_TIME_LIMIT_S,
+    )

@@ -621,6 +621,18 @@ Two free accounts cover everything: Render for the frontend and backend, Neon fo
 
 Render's own free Postgres is not used because it expires 30 days after creation. I could not confirm the memory of Render's free instance, so the practice deploy in the prep list must run a small OR-Tools solve on it.
 
+### Backup hosting: WSL server with Docker and Tailscale Funnel
+
+If Render or Neon fails (sleeping instance, memory limit, a broken deploy), the same app runs on a team member's private WSL server. Everything is in `deploy/wsl/` (see its README) and is owned by Data next to the Render deploy.
+
+| Part | Container | Published as |
+| --- | --- | --- |
+| Frontend | `web`: nginx serving the Vite build, proxying `/api`, `/admin`, `/health`, `/docs`, `/openapi.json` | Tailscale Funnel `https://<machine>.<tailnet>.ts.net` (port 443) |
+| Backend | `backend`, from `backend/Dockerfile` | Behind `web`; optionally Funnel port 8443 |
+| Postgres | `db`, Postgres 18 on a Docker volume | `tailscale serve` TCP 5432, tailnet only. Never on Funnel. |
+
+The backup host has no sleep and no free-tier limits, so it needs no health ping. It shares one origin for the app and the API, while Render uses two; the rules in `AGENTS.md` ("Hosting compatibility") keep both working. Every block that touches the backend's start-up, env vars, routes, dependencies or the frontend build must still pass on the compose stack. The demo snapshot (DATA-06) must restore into either database.
+
 ## Risks
 
 The three risks most likely to hurt the demo are a late critical-path block, an audit PDF Claude misreads on stage, and a scraper that needs a session cookie. Each risk below has a fallback that is already inside a block.
@@ -637,7 +649,7 @@ The three risks most likely to hurt the demo are a late critical-path block, an 
 | Solver returns nothing or runs long | 3-second cap, relaxation hint, property tests. | ENG-03, ENG-05 |
 | Claude API cost or rate limits | Cache by input hash, per-session rate limits, recorded responses in CI, a spend limit on the API key. | AI-02, DATA-06 |
 | Message Batches are too slow for a 12-hour event: a batch can take up to 24 hours, though most finish within 1 hour ([Claude docs](https://platform.claude.com/docs/en/build-with-claude/batch-processing)) | Run the bulk Haiku jobs as direct calls with caching. The volumes are small (20 to 40 prerequisite texts, about 30 professors). Move to Batches after the hackathon. | ENG-04, DATA-05 |
-| The free backend sleeps or the last deploy fails | Deploy at Hour 1.5, auto-deploy on every merge, health ping, backup video. | DATA-01, AI-06 |
+| The free backend sleeps or the last deploy fails | Deploy at Hour 1.5, auto-deploy on every merge, health ping, backup video. Backup host: the Docker stack on the WSL server via Tailscale Funnel (`deploy/wsl/`). | DATA-01, AI-06 |
 | AI & Product is still the heaviest lane | The Engine owner pairs on it from Hour 9.5. Cut-list items 5 to 7 all lighten it. | Cut list |
 
 ## Working rules
@@ -662,6 +674,7 @@ When a block is blocked:
 - [ ] Create the accounts: GitHub repo, Render, Neon, and a Claude API key with a spend limit.
 - [ ] Look up BYU-Idaho's school id on Rate My Professors in a browser and put it in config.
 - [ ] Practice deploy: FastAPI with OR-Tools on the free instance, solving a toy model.
+- [ ] Practice backup deploy: `deploy/wsl/push.sh` to the WSL server, `deploy/wsl/funnel.sh up`, open the ts.net URL from a phone off the tailnet.
 - [ ] Decide the three owners, the contact email and the demo persona.
 
 ## Name ideas

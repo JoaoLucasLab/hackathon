@@ -6,7 +6,8 @@
 from fastapi import APIRouter, UploadFile
 
 from app.api import fixture_data
-from app.contracts import AuditRequirement, DegreeAudit, RequirementStatus
+from app.contracts import AuditRequirement, DegreeAudit
+from app.engine.candidates import remaining_requirements as unmet_requirements
 
 router = APIRouter(prefix="/api", tags=["audit"])
 
@@ -31,5 +32,5 @@ def sample_audit() -> DegreeAudit:
 
 @router.get("/requirements/remaining", response_model=list[AuditRequirement])
 def remaining_requirements() -> list[AuditRequirement]:
-    # STUB: ENG-03 reads the session's stored audit instead of the fixture.
-    return [r for r in fixture_data.audit().requirements if r.status == RequirementStatus.not_met]
+    # Fixture audit until AI-04 stores the session's own audit.
+    return unmet_requirements(fixture_data.audit())
