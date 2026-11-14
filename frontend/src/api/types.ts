@@ -405,6 +405,17 @@ export interface components {
         BlockKind: "full" | "first" | "second";
         /** BuildSchedulesRequest */
         BuildSchedulesRequest: {
+            /**
+             * Avoid Schedules
+             * @description ENG-07: section ids of each schedule the student rejected. No result repeats one of them.
+             * @example [
+             *       [
+             *         "2027;WI|CSE 111-01",
+             *         "2027;WI|MATH 112-02"
+             *       ]
+             *     ]
+             */
+            avoid_schedules?: string[][];
             /** @description None: use the session's saved constraints. */
             constraints?: components["schemas"]["ConstraintSet"] | null;
             /**
@@ -417,6 +428,12 @@ export interface components {
         BuildSchedulesResponse: {
             /** Excluded */
             excluded?: components["schemas"]["Excluded"][];
+            /**
+             * Exhausted
+             * @description ENG-07: no schedules because every schedule that fits the constraints was already rejected (see avoid_schedules).
+             * @default false
+             */
+            exhausted: boolean;
             relaxation?: components["schemas"]["Relaxation"] | null;
             /** Schedules */
             schedules: components["schemas"]["Schedule"][];

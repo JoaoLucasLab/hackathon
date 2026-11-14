@@ -102,12 +102,24 @@ class BuildSchedulesRequest(Contract):
         default=None, description="None: use the session's saved constraints."
     )
     max_results: int = Field(default=3, ge=1, le=5)
+    avoid_schedules: list[list[str]] = Field(
+        default_factory=list,
+        max_length=50,
+        description="ENG-07: section ids of each schedule the student rejected. No result "
+        "repeats one of them.",
+        examples=[[["2027;WI|CSE 111-01", "2027;WI|MATH 112-02"]]],
+    )
 
 
 class BuildSchedulesResponse(Contract):
     schedules: list[Schedule]
     excluded: list[Excluded] = Field(default_factory=list)
     relaxation: Relaxation | None = None
+    exhausted: bool = Field(
+        default=False,
+        description="ENG-07: no schedules because every schedule that fits the constraints "
+        "was already rejected (see avoid_schedules).",
+    )
 
 
 class ExplainScheduleRequest(Contract):

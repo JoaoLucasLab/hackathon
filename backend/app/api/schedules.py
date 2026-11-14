@@ -47,6 +47,7 @@ def build_schedules(
         catalog_data.sections(),
         constraints,
         max_results=body.max_results,
+        avoid_schedules=body.avoid_schedules,
         favorite_professor_ids=favorite_professor_ids,
         prereqs=prereq_checker(audit),
         rules=default_school().rules,
