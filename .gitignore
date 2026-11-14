@@ -12,3 +12,7 @@ backend/compose/.env
 scripts/out/*.new.json
 scripts/out/.refresh.lock
 scripts/out/refresh.log
+
+# The scraped class schedule: large, changes every refresh; the database holds it.
+scripts/out/course_search.json
+scripts/out/course_search_clean.json

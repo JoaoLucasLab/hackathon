@@ -39,7 +39,7 @@ Built on Nov 13, 2026, ahead of the blocks below. Acceptance criteria these meet
 
 | What | Where | Covers |
 | --- | --- | --- |
-| Live Course Search scraper: sections, meetings, seats, instructors, descriptions and the "Course Requisites" rows (AND/OR, group, type, minimum grade). Subjects come from `SUBJECTS` (CSE, CIT, MATH); writes `scripts/out/course_search.json` | `scripts/scrape_course_search.py` | Most of DATA-03 |
+| Live Course Search scraper: sections, meetings, seats, instructors, descriptions and the "Course Requisites" rows (AND/OR, group, type, minimum grade). By default the subjects of the CS, Software Engineering, Computer Engineering, Data Science and Cybersecurity majors (`MAJOR_SUBJECTS`); `--subjects DEMO` for CSE, CIT, MATH, `--subjects ALL` for every subject; writes `scripts/out/course_search.json` | `scripts/scrape_course_search.py` | Most of DATA-03 |
 | Requisite rows turned into `PrereqExpression` trees that validate against the ENG-01 contract (88 courses, 0 unparsed): co-requisites as `concurrent_ok`, exams (LUC, ACT, SAT, ALEKS, Math Path) as conditions, wildcards like `MATH 221*` expanded, section rules kept apart as `section_requirements` | `scripts/data_cleaner.py` | Part of ENG-04 (for courses offered this term) |
 | Postgres schema: universities, scrape_runs, terms, courses, course_requisites, sections, meetings, professors, section_instructors | `backend/app/db/schema.sql` | Part of DATA-01 |
 | Loader: full refresh in one transaction (an error changes nothing) | `scripts/populate_db.py` | DATA-03 idempotency, part of DATA-05 |

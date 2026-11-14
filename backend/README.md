@@ -68,13 +68,14 @@ in git, so either ask a teammate for that file and put it in `scripts/out/`,
 or build it yourself:
 
 ```bash
-python3 scripts/scrape_course_search.py   # downloads the class schedule, about 25 minutes
+python3 scripts/scrape_course_search.py   # downloads the class schedule, about 1 hour 40 minutes
 python3 scripts/data_cleaner.py           # adds prerequisite trees and class times, a few seconds
 ```
 
 The scraper reads the public BYU-Idaho Course Search (no login), waits 2
-seconds between requests, and covers the subjects in `SUBJECTS` at the top of
-the script (CSE, CIT, MATH). Keep the terminal open and the computer awake: it
+seconds between requests, and covers the subjects in `MAJOR_SUBJECTS` at the top
+of the script (the computing majors' subjects; `--subjects DEMO` for CSE, CIT and
+MATH, about 25 minutes). Keep the terminal open and the computer awake: it
 writes `course_search.json` only at the end. Run one copy at a time.
 
 ## 4. Fill the database

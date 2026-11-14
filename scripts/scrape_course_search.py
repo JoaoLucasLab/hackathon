@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Standalone test scraper for BYU-Idaho Public Course Search.
 
-Fetches the public class schedule (no login) for a few subjects and writes one
-JSON file so the team can inspect the data. This is a throwaway test, not the
-DATA-03 importer: it uses only the standard library and does not go through
+Fetches the public class schedule (no login) for the subjects in MAJOR_SUBJECTS
+(or the ones given with --subjects) and writes one JSON file
+so the team can inspect the data. This is a throwaway test, not the DATA-03
+importer: it uses only the standard library and does not go through
 PublicHttpClient (DATA-02 does not exist yet).
 
 Rules it follows (see AGENTS.md):
@@ -11,7 +12,7 @@ Rules it follows (see AGENTS.md):
   header, and stops if the site redirects to a login page.
 - The only cookie sent is the anonymous ASP.NET_SessionId that the page gives
   every visitor. Each subject starts with an empty cookie jar.
-- At least DELAY_S seconds between requests.
+- At least DELAY_S seconds between requests, also across subjects.
 - No HTML is saved to disk; the only output is the JSON file.
 - Meeting times are kept as the raw strings ("TR 12:45-01:45PM"); turning them
   into real times is ENG-02's parser's job.
@@ -20,9 +21,10 @@ Rules it follows (see AGENTS.md):
   Building the AND/OR tree from them is ENG-04's job.
 
 Usage:
-    python3 scripts/scrape_course_search.py                      # the SUBJECTS list
+    python3 scripts/scrape_course_search.py                      # MAJOR_SUBJECTS
     python3 scripts/scrape_course_search.py --subjects CSE --limit 5
-    python3 scripts/scrape_course_search.py --subjects ALL       # every subject (slow)
+    python3 scripts/scrape_course_search.py --subjects DEMO      # DEMO_SUBJECTS only
+    python3 scripts/scrape_course_search.py --subjects ALL       # every subject (many hours)
 """
 
 from __future__ import annotations
@@ -52,8 +54,22 @@ BLOCK_TERMS = {
     "Winter Second Block": "2027;WI;W2",
 }
 
-# Subjects (discipline codes from the Course Search dropdown) to scrape.
-SUBJECTS = ["CSE", "CIT", "MATH"]
+# Discipline codes from the Course Search dropdown. MAJOR_SUBJECTS is the default;
+# --subjects ALL reads every code from the dropdown, DEMO uses DEMO_SUBJECTS.
+# Codes are the dropdown's, which can differ from the course prefix (CYBE is
+# Cybersecurity; the major page lists its courses as CYBER 340). An unknown code makes the site
+# ignore the filter and return every section, so the scraper checks the codes first.
+# MAJOR_SUBJECTS covers the required courses and listed options of the Computer
+# Science, Software Engineering, Computer Engineering, Data Science and
+# Cybersecurity majors (2026-2027 plans), CIT for Information Technology, plus the
+# shared requirements: math, physics, writing, religion and BYUI 101. Electives
+# outside these subjects (CHEM, BIO, GE breadth courses) are left out; add them
+# with --subjects.
+MAJOR_SUBJECTS = [
+    "CSE", "ECEN", "WDD", "ITM", "DS", "CIT", "CYBE",
+    "MATH", "PH", "BUS", "ENG", "REL", "BYUI",
+]  # fmt: skip
+DEMO_SUBJECTS = ["CSE", "CIT", "MATH"]
 
 SEARCH_PREFIX = "pg0$V$tabSearch$"
 REQ_BUTTON = "pg0_V_lnkbCourseRequisites"
@@ -77,14 +93,16 @@ class Session:
         self.jar = http.cookiejar.CookieJar()
         self.opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(self.jar))
         self.opener.addheaders = [("User-Agent", USER_AGENT)]
-        self._last = 0.0
         self.requests = 0
 
+    # Shared by every Session, so a new subject's first request also waits DELAY_S.
+    _last = 0.0
+
     def _wait(self) -> None:
-        gap = time.monotonic() - self._last
+        gap = time.monotonic() - Session._last
         if gap < DELAY_S:
             time.sleep(DELAY_S - gap)
-        self._last = time.monotonic()
+        Session._last = time.monotonic()
 
     def _check_cookies(self) -> None:
         extra = {c.name for c in self.jar} - ALLOWED_COOKIES
@@ -384,18 +402,28 @@ def back_to_list(session: Session, page: str) -> str:
 
 
 def scrape_subject(
-    term: str, subject: str, limit: int | None, requisites: dict[str, dict], stats: dict
+    term: str,
+    subject: str,
+    limit: int | None,
+    requisites: dict[str, dict],
+    seen: set[tuple[str, str]],
+    stats: dict,
 ) -> list[dict]:
     """Scrape one subject.
 
     `requisites` is shared across subjects: course code -> parsed requisites.
+    `seen` holds the (course, section) pairs already scraped, so a section listed
+    under two subjects is fetched and saved once.
     """
     session = Session()
     list_page = search(session, term, subject)
     rows = parse_list(list_page)
-    if "No courses" in list_page and not rows:
+    if not rows:
+        if "No courses" not in list_page:
+            raise ValueError("no sections and no 'No courses' message; the page changed?")
         print(f"  {subject}: no sections")
         return []
+    rows = [r for r in rows if (r["course"], r["section"]) not in seen]
     if limit:
         rows = rows[:limit]
     print(f"  {subject}: {len(rows)} sections on the list page")
@@ -445,6 +473,8 @@ def scrape_subject(
                 "fetched_at": fetched_at,
             }
         )
+        # Marked only once saved, so a subject that stops early leaves the rest to others.
+        seen.add((row["course"], row["section"]))
         if i % 10 == 0:
             print(f"    {i}/{len(rows)}")
     stats["requests"] += session.requests
@@ -459,7 +489,11 @@ def main() -> int:
         "--term", default="2027;WI", help="term code (default 2027;WI; includes both blocks)"
     )
     ap.add_argument(
-        "--subjects", nargs="+", default=SUBJECTS, help="override SUBJECTS; ALL for every subject"
+        "--subjects",
+        nargs="+",
+        default=MAJOR_SUBJECTS,
+        help="discipline codes (default MAJOR_SUBJECTS); ALL for every subject, DEMO for "
+        "DEMO_SUBJECTS",
     )
     ap.add_argument("--limit", type=int, help="max sections per subject (for quick tests)")
     ap.add_argument(
@@ -469,20 +503,47 @@ def main() -> int:
     # Show progress lines right away, even when output is not a terminal (IDE run panel, pipe).
     sys.stdout.reconfigure(line_buffering=True)  # type: ignore[union-attr]
 
-    subjects = args.subjects
-    if subjects == ["ALL"]:
+    try:
         landing = Session().fetch()
-        subjects = [v for v, _ in select_options(landing, SEARCH_PREFIX + "ddlDiscipline") if v]
+    except StopScrape as e:
+        print(f"STOPPED: {e}", file=sys.stderr)
+        return 1
+    known = [v for v, _ in select_options(landing, SEARCH_PREFIX + "ddlDiscipline") if v]
+    if not known:
+        print("No subjects found in the Course Search dropdown.", file=sys.stderr)
+        return 1
+    subjects = args.subjects
+    if subjects == ["DEMO"]:
+        subjects = DEMO_SUBJECTS
+    elif subjects == ["ALL"]:
+        subjects = known
+    unknown = [s for s in subjects if s not in known]
+    if unknown:
+        print(
+            f"Not in the Course Search dropdown: {' '.join(unknown)}. "
+            f"Known codes: {' '.join(known)}",
+            file=sys.stderr,
+        )
+        return 1
 
     stats = {"ok": 0, "failed": 0, "requests": 0, "requisite_pages": 0}
     requisites: dict[str, dict] = {}
+    seen: set[tuple[str, str]] = set()
     sections: list[dict] = []
+    by_subject: dict[str, int] = {}  # sections each subject added
+    # Subjects that added no sections: none this term, or all already saved under another.
+    empty_subjects: list[str] = []
     started = datetime.now(UTC)
     complete = True  # False when the run stopped or a subject failed
-    print(f"Term {args.term}, subjects: {' '.join(subjects)}", flush=True)
-    for subject in subjects:
+    print(f"Term {args.term}, {len(subjects)} subjects: {' '.join(subjects)}", flush=True)
+    for n, subject in enumerate(subjects, 1):
+        print(f"[{n}/{len(subjects)}] {subject}")
         try:
-            sections += scrape_subject(args.term, subject, args.limit, requisites, stats)
+            found = scrape_subject(args.term, subject, args.limit, requisites, seen, stats)
+            sections += found
+            by_subject[subject] = len(found)
+            if not found:
+                empty_subjects.append(subject)
         except StopScrape as e:
             print(f"STOPPED: {e}", file=sys.stderr)
             complete = False
@@ -499,6 +560,8 @@ def main() -> int:
                 "source": URL,
                 "term": args.term,
                 "subjects": subjects,
+                "empty_subjects": empty_subjects,
+                "sections_by_subject": by_subject,
                 "scraped_at": started.isoformat(timespec="seconds"),
                 "count": len(sections),
                 "sections": sections,
@@ -510,8 +573,8 @@ def main() -> int:
     )
     print(
         f"Done: {stats['ok']} sections parsed, {stats['failed']} failed, "
-        f"{stats['requisite_pages']} requisite pages fetched, {stats['requests']} requests. "
-        f"Wrote {out}"
+        f"{stats['requisite_pages']} requisite pages fetched, {stats['requests']} requests "
+        f"in {(datetime.now(UTC) - started).total_seconds() / 60:.1f} min. Wrote {out}"
     )
     # Exit code 1 when data is missing, so scripts/refresh_data.py does not load a
     # partial file into the database.
