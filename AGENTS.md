@@ -48,7 +48,11 @@ When you are asked to work on something:
 - All outbound HTTP from importers goes through `PublicHttpClient`
   (`backend/app/http/client.py`). Do not import `requests` or `httpx` directly in
   `importers/` or `schools/`.
-- Never send a `Cookie` or `Authorization` header to `*.byui.edu`.
+- Never send an `Authorization` header or a login cookie to `*.byui.edu`. The only
+  cookie allowed is the anonymous `ASP.NET_SessionId` that the public Course Search
+  page (`student.byui.edu/ICS/Class_Schedule/`) gives every visitor; its search
+  postbacks do not work without it. Start each run with an empty cookie jar and
+  never send any other cookie.
 - `LIVE_SOURCES` is empty by default, which means zero outbound requests to
   BYU-Idaho. Do not change the default. Do not run a live importer unless a human
   on the team asks you to in this session. Never run one in CI or in tests.
