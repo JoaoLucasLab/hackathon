@@ -16,6 +16,8 @@ export interface ChatTurn {
   text: string;
   status?: string;
   error?: string;
+  /** Fixed answers to the assistant's question (AI-07). Shown on the latest turn only. */
+  quickReplies?: string[];
 }
 
 const Context = createContext<{

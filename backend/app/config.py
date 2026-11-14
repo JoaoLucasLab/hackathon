@@ -20,3 +20,13 @@ LIVE_SOURCES = [s for s in os.environ.get("LIVE_SOURCES", "").split(",") if s.st
 SOLVER_TIME_LIMIT_S = float(os.environ.get("SOLVER_TIME_LIMIT_S", "3"))
 # The default credit range, score weights and other school rules live in
 # schools/byui/config.yaml (ENG-05), read through SchoolRules.
+
+
+def _flag(name: str) -> bool:
+    return os.environ.get(name, "false").strip().lower() == "true"
+
+
+# AI-07 / AI-08: the chat asks questions before it builds, and shows one schedule at
+# a time. Off in production until AI-08 passes its tests. Read at call time
+# (`config.FEATURE_CONVERSATIONAL_PLANNER`) so tests can switch it.
+FEATURE_CONVERSATIONAL_PLANNER = _flag("FEATURE_CONVERSATIONAL_PLANNER")

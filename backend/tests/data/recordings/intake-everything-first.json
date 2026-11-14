@@ -1,0 +1,508 @@
+{
+  "id": "intake-everything-first",
+  "messages": [
+    "Fall & Winter track, 12 to 15 credits, no classes before 10, no Fridays, include CSE 210",
+    "yes"
+  ],
+  "calls": [
+    {
+      "request_messages": [
+        {
+          "role": "user",
+          "content": "Fall & Winter track, 12 to 15 credits, no classes before 10, no Fridays, include CSE 210"
+        }
+      ],
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_01BeRnGE3w7CsugKqFrYeB2S",
+          "input": {},
+          "name": "get_remaining_requirements",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        },
+        {
+          "id": "toolu_011quKPXea4s8wBXcX5r13vE",
+          "input": {
+            "course_codes": [
+              "CSE 210"
+            ],
+            "delivery_method": null
+          },
+          "name": "search_sections",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "request_messages": [
+        {
+          "role": "user",
+          "content": "Fall & Winter track, 12 to 15 credits, no classes before 10, no Fridays, include CSE 210"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "id": "toolu_01BeRnGE3w7CsugKqFrYeB2S",
+              "input": {},
+              "name": "get_remaining_requirements",
+              "type": "tool_use",
+              "caller": {
+                "type": "direct"
+              }
+            },
+            {
+              "id": "toolu_011quKPXea4s8wBXcX5r13vE",
+              "input": {
+                "course_codes": [
+                  "CSE 210"
+                ],
+                "delivery_method": null
+              },
+              "name": "search_sections",
+              "type": "tool_use",
+              "caller": {
+                "type": "direct"
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "toolu_01BeRnGE3w7CsugKqFrYeB2S",
+              "content": "{\"track\": \"fall_winter\", \"track_known\": true, \"default_credit_range\": {\"credit_min\": 12.0, \"credit_max\": 15.0}, \"requirements\": [{\"id\": \"core-data-structures\", \"group\": \"Major Core\", \"name\": \"Programming with Data Structures\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"CSE 212\"], \"courses_counted\": []}, {\"id\": \"core-testing\", \"group\": \"Major Core\", \"name\": \"Software Testing\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"CSE 270\"], \"courses_counted\": []}, {\"id\": \"core-applied\", \"group\": \"Major Core\", \"name\": \"Applied Programming\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 310\"], \"courses_counted\": []}, {\"id\": \"core-web-backend\", \"group\": \"Major Core\", \"name\": \"Web Backend\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 340\", \"CSE 341\"], \"courses_counted\": []}, {\"id\": \"web-frontend\", \"group\": \"Web Foundations\", \"name\": \"Web Frontend Development\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"WDD 231\"], \"courses_counted\": []}, {\"id\": \"db-design\", \"group\": \"Databases\", \"name\": \"Database Design\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CIT 225\"], \"courses_counted\": []}, {\"id\": \"math-calc2\", \"group\": \"Mathematics\", \"name\": \"Calculus II\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"MATH 113\"], \"courses_counted\": []}, {\"id\": \"math-stats\", \"group\": \"Mathematics\", \"name\": \"Statistics\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"MATH 221A\", \"MATH 325\"], \"courses_counted\": []}, {\"id\": \"major-elective\", \"group\": \"Major Electives\", \"name\": \"Computer Science Elective\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 325\", \"CSE 381\", \"CSE 450\"], \"courses_counted\": []}, {\"id\": \"rel-book-of-mormon\", \"group\": \"Religion Cornerstones\", \"name\": \"Teachings and Doctrine of the Book of Mormon\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"REL 275\"], \"courses_counted\": []}]}"
+            },
+            {
+              "type": "tool_result",
+              "tool_use_id": "toolu_011quKPXea4s8wBXcX5r13vE",
+              "content": "{\"courses\": [{\"course_code\": \"CSE 210\", \"title\": \"Programming with Classes\", \"credits\": 2.0, \"description\": \"Fixture description for Programming with Classes.\", \"sections\": [{\"id\": \"2027;WI|CSE 210-01\", \"course_code\": \"CSE 210\", \"section\": \"01\", \"title\": \"Programming with Classes\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-lindqvist\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"10:15:00\", \"end_time\": \"11:15:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 233\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 6, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CSE210-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, {\"id\": \"2027;WI|CSE 210-02\", \"course_code\": \"CSE 210\", \"section\": \"02\", \"title\": \"Programming with Classes\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-smith-cse\"], \"meetings\": [{\"days\": [\"M\", \"W\"], \"start_time\": \"14:00:00\", \"end_time\": \"15:00:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 231\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 10, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CSE210-02\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}]}], \"not_found\": []}"
+            }
+          ]
+        }
+      ],
+      "text": [
+        "Here is what I have:",
+        "\n- Track: Fall &",
+        " Winter\n- Credits",
+        ": 12 to 15",
+        "\n- No classes before 10:",
+        "00\n- No classes on",
+        " Fridays\n- Include C",
+        "SE 210 ",
+        "(found for",
+        " Winter 2027)",
+        "\n- Campus or online: either",
+        "\n\nShould I build a sched",
+        "ule with these?\n<<cho",
+        "ices: Build it | Change",
+        " something>>"
+      ],
+      "content": [
+        {
+          "text": "Here is what I have:\n- Track: Fall & Winter\n- Credits: 12 to 15\n- No classes before 10:00\n- No classes on Fridays\n- Include CSE 210 (found for Winter 2027)\n- Campus or online: either\n\nShould I build a schedule with these?\n<<choices: Build it | Change something>>",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    },
+    {
+      "request_messages": [
+        {
+          "role": "user",
+          "content": "Fall & Winter track, 12 to 15 credits, no classes before 10, no Fridays, include CSE 210"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "id": "toolu_01BeRnGE3w7CsugKqFrYeB2S",
+              "input": {},
+              "name": "get_remaining_requirements",
+              "type": "tool_use",
+              "caller": {
+                "type": "direct"
+              }
+            },
+            {
+              "id": "toolu_011quKPXea4s8wBXcX5r13vE",
+              "input": {
+                "course_codes": [
+                  "CSE 210"
+                ],
+                "delivery_method": null
+              },
+              "name": "search_sections",
+              "type": "tool_use",
+              "caller": {
+                "type": "direct"
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "toolu_01BeRnGE3w7CsugKqFrYeB2S",
+              "content": "{\"track\": \"fall_winter\", \"track_known\": true, \"default_credit_range\": {\"credit_min\": 12.0, \"credit_max\": 15.0}, \"requirements\": [{\"id\": \"core-data-structures\", \"group\": \"Major Core\", \"name\": \"Programming with Data Structures\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"CSE 212\"], \"courses_counted\": []}, {\"id\": \"core-testing\", \"group\": \"Major Core\", \"name\": \"Software Testing\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"CSE 270\"], \"courses_counted\": []}, {\"id\": \"core-applied\", \"group\": \"Major Core\", \"name\": \"Applied Programming\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 310\"], \"courses_counted\": []}, {\"id\": \"core-web-backend\", \"group\": \"Major Core\", \"name\": \"Web Backend\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 340\", \"CSE 341\"], \"courses_counted\": []}, {\"id\": \"web-frontend\", \"group\": \"Web Foundations\", \"name\": \"Web Frontend Development\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"WDD 231\"], \"courses_counted\": []}, {\"id\": \"db-design\", \"group\": \"Databases\", \"name\": \"Database Design\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CIT 225\"], \"courses_counted\": []}, {\"id\": \"math-calc2\", \"group\": \"Mathematics\", \"name\": \"Calculus II\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"MATH 113\"], \"courses_counted\": []}, {\"id\": \"math-stats\", \"group\": \"Mathematics\", \"name\": \"Statistics\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"MATH 221A\", \"MATH 325\"], \"courses_counted\": []}, {\"id\": \"major-elective\", \"group\": \"Major Electives\", \"name\": \"Computer Science Elective\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 325\", \"CSE 381\", \"CSE 450\"], \"courses_counted\": []}, {\"id\": \"rel-book-of-mormon\", \"group\": \"Religion Cornerstones\", \"name\": \"Teachings and Doctrine of the Book of Mormon\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"REL 275\"], \"courses_counted\": []}]}"
+            },
+            {
+              "type": "tool_result",
+              "tool_use_id": "toolu_011quKPXea4s8wBXcX5r13vE",
+              "content": "{\"courses\": [{\"course_code\": \"CSE 210\", \"title\": \"Programming with Classes\", \"credits\": 2.0, \"description\": \"Fixture description for Programming with Classes.\", \"sections\": [{\"id\": \"2027;WI|CSE 210-01\", \"course_code\": \"CSE 210\", \"section\": \"01\", \"title\": \"Programming with Classes\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-lindqvist\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"10:15:00\", \"end_time\": \"11:15:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 233\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 6, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CSE210-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, {\"id\": \"2027;WI|CSE 210-02\", \"course_code\": \"CSE 210\", \"section\": \"02\", \"title\": \"Programming with Classes\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-smith-cse\"], \"meetings\": [{\"days\": [\"M\", \"W\"], \"start_time\": \"14:00:00\", \"end_time\": \"15:00:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 231\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 10, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CSE210-02\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}]}], \"not_found\": []}"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Here is what I have:\n- Track: Fall & Winter\n- Credits: 12 to 15\n- No classes before 10:00\n- No classes on Fridays\n- Include CSE 210 (found for Winter 2027)\n- Campus or online: either\n\nShould I build a schedule with these?\n<<choices: Build it | Change something>>",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": "yes"
+        }
+      ],
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_01K2qfuaLRo7Gfw3Bn7rKRTr",
+          "input": {
+            "constraints": {
+              "credit_min": 12,
+              "credit_max": 15,
+              "earliest_start": "10:00",
+              "latest_end": null,
+              "days_off": [
+                "F"
+              ],
+              "include_courses": [
+                "CSE 210"
+              ],
+              "exclude_courses": [],
+              "exclude_section_ids": [],
+              "delivery_methods": [],
+              "only_required": false,
+              "allow_waitlist": false,
+              "only_favorite_professors": false
+            },
+            "max_results": 3,
+            "intake": {
+              "track": null,
+              "use_default_credits": false,
+              "student_agreed": true
+            }
+          },
+          "name": "build_schedules",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "request_messages": [
+        {
+          "role": "user",
+          "content": "Fall & Winter track, 12 to 15 credits, no classes before 10, no Fridays, include CSE 210"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "id": "toolu_01BeRnGE3w7CsugKqFrYeB2S",
+              "input": {},
+              "name": "get_remaining_requirements",
+              "type": "tool_use",
+              "caller": {
+                "type": "direct"
+              }
+            },
+            {
+              "id": "toolu_011quKPXea4s8wBXcX5r13vE",
+              "input": {
+                "course_codes": [
+                  "CSE 210"
+                ],
+                "delivery_method": null
+              },
+              "name": "search_sections",
+              "type": "tool_use",
+              "caller": {
+                "type": "direct"
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "toolu_01BeRnGE3w7CsugKqFrYeB2S",
+              "content": "{\"track\": \"fall_winter\", \"track_known\": true, \"default_credit_range\": {\"credit_min\": 12.0, \"credit_max\": 15.0}, \"requirements\": [{\"id\": \"core-data-structures\", \"group\": \"Major Core\", \"name\": \"Programming with Data Structures\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"CSE 212\"], \"courses_counted\": []}, {\"id\": \"core-testing\", \"group\": \"Major Core\", \"name\": \"Software Testing\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"CSE 270\"], \"courses_counted\": []}, {\"id\": \"core-applied\", \"group\": \"Major Core\", \"name\": \"Applied Programming\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 310\"], \"courses_counted\": []}, {\"id\": \"core-web-backend\", \"group\": \"Major Core\", \"name\": \"Web Backend\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 340\", \"CSE 341\"], \"courses_counted\": []}, {\"id\": \"web-frontend\", \"group\": \"Web Foundations\", \"name\": \"Web Frontend Development\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"WDD 231\"], \"courses_counted\": []}, {\"id\": \"db-design\", \"group\": \"Databases\", \"name\": \"Database Design\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CIT 225\"], \"courses_counted\": []}, {\"id\": \"math-calc2\", \"group\": \"Mathematics\", \"name\": \"Calculus II\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"MATH 113\"], \"courses_counted\": []}, {\"id\": \"math-stats\", \"group\": \"Mathematics\", \"name\": \"Statistics\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"MATH 221A\", \"MATH 325\"], \"courses_counted\": []}, {\"id\": \"major-elective\", \"group\": \"Major Electives\", \"name\": \"Computer Science Elective\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 325\", \"CSE 381\", \"CSE 450\"], \"courses_counted\": []}, {\"id\": \"rel-book-of-mormon\", \"group\": \"Religion Cornerstones\", \"name\": \"Teachings and Doctrine of the Book of Mormon\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"REL 275\"], \"courses_counted\": []}]}"
+            },
+            {
+              "type": "tool_result",
+              "tool_use_id": "toolu_011quKPXea4s8wBXcX5r13vE",
+              "content": "{\"courses\": [{\"course_code\": \"CSE 210\", \"title\": \"Programming with Classes\", \"credits\": 2.0, \"description\": \"Fixture description for Programming with Classes.\", \"sections\": [{\"id\": \"2027;WI|CSE 210-01\", \"course_code\": \"CSE 210\", \"section\": \"01\", \"title\": \"Programming with Classes\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-lindqvist\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"10:15:00\", \"end_time\": \"11:15:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 233\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 6, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CSE210-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, {\"id\": \"2027;WI|CSE 210-02\", \"course_code\": \"CSE 210\", \"section\": \"02\", \"title\": \"Programming with Classes\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-smith-cse\"], \"meetings\": [{\"days\": [\"M\", \"W\"], \"start_time\": \"14:00:00\", \"end_time\": \"15:00:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 231\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 10, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CSE210-02\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}]}], \"not_found\": []}"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Here is what I have:\n- Track: Fall & Winter\n- Credits: 12 to 15\n- No classes before 10:00\n- No classes on Fridays\n- Include CSE 210 (found for Winter 2027)\n- Campus or online: either\n\nShould I build a schedule with these?\n<<choices: Build it | Change something>>",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": "yes"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "id": "toolu_01K2qfuaLRo7Gfw3Bn7rKRTr",
+              "input": {
+                "constraints": {
+                  "credit_min": 12,
+                  "credit_max": 15,
+                  "earliest_start": "10:00",
+                  "latest_end": null,
+                  "days_off": [
+                    "F"
+                  ],
+                  "include_courses": [
+                    "CSE 210"
+                  ],
+                  "exclude_courses": [],
+                  "exclude_section_ids": [],
+                  "delivery_methods": [],
+                  "only_required": false,
+                  "allow_waitlist": false,
+                  "only_favorite_professors": false
+                },
+                "max_results": 3,
+                "intake": {
+                  "track": null,
+                  "use_default_credits": false,
+                  "student_agreed": true
+                }
+              },
+              "name": "build_schedules",
+              "type": "tool_use",
+              "caller": {
+                "type": "direct"
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "toolu_01K2qfuaLRo7Gfw3Bn7rKRTr",
+              "content": "{\"constraints\": {\"credit_min\": 12.0, \"credit_max\": 15.0, \"earliest_start\": \"10:00:00\", \"latest_end\": null, \"days_off\": [\"F\"], \"include_courses\": [\"CSE 210\"], \"exclude_courses\": [], \"exclude_section_ids\": [], \"delivery_methods\": [], \"only_required\": false, \"allow_waitlist\": false, \"only_favorite_professors\": false}, \"schedules\": [{\"id\": \"sch-8bac2d25a327\", \"rank\": 1, \"score\": 711.4125, \"total_credits\": 15.0, \"optimal\": true, \"classes\": [{\"section\": {\"id\": \"2027;WI;W1|MATH 221A-03\", \"course_code\": \"MATH 221A\", \"section\": \"03\", \"title\": \"Business Statistics\", \"credits\": 3.0, \"term_code\": \"2027;WI;W1\", \"block\": \"first\", \"delivery_method\": \"online\", \"class_type\": \"Lecture\", \"department\": \"Mathematics\", \"instructor_ids\": [\"p-reyes\"], \"meetings\": [], \"seats\": {\"status\": \"open\", \"open\": 25, \"total\": 50, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI-W1/MATH221A-03\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"math-stats\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI;W1|WDD 231-02\", \"course_code\": \"WDD 231\", \"section\": \"02\", \"title\": \"Web Frontend Development I\", \"credits\": 2.0, \"term_code\": \"2027;WI;W1\", \"block\": \"first\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Web Design and Development\", \"instructor_ids\": [\"p-okafor\"], \"meetings\": [{\"days\": [\"M\", \"W\"], \"start_time\": \"12:45:00\", \"end_time\": \"13:45:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-02-23\", \"room\": \"STC 150\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 9, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI-W1/WDD231-02\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"web-frontend\"], \"waitlisted\": false, \"backups\": [{\"id\": \"2027;WI;W2|WDD 231-03\", \"course_code\": \"WDD 231\", \"section\": \"03\", \"title\": \"Web Frontend Development I\", \"credits\": 2.0, \"term_code\": \"2027;WI;W2\", \"block\": \"second\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Web Design and Development\", \"instructor_ids\": [\"p-okafor\"], \"meetings\": [{\"days\": [\"M\", \"W\"], \"start_time\": \"12:45:00\", \"end_time\": \"13:45:00\", \"start_date\": \"2027-02-24\", \"end_date\": \"2027-04-08\", \"room\": \"STC 150\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 12, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI-W2/WDD231-03\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, {\"id\": \"2027;WI|WDD 231-01\", \"course_code\": \"WDD 231\", \"section\": \"01\", \"title\": \"Web Frontend Development I\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Web Design and Development\", \"instructor_ids\": [\"p-okafor\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"11:30:00\", \"end_time\": \"12:30:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 150\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 5, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/WDD231-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}], \"warnings\": [{\"kind\": \"prerequisite_check\", \"message\": \"Prerequisite WDD 131 is in progress: pending grade\", \"course_code\": \"WDD 231\", \"section_id\": \"2027;WI;W1|WDD 231-02\"}]}, {\"section\": {\"id\": \"2027;WI;W2|CSE 310-03\", \"course_code\": \"CSE 310\", \"section\": \"03\", \"title\": \"Applied Programming\", \"credits\": 3.0, \"term_code\": \"2027;WI;W2\", \"block\": \"second\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-okafor\"], \"meetings\": [{\"days\": [\"M\", \"T\", \"W\", \"R\"], \"start_time\": \"14:00:00\", \"end_time\": \"15:00:00\", \"start_date\": \"2027-02-24\", \"end_date\": \"2027-04-08\", \"room\": \"STC 380\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 13, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI-W2/CSE310-03\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"core-applied\"], \"waitlisted\": false, \"backups\": [], \"warnings\": [{\"kind\": \"prerequisite_check\", \"message\": \"Prerequisite CSE 210 is in progress: pending grade\", \"course_code\": \"CSE 310\", \"section_id\": \"2027;WI;W2|CSE 310-03\"}]}, {\"section\": {\"id\": \"2027;WI|CSE 212-03\", \"course_code\": \"CSE 212\", \"section\": \"03\", \"title\": \"Programming with Data Structures\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"online\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-barros\"], \"meetings\": [], \"seats\": {\"status\": \"open\", \"open\": 15, \"total\": 40, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CSE212-03\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"core-data-structures\"], \"waitlisted\": false, \"backups\": [{\"id\": \"2027;WI;W2|CSE 212-04\", \"course_code\": \"CSE 212\", \"section\": \"04\", \"title\": \"Programming with Data Structures\", \"credits\": 2.0, \"term_code\": \"2027;WI;W2\", \"block\": \"second\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-smith-cse\"], \"meetings\": [{\"days\": [\"M\", \"W\"], \"start_time\": \"15:15:00\", \"end_time\": \"16:15:00\", \"start_date\": \"2027-02-24\", \"end_date\": \"2027-04-08\", \"room\": \"STC 231\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 9, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI-W2/CSE212-04\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}], \"warnings\": [{\"kind\": \"prerequisite_check\", \"message\": \"Prerequisite CSE 210 is in progress: pending grade\", \"course_code\": \"CSE 212\", \"section_id\": \"2027;WI|CSE 212-03\"}]}, {\"section\": {\"id\": \"2027;WI|MATH 113-04\", \"course_code\": \"MATH 113\", \"section\": \"04\", \"title\": \"Calculus II\", \"credits\": 3.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"online\", \"class_type\": \"Lecture\", \"department\": \"Mathematics\", \"instructor_ids\": [\"p-nakamura\"], \"meetings\": [], \"seats\": {\"status\": \"open\", \"open\": 22, \"total\": 40, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/MATH113-04\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"math-calc2\"], \"waitlisted\": false, \"backups\": [{\"id\": \"2027;WI|MATH 113-03\", \"course_code\": \"MATH 113\", \"section\": \"03\", \"title\": \"Calculus II\", \"credits\": 3.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Mathematics\", \"instructor_ids\": [\"p-nakamura\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"11:30:00\", \"end_time\": \"12:45:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"RKS 103\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 8, \"total\": 40, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/MATH113-03\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|REL 275-02\", \"course_code\": \"REL 275\", \"section\": \"02\", \"title\": \"Teachings and Doctrine of the Book of Mormon\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Religious Education\", \"instructor_ids\": [\"p-smith-rel\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"12:45:00\", \"end_time\": \"13:45:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"TAY 120\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 25, \"total\": 80, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/REL275-02\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"rel-book-of-mormon\"], \"waitlisted\": false, \"backups\": [{\"id\": \"2027;WI|REL 275-01\", \"course_code\": \"REL 275\", \"section\": \"01\", \"title\": \"Teachings and Doctrine of the Book of Mormon\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Religious Education\", \"instructor_ids\": [\"p-smith-rel\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"10:15:00\", \"end_time\": \"11:15:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"TAY 120\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 12, \"total\": 80, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/REL275-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}], \"warnings\": []}], \"why\": {\"preferences_met\": [\"credit_range\", \"earliest_start\", \"days_off:F\"], \"preferences_missed\": [\"include_courses:CSE 210\"], \"favorite_professor_ids\": []}, \"warnings\": [{\"kind\": \"prerequisite_check\", \"message\": \"Prerequisite WDD 131 is in progress: pending grade\", \"course_code\": \"WDD 231\", \"section_id\": \"2027;WI;W1|WDD 231-02\"}, {\"kind\": \"prerequisite_check\", \"message\": \"Prerequisite CSE 210 is in progress: pending grade\", \"course_code\": \"CSE 310\", \"section_id\": \"2027;WI;W2|CSE 310-03\"}, {\"kind\": \"prerequisite_check\", \"message\": \"Prerequisite CSE 210 is in progress: pending grade\", \"course_code\": \"CSE 212\", \"section_id\": \"2027;WI|CSE 212-03\"}, {\"kind\": \"religion_limit\", \"message\": \"You can add a second religion course after the first day of the semester.\", \"course_code\": \"REL 275\", \"section_id\": \"2027;WI|REL 275-02\"}], \"advising_note\": \"Confirm with BYU-Idaho Academic Advising.\"}, {\"id\": \"sch-399996371fc6\", \"rank\": 2, \"score\": 709.4875, \"total_credits\": 15.0, \"optimal\": true, \"classes\": [{\"section\": {\"id\": \"2027;WI;W1|MATH 221A-03\", \"course_code\": \"MATH 221A\", \"section\": \"03\", \"title\": \"Business Statistics\", \"credits\": 3.0, \"term_code\": \"2027;WI;W1\", \"block\": \"first\", \"delivery_method\": \"online\", \"class_type\": \"Lecture\", \"department\": \"Mathematics\", \"instructor_ids\": [\"p-reyes\"], \"meetings\": [], \"seats\": {\"status\": \"open\", \"open\": 25, \"total\": 50, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI-W1/MATH221A-03\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"math-stats\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI;W2|CSE 212-04\", \"course_code\": \"CSE 212\", \"section\": \"04\", \"title\": \"Programming with Data Structures\", \"credits\": 2.0, \"term_code\": \"2027;WI;W2\", \"block\": \"second\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-smith-cse\"], \"meetings\": [{\"days\": [\"M\", \"W\"], \"start_time\": \"15:15:00\", \"end_time\": \"16:15:00\", \"start_date\": \"2027-02-24\", \"end_date\": \"2027-04-08\", \"room\": \"STC 231\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 9, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI-W2/CSE212-04\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"core-data-structures\"], \"waitlisted\": false, \"backups\": [{\"id\": \"2027;WI|CSE 212-03\", \"course_code\": \"CSE 212\", \"section\": \"03\", \"title\": \"Programming with Data Structures\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"online\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-barros\"], \"meetings\": [], \"seats\": {\"status\": \"open\", \"open\": 15, \"total\": 40, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CSE212-03\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}], \"warnings\": [{\"kind\": \"prerequisite_check\", \"message\": \"Prerequisite CSE 210 is in progress: pending grade\", \"course_code\": \"CSE 212\", \"section_id\": \"2027;WI;W2|CSE 212-04\"}]}, {\"section\": {\"id\": \"2027;WI;W2|CSE 310-03\", \"course_code\": \"CSE 310\", \"section\": \"03\", \"title\": \"Applied Programming\", \"credits\": 3.0, \"term_code\": \"2027;WI;W2\", \"block\": \"second\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-okafor\"], \"meetings\": [{\"days\": [\"M\", \"T\", \"W\", \"R\"], \"start_time\": \"14:00:00\", \"end_time\": \"15:00:00\", \"start_date\": \"2027-02-24\", \"end_date\": \"2027-04-08\", \"room\": \"STC 380\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 13, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI-W2/CSE310-03\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"core-applied\"], \"waitlisted\": false, \"backups\": [], \"warnings\": [{\"kind\": \"prerequisite_check\", \"message\": \"Prerequisite CSE 210 is in progress: pending grade\", \"course_code\": \"CSE 310\", \"section_id\": \"2027;WI;W2|CSE 310-03\"}]}, {\"section\": {\"id\": \"2027;WI;W2|WDD 231-03\", \"course_code\": \"WDD 231\", \"section\": \"03\", \"title\": \"Web Frontend Development I\", \"credits\": 2.0, \"term_code\": \"2027;WI;W2\", \"block\": \"second\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Web Design and Development\", \"instructor_ids\": [\"p-okafor\"], \"meetings\": [{\"days\": [\"M\", \"W\"], \"start_time\": \"12:45:00\", \"end_time\": \"13:45:00\", \"start_date\": \"2027-02-24\", \"end_date\": \"2027-04-08\", \"room\": \"STC 150\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 12, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI-W2/WDD231-03\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"web-frontend\"], \"waitlisted\": false, \"backups\": [{\"id\": \"2027;WI;W1|WDD 231-02\", \"course_code\": \"WDD 231\", \"section\": \"02\", \"title\": \"Web Frontend Development I\", \"credits\": 2.0, \"term_code\": \"2027;WI;W1\", \"block\": \"first\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Web Design and Development\", \"instructor_ids\": [\"p-okafor\"], \"meetings\": [{\"days\": [\"M\", \"W\"], \"start_time\": \"12:45:00\", \"end_time\": \"13:45:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-02-23\", \"room\": \"STC 150\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 9, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI-W1/WDD231-02\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, {\"id\": \"2027;WI|WDD 231-01\", \"course_code\": \"WDD 231\", \"section\": \"01\", \"title\": \"Web Frontend Development I\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Web Design and Development\", \"instructor_ids\": [\"p-okafor\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"11:30:00\", \"end_time\": \"12:30:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 150\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 5, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/WDD231-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}], \"warnings\": [{\"kind\": \"prerequisite_check\", \"message\": \"Prerequisite WDD 131 is in progress: pending grade\", \"course_code\": \"WDD 231\", \"section_id\": \"2027;WI;W2|WDD 231-03\"}]}, {\"section\": {\"id\": \"2027;WI|MATH 113-04\", \"course_code\": \"MATH 113\", \"section\": \"04\", \"title\": \"Calculus II\", \"credits\": 3.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"online\", \"class_type\": \"Lecture\", \"department\": \"Mathematics\", \"instructor_ids\": [\"p-nakamura\"], \"meetings\": [], \"seats\": {\"status\": \"open\", \"open\": 22, \"total\": 40, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/MATH113-04\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"math-calc2\"], \"waitlisted\": false, \"backups\": [{\"id\": \"2027;WI|MATH 113-03\", \"course_code\": \"MATH 113\", \"section\": \"03\", \"title\": \"Calculus II\", \"credits\": 3.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Mathematics\", \"instructor_ids\": [\"p-nakamura\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"11:30:00\", \"end_time\": \"12:45:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"RKS 103\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 8, \"total\": 40, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/MATH113-03\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|REL 275-02\", \"course_code\": \"REL 275\", \"section\": \"02\", \"title\": \"Teachings and Doctrine of the Book of Mormon\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Religious Education\", \"instructor_ids\": [\"p-smith-rel\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"12:45:00\", \"end_time\": \"13:45:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"TAY 120\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 25, \"total\": 80, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/REL275-02\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"rel-book-of-mormon\"], \"waitlisted\": false, \"backups\": [{\"id\": \"2027;WI|REL 275-01\", \"course_code\": \"REL 275\", \"section\": \"01\", \"title\": \"Teachings and Doctrine of the Book of Mormon\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Religious Education\", \"instructor_ids\": [\"p-smith-rel\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"10:15:00\", \"end_time\": \"11:15:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"TAY 120\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 12, \"total\": 80, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/REL275-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}], \"warnings\": []}], \"why\": {\"preferences_met\": [\"credit_range\", \"earliest_start\", \"days_off:F\"], \"preferences_missed\": [\"include_courses:CSE 210\"], \"favorite_professor_ids\": []}, \"warnings\": [{\"kind\": \"prerequisite_check\", \"message\": \"Prerequisite CSE 210 is in progress: pending grade\", \"course_code\": \"CSE 212\", \"section_id\": \"2027;WI;W2|CSE 212-04\"}, {\"kind\": \"prerequisite_check\", \"message\": \"Prerequisite CSE 210 is in progress: pending grade\", \"course_code\": \"CSE 310\", \"section_id\": \"2027;WI;W2|CSE 310-03\"}, {\"kind\": \"prerequisite_check\", \"message\": \"Prerequisite WDD 131 is in progress: pending grade\", \"course_code\": \"WDD 231\", \"section_id\": \"2027;WI;W2|WDD 231-03\"}, {\"kind\": \"religion_limit\", \"message\": \"You can add a second religion course after the first day of the semester.\", \"course_code\": \"REL 275\", \"section_id\": \"2027;WI|REL 275-02\"}], \"advising_note\": \"Confirm with BYU-Idaho Academic Advising.\"}, {\"id\": \"sch-f0fc16f23757\", \"rank\": 3, \"score\": 700.225, \"total_credits\": 15.0, \"optimal\": true, \"classes\": [{\"section\": {\"id\": \"2027;WI;W1|MATH 221A-03\", \"course_code\": \"MATH 221A\", \"section\": \"03\", \"title\": \"Business Statistics\", \"credits\": 3.0, \"term_code\": \"2027;WI;W1\", \"block\": \"first\", \"delivery_method\": \"online\", \"class_type\": \"Lecture\", \"department\": \"Mathematics\", \"instructor_ids\": [\"p-reyes\"], \"meetings\": [], \"seats\": {\"status\": \"open\", \"open\": 25, \"total\": 50, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI-W1/MATH221A-03\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"math-stats\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI;W2|CSE 310-03\", \"course_code\": \"CSE 310\", \"section\": \"03\", \"title\": \"Applied Programming\", \"credits\": 3.0, \"term_code\": \"2027;WI;W2\", \"block\": \"second\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-okafor\"], \"meetings\": [{\"days\": [\"M\", \"T\", \"W\", \"R\"], \"start_time\": \"14:00:00\", \"end_time\": \"15:00:00\", \"start_date\": \"2027-02-24\", \"end_date\": \"2027-04-08\", \"room\": \"STC 380\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 13, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI-W2/CSE310-03\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"core-applied\"], \"waitlisted\": false, \"backups\": [], \"warnings\": [{\"kind\": \"prerequisite_check\", \"message\": \"Prerequisite CSE 210 is in progress: pending grade\", \"course_code\": \"CSE 310\", \"section_id\": \"2027;WI;W2|CSE 310-03\"}]}, {\"section\": {\"id\": \"2027;WI;W2|WDD 231-03\", \"course_code\": \"WDD 231\", \"section\": \"03\", \"title\": \"Web Frontend Development I\", \"credits\": 2.0, \"term_code\": \"2027;WI;W2\", \"block\": \"second\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Web Design and Development\", \"instructor_ids\": [\"p-okafor\"], \"meetings\": [{\"days\": [\"M\", \"W\"], \"start_time\": \"12:45:00\", \"end_time\": \"13:45:00\", \"start_date\": \"2027-02-24\", \"end_date\": \"2027-04-08\", \"room\": \"STC 150\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 12, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI-W2/WDD231-03\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"web-frontend\"], \"waitlisted\": false, \"backups\": [{\"id\": \"2027;WI;W1|WDD 231-02\", \"course_code\": \"WDD 231\", \"section\": \"02\", \"title\": \"Web Frontend Development I\", \"credits\": 2.0, \"term_code\": \"2027;WI;W1\", \"block\": \"first\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Web Design and Development\", \"instructor_ids\": [\"p-okafor\"], \"meetings\": [{\"days\": [\"M\", \"W\"], \"start_time\": \"12:45:00\", \"end_time\": \"13:45:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-02-23\", \"room\": \"STC 150\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 9, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI-W1/WDD231-02\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, {\"id\": \"2027;WI|WDD 231-01\", \"course_code\": \"WDD 231\", \"section\": \"01\", \"title\": \"Web Frontend Development I\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Web Design and Development\", \"instructor_ids\": [\"p-okafor\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"11:30:00\", \"end_time\": \"12:30:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 150\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 5, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/WDD231-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}], \"warnings\": [{\"kind\": \"prerequisite_check\", \"message\": \"Prerequisite WDD 131 is in progress: pending grade\", \"course_code\": \"WDD 231\", \"section_id\": \"2027;WI;W2|WDD 231-03\"}]}, {\"section\": {\"id\": \"2027;WI|CSE 212-03\", \"course_code\": \"CSE 212\", \"section\": \"03\", \"title\": \"Programming with Data Structures\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"online\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-barros\"], \"meetings\": [], \"seats\": {\"status\": \"open\", \"open\": 15, \"total\": 40, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CSE212-03\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"core-data-structures\"], \"waitlisted\": false, \"backups\": [{\"id\": \"2027;WI;W2|CSE 212-04\", \"course_code\": \"CSE 212\", \"section\": \"04\", \"title\": \"Programming with Data Structures\", \"credits\": 2.0, \"term_code\": \"2027;WI;W2\", \"block\": \"second\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-smith-cse\"], \"meetings\": [{\"days\": [\"M\", \"W\"], \"start_time\": \"15:15:00\", \"end_time\": \"16:15:00\", \"start_date\": \"2027-02-24\", \"end_date\": \"2027-04-08\", \"room\": \"STC 231\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 9, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI-W2/CSE212-04\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, {\"id\": \"2027;WI|CSE 212-02\", \"course_code\": \"CSE 212\", \"section\": \"02\", \"title\": \"Programming with Data Structures\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-hale\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"12:45:00\", \"end_time\": \"13:45:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 235\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 7, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CSE212-02\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}], \"warnings\": [{\"kind\": \"prerequisite_check\", \"message\": \"Prerequisite CSE 210 is in progress: pending grade\", \"course_code\": \"CSE 212\", \"section_id\": \"2027;WI|CSE 212-03\"}]}, {\"section\": {\"id\": \"2027;WI|MATH 113-04\", \"course_code\": \"MATH 113\", \"section\": \"04\", \"title\": \"Calculus II\", \"credits\": 3.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"online\", \"class_type\": \"Lecture\", \"department\": \"Mathematics\", \"instructor_ids\": [\"p-nakamura\"], \"meetings\": [], \"seats\": {\"status\": \"open\", \"open\": 22, \"total\": 40, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/MATH113-04\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"math-calc2\"], \"waitlisted\": false, \"backups\": [{\"id\": \"2027;WI|MATH 113-03\", \"course_code\": \"MATH 113\", \"section\": \"03\", \"title\": \"Calculus II\", \"credits\": 3.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Mathematics\", \"instructor_ids\": [\"p-nakamura\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"11:30:00\", \"end_time\": \"12:45:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"RKS 103\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 8, \"total\": 40, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/MATH113-03\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|REL 275-01\", \"course_code\": \"REL 275\", \"section\": \"01\", \"title\": \"Teachings and Doctrine of the Book of Mormon\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Religious Education\", \"instructor_ids\": [\"p-smith-rel\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"10:15:00\", \"end_time\": \"11:15:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"TAY 120\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 12, \"total\": 80, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/REL275-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"rel-book-of-mormon\"], \"waitlisted\": false, \"backups\": [{\"id\": \"2027;WI|REL 275-02\", \"course_code\": \"REL 275\", \"section\": \"02\", \"title\": \"Teachings and Doctrine of the Book of Mormon\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Religious Education\", \"instructor_ids\": [\"p-smith-rel\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"12:45:00\", \"end_time\": \"13:45:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"TAY 120\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 25, \"total\": 80, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/REL275-02\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}], \"warnings\": []}], \"why\": {\"preferences_met\": [\"credit_range\", \"earliest_start\", \"days_off:F\"], \"preferences_missed\": [\"include_courses:CSE 210\"], \"favorite_professor_ids\": []}, \"warnings\": [{\"kind\": \"prerequisite_check\", \"message\": \"Prerequisite CSE 210 is in progress: pending grade\", \"course_code\": \"CSE 310\", \"section_id\": \"2027;WI;W2|CSE 310-03\"}, {\"kind\": \"prerequisite_check\", \"message\": \"Prerequisite WDD 131 is in progress: pending grade\", \"course_code\": \"WDD 231\", \"section_id\": \"2027;WI;W2|WDD 231-03\"}, {\"kind\": \"prerequisite_check\", \"message\": \"Prerequisite CSE 210 is in progress: pending grade\", \"course_code\": \"CSE 212\", \"section_id\": \"2027;WI|CSE 212-03\"}, {\"kind\": \"religion_limit\", \"message\": \"You can add a second religion course after the first day of the semester.\", \"course_code\": \"REL 275\", \"section_id\": \"2027;WI|REL 275-01\"}], \"advising_note\": \"Confirm with BYU-Idaho Academic Advising.\"}], \"excluded\": [{\"section_id\": \"2027;WI|CSE 212-01\", \"reason\": \"excluded by you\", \"detail\": \"starts at 09:00, before 10:00\"}, {\"section_id\": \"2027;WI|CSE 270-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212\"}, {\"section_id\": \"2027;WI;W1|CSE 270-02\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212\"}, {\"section_id\": \"2027;WI;W2|CSE 300-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212\"}, {\"section_id\": \"2027;WI|CSE 310-01\", \"reason\": \"excluded by you\", \"detail\": \"meets on F (day off)\"}, {\"section_id\": \"2027;WI|CSE 310-02\", \"reason\": \"excluded by you\", \"detail\": \"meets on F (day off)\"}, {\"section_id\": \"2027;WI|CSE 325-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212\"}, {\"section_id\": \"2027;WI|CSE 340-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212 and one of WDD 231, CIT 230\"}, {\"section_id\": \"2027;WI|CSE 340-02\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212 and one of WDD 231, CIT 230\"}, {\"section_id\": \"2027;WI|CSE 341-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs one of CSE 340, WDD 330\"}, {\"section_id\": \"2027;WI|CSE 370-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 270\"}, {\"section_id\": \"2027;WI|CSE 381-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212 and MATH 215 with C or better\"}, {\"section_id\": \"2027;WI|CSE 450-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212 and one of MATH 221A, MATH 325\"}, {\"section_id\": \"2027;WI|CSE 450-02\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212 and one of MATH 221A, MATH 325\"}, {\"section_id\": \"2027;WI|CSE 499-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 300\"}, {\"section_id\": \"2027;WI|CIT 225-01\", \"reason\": \"excluded by you\", \"detail\": \"meets on F (day off)\"}, {\"section_id\": \"2027;WI|CIT 225-02\", \"reason\": \"closed\", \"detail\": \"section is closed\"}, {\"section_id\": \"2027;WI|MATH 113-01\", \"reason\": \"excluded by you\", \"detail\": \"meets on F (day off)\"}, {\"section_id\": \"2027;WI|MATH 113-02\", \"reason\": \"excluded by you\", \"detail\": \"meets on F (day off)\"}, {\"section_id\": \"2027;WI|MATH 215-01\", \"reason\": \"excluded by you\", \"detail\": \"starts at 09:00, before 10:00\"}, {\"section_id\": \"2027;WI|MATH 221A-01\", \"reason\": \"excluded by you\", \"detail\": \"meets on F (day off)\"}, {\"section_id\": \"2027;WI|MATH 221A-02\", \"reason\": \"excluded by you\", \"detail\": \"starts at 09:00, before 10:00\"}, {\"section_id\": \"2027;WI|MATH 325-01\", \"reason\": \"excluded by you\", \"detail\": \"meets on F (day off)\"}, {\"section_id\": \"2027;WI|REL 275-03\", \"reason\": \"excluded by you\", \"detail\": \"starts at 09:00, before 10:00\"}], \"relaxation\": null}"
+            }
+          ]
+        }
+      ],
+      "text": [
+        "I built",
+        " three ",
+        "15-credit schedules,",
+        " but **",
+        "none of them include",
+        " CSE 210**,",
+        " which you",
+        " asked for. The buil",
+        "der did not expl",
+        "ain why. CSE 210",
+        " has two sections that f",
+        "it your lim",
+        "its:",
+        "\n- Section 01: T",
+        "ue/Thu 10:",
+        "15\u201311:15, STC",
+        " 233 ",
+        "(seats as of 2026",
+        "-11-13 ",
+        "15:00 ",
+        "UTC: 6 of",
+        " 30 ",
+        "open)\n- Section 02",
+        ": Mon/Wed",
+        " 14:00\u201315:00",
+        ", STC 231 (se",
+        "ats as of 2026-11",
+        "-13 15:00 U",
+        "TC: 10 of ",
+        "30 open)\n\nThe",
+        " prerequisite chec",
+        "ks also list",
+        " CSE 210 as in",
+        " progress for",
+        " you",
+        ". If",
+        " you",
+        " are taking it now, you may",
+        " not need it again. Let me",
+        " know wh",
+        "ether you still",
+        " want it.\n\nAll",
+        " three schedules have the",
+        " same courses with",
+        " different",
+        " sections. None",
+        " has",
+        " a class before",
+        " 10:00 or on a",
+        " Friday.",
+        " Se",
+        "ats for",
+        " all of",
+        " them",
+        " are",
+        " as of 2026-11-",
+        "13 15:00 UT",
+        "C.",
+        "\n- **",
+        "M",
+        "ATH 221A-",
+        "03** (online, first",
+        " block, 3 c",
+        "r): Statistics. ",
+        "25 of 50 seats",
+        " open.\n- **CSE",
+        " 212**",
+        " (2",
+        " cr): Data",
+        " Structures.",
+        "\n  - Sch",
+        "edules",
+        " 1 and 3 use",
+        " section",
+        " 03, online, with",
+        " 15 of 40 se",
+        "ats open.\n  - Sch",
+        "edule 2 uses section",
+        " 04, Mon/",
+        "Wed 15:15\u201316",
+        ":15, STC 231,",
+        " second block,",
+        " with 9 of 30 ",
+        "seats open.\n- **C",
+        "SE 310-",
+        "03** (3 cr):",
+        " Applied Programming.",
+        " It me",
+        "ets Mon/Tue",
+        "/Wed/Thu",
+        " 14:00\u201315:00",
+        " ",
+        "in STC 380, second block",
+        ", with 13 of 30",
+        " seats open.\n- **",
+        "WDD 231**",
+        " (2 cr): Web",
+        " Frontend.",
+        "\n  - Schedule ",
+        "1 uses section",
+        " 02, Mon/",
+        "Wed 12:45\u201313",
+        ":45, ST",
+        "C 150, first block,",
+        " with 9 of 30 ",
+        "seats open.\n  -",
+        " Schedules 2 and ",
+        "3 use section 03, the",
+        " same days",
+        " and time, second block, with ",
+        "12 of 30 seats",
+        " open.\n- **MATH",
+        " ",
+        "113-04** (online, ",
+        "3 cr): Calcul",
+        "us II. 22 of ",
+        "40 seats open.\n-",
+        " **REL 275**",
+        " (2 cr): Book",
+        " of Mormon.\n  ",
+        "- Schedules",
+        " 1 and 2 use",
+        " section 02, Tue/",
+        "Thu 12:45\u2013",
+        "13:45, TAY ",
+        "120, with 25 of ",
+        "80 seats open.\n  ",
+        "- Schedule 3 ",
+        "uses section 01, T",
+        "ue/Thu 10:",
+        "15\u201311:15, TA",
+        "Y 120, with 12 ",
+        "of 80 seats open.",
+        "\n\nWar",
+        "nings to check before you",
+        " register:\n- CSE ",
+        "212 and CSE 310",
+        " require CSE 210,",
+        " which is in progress with",
+        " the",
+        " grade pending.\n- W",
+        "DD 231 requires W",
+        "DD 131, which is in",
+        " progress with the grade pending",
+        ".\n- REL 275:",
+        " you",
+        " can add a second religion course after",
+        " the first day of the semester.",
+        "\n\nDo you want me to r",
+        "ebuild with CSE ",
+        "210 required",
+        " and",
+        " see",
+        " what",
+        " the",
+        " buil",
+        "der retur",
+        "ns?\n\nConfirm with",
+        " BYU-Idaho",
+        " Academic Advising."
+      ],
+      "content": [
+        {
+          "signature": "CAQS/gcKEAgTGAI4AUIIdGhpbmtpbmcSDLYaewzr0p9mBtbq2BoMdfyHbOmNRjYbmYzBIjBgdKbE0JeJx9BEO+bDWL3DmVEEqet7+ZBC9AaI2/Cui9fVysqydX2ydVplfOVUQNgqmwfJjFNFFAzeL+LtfGtazskNwf77xBA9ttuEMX7d2/ZiOxjtmujdykAykfbXm2HcdMeqafd/c5F5ZgOkXyjjuHT/1VOX7grUauIWn5aSX310G9moJLs21MIKaGttQBYorOKw6NlJt5lNH82oUhkhVSZP3z6+6LyXQ3o6Y2E5jSM3JrvyDSLV/To0ZgcmDaQ0a3+XtlujCTRdD1ItKygbesJlnXRBWy2kgkR1UBvYOCJNtNrH6VqWpsw4GEPNc0EtHoxXs3Nnza474CKrRZlqwxrufKep0NTwzYwo8TC278YO7uIVCZcCvHYi4sGf8pyxw0FQw25z8KTHYkn1cezmZ7pboDF9jYIT7Odnj/hR11wFrzw8YSGj1brtJx3HUqxL1kha4oQlF8cBUxZ7a9AT3+75wCwZCSa+AimGVv6rw1luQ5+nXZgiIs3p0zaLv/0uGqZ8eBGzlu0fsFv9YRebDDkNtU8IcWAZvOiLPDuiSWAJD4PKNi0gV9lSSBJa5EJwY7T1EKtulTZB5RRvB6A9dvwkXlnJgL+eeMV4c4c0ewXfMKjZI5kGWfSe2BfgIknXyfj8gmRb3PSkGOUvQbVqwZtMZNgEMbgxU9fCqVJ/KlhBCZcKirLFZf5yJsHOI5jzaUqetmj90MlQ/sVQg0XbWpSCNPWiRhSgEEWJPLGCLdlDDni47PRikqYXS/M6DGJs+Uv3pioRL28WzqJAS+Qc2ia/L0mWo2C0rP/QvDgoX2TPYvbKv+36hijbosP9lESxt+/hU0olttv9hmGNdpYu55n6g8O60bCdXN682/cRj0nRk33nS+3Psxs1MHh3pQPkLyl+KR35XO9xMxYJH2ddoDaiM0kho7VMbp4+hosdmnrz8oUF/tQLag6sJekmEdxp81eN88Ni7pyKSNQxUTc58RmeVVu4UukVX1/6UsaXHwkKbankcwyfhM+mA3rSa4Z9PU5ib291AijHEkmibIbbbGJoacCeUGvGFQFDGo8B6iJBNZqT0pmzCe6q2A0v2+xBSvVqmiDyqR86Q49pJ8ojeqVTntnUNyjrt243m5Y/wIHOJgoGy3CA+K1jW/2KCJmIZJF+i6eiU06fSO6V2X8OGXoiIKETDy/cAzej7frlTorP2ru2+Yri1EUQcJGuvMwvGYG8fKNaOteJT2bRjH8mFTRLo8qrR85xumCBXGWavZu9Aozx9jHTVhCkcZvpgKzcxqn0BDrL6cIXarQDFRgB",
+          "thinking": "",
+          "type": "thinking"
+        },
+        {
+          "text": "I built three 15-credit schedules, but **none of them include CSE 210**, which you asked for. The builder did not explain why. CSE 210 has two sections that fit your limits:\n- Section 01: Tue/Thu 10:15\u201311:15, STC 233 (seats as of 2026-11-13 15:00 UTC: 6 of 30 open)\n- Section 02: Mon/Wed 14:00\u201315:00, STC 231 (seats as of 2026-11-13 15:00 UTC: 10 of 30 open)\n\nThe prerequisite checks also list CSE 210 as in progress for you. If you are taking it now, you may not need it again. Let me know whether you still want it.\n\nAll three schedules have the same courses with different sections. None has a class before 10:00 or on a Friday. Seats for all of them are as of 2026-11-13 15:00 UTC.\n- **MATH 221A-03** (online, first block, 3 cr): Statistics. 25 of 50 seats open.\n- **CSE 212** (2 cr): Data Structures.\n  - Schedules 1 and 3 use section 03, online, with 15 of 40 seats open.\n  - Schedule 2 uses section 04, Mon/Wed 15:15\u201316:15, STC 231, second block, with 9 of 30 seats open.\n- **CSE 310-03** (3 cr): Applied Programming. It meets Mon/Tue/Wed/Thu 14:00\u201315:00 in STC 380, second block, with 13 of 30 seats open.\n- **WDD 231** (2 cr): Web Frontend.\n  - Schedule 1 uses section 02, Mon/Wed 12:45\u201313:45, STC 150, first block, with 9 of 30 seats open.\n  - Schedules 2 and 3 use section 03, the same days and time, second block, with 12 of 30 seats open.\n- **MATH 113-04** (online, 3 cr): Calculus II. 22 of 40 seats open.\n- **REL 275** (2 cr): Book of Mormon.\n  - Schedules 1 and 2 use section 02, Tue/Thu 12:45\u201313:45, TAY 120, with 25 of 80 seats open.\n  - Schedule 3 uses section 01, Tue/Thu 10:15\u201311:15, TAY 120, with 12 of 80 seats open.\n\nWarnings to check before you register:\n- CSE 212 and CSE 310 require CSE 210, which is in progress with the grade pending.\n- WDD 231 requires WDD 131, which is in progress with the grade pending.\n- REL 275: you can add a second religion course after the first day of the semester.\n\nDo you want me to rebuild with CSE 210 required and see what the builder returns?\n\nConfirm with BYU-Idaho Academic Advising.",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    }
+  ]
+}

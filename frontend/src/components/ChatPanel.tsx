@@ -27,6 +27,14 @@ const STARTERS = [
 ];
 const STARTER_COLORS = ["bg-sq-sage", "bg-sq-clay", "bg-sq-sky", "bg-sq-butter"];
 
+/** The `done` event may carry fixed answers for the question the assistant just asked. */
+function quickRepliesFrom(event: ChatEvent): string[] | undefined {
+  const raw = (event.data as { quick_replies?: unknown } | null | undefined)?.quick_replies;
+  if (!Array.isArray(raw)) return undefined;
+  const options = raw.filter((o): o is string => typeof o === "string" && o.trim() !== "");
+  return options.length > 0 ? options : undefined;
+}
+
 interface ChatPanelProps {
   /** Every event, so the page can show chips and schedule cards. */
   onEvent?: (event: ChatEvent) => void;
@@ -81,7 +89,7 @@ export function ChatPanel({ onEvent, beforeSend }: ChatPanelProps) {
         } else if (event.type === "error") {
           updateReply((turn) => ({ ...turn, status: undefined, error: event.text ?? "Something went wrong." }));
         } else if (event.type === "done") {
-          updateReply((turn) => ({ ...turn, status: undefined }));
+          updateReply((turn) => ({ ...turn, status: undefined, quickReplies: quickRepliesFrom(event) }));
         }
       }, controller.signal);
     } catch {
@@ -114,6 +122,10 @@ export function ChatPanel({ onEvent, beforeSend }: ChatPanelProps) {
       void send(draft);
     }
   }
+
+  // Quick replies belong to the question just asked: only the latest turn shows them.
+  const lastTurn = turns[turns.length - 1];
+  const quickReplies = !busy && lastTurn?.role === "assistant" ? lastTurn.quickReplies : undefined;
 
   return (
     <section aria-label="Chat" className="flex flex-col gap-5">
@@ -150,6 +162,22 @@ export function ChatPanel({ onEvent, beforeSend }: ChatPanelProps) {
             ),
           )}
         </ol>
+      )}
+
+      {quickReplies && (
+        <ul aria-label="Quick replies" className="flex flex-wrap gap-2">
+          {quickReplies.map((option) => (
+            <li key={option}>
+              <button
+                type="button"
+                onClick={() => void send(option)}
+                className="min-h-11 rounded-btn border border-line bg-surface px-4 text-[15px] text-ink transition-colors duration-150 hover:bg-field"
+              >
+                {option}
+              </button>
+            </li>
+          ))}
+        </ul>
       )}
 
       {sendError && <p role="alert" className="text-sm">{sendError}</p>}
