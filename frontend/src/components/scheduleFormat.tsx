@@ -13,7 +13,8 @@ export const DAYS: { day: Day; short: string; abbr: string; name: string }[] = [
 const DAY_ABBR = Object.fromEntries(DAYS.map((d) => [d.day, d.abbr])) as Record<Day, string>;
 
 export function plural(n: number, word: string): string {
-  return `${n} ${n === 1 ? word : `${word}s`}`;
+  // "class" -> "classes", "credit" -> "credits".
+  return `${n} ${n === 1 ? word : word.endsWith("s") ? `${word}es` : `${word}s`}`;
 }
 
 export function timedMeetings(section: Section): Meeting[] {

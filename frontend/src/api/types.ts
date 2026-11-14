@@ -93,6 +93,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/chat/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Chat History
+         * @description The conversation as the chat showed it, so a reload keeps it (AI-08).
+         */
+        get: operations["chat_history_api_chat_history_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/constraints": {
         parameters: {
             query?: never;
@@ -177,6 +197,25 @@ export interface paths {
         /** Email Draft */
         post: operations["email_draft_api_mentors__professor_id__email_draft_post"];
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/plan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Plan */
+        get: operations["get_plan_api_plan_get"];
+        /** Put Plan */
+        put: operations["put_plan_api_plan_put"];
+        post?: never;
+        /** Delete Plan */
+        delete: operations["delete_plan_api_plan_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -466,10 +505,64 @@ export interface components {
              */
             type: "text" | "tool_call" | "tool_result" | "done" | "error";
         };
+        /**
+         * ChatHistory
+         * @description The session's conversation, so a reload keeps it (AI-08).
+         */
+        ChatHistory: {
+            /** Turns */
+            turns?: components["schemas"]["ChatTurn"][];
+        };
         /** ChatRequest */
         ChatRequest: {
             /** Message */
             message: string;
+        };
+        /**
+         * ChatTurn
+         * @description One message of the conversation as the chat shows it (AI-08).
+         */
+        ChatTurn: {
+            /** Error */
+            error?: string | null;
+            /**
+             * No Schedule
+             * @description A build ran and no schedule fits.
+             * @default false
+             */
+            no_schedule: boolean;
+            /**
+             * Option
+             * @description The card label: "Option 2".
+             */
+            option?: number | null;
+            /** Quick Replies */
+            quick_replies?: string[];
+            /** @description No schedule fits: the rule to loosen. */
+            relaxation?: components["schemas"]["Relaxation"] | null;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "student" | "assistant";
+            /** @description The one schedule this assistant message shows. */
+            schedule?: components["schemas"]["Schedule"] | null;
+            /**
+             * Text
+             * @default
+             */
+            text: string;
+        };
+        /**
+         * ConfirmPlanRequest
+         * @description AI-08: confirm the schedule the chat showed last as the session's plan.
+         */
+        ConfirmPlanRequest: {
+            /**
+             * Schedule Id
+             * @example sch-8bac2d25a327
+             */
+            schedule_id: string;
         };
         /** ConstraintSet */
         ConstraintSet: {
@@ -1445,6 +1538,26 @@ export interface operations {
             };
         };
     };
+    chat_history_api_chat_history_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChatHistory"];
+                };
+            };
+        };
+    };
     get_constraints_api_constraints_get: {
         parameters: {
             query?: never;
@@ -1614,6 +1727,91 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
+            };
+        };
+    };
+    get_plan_api_plan_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Schedule"];
+                };
+            };
+            /** @description No plan yet */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    put_plan_api_plan_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConfirmPlanRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Schedule"];
+                };
+            };
+            /** @description Not the schedule shown last */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_plan_api_plan_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

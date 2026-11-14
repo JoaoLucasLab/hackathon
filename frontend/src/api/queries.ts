@@ -5,6 +5,7 @@ import { forgetPlanningSetup, rememberPlanningSetup } from "./planningSetup";
 import type {
   AuditRequirement,
   BuildSchedulesResponse,
+  ChatHistory,
   ConstraintSet,
   DegreeAudit,
   FavoriteProfessor,
@@ -18,6 +19,8 @@ export const queryKeys = {
   /** The parsed audit waiting for the student to confirm it. Memory only. */
   auditDraft: ["audit", "draft"] as const,
   remaining: ["requirements", "remaining"] as const,
+  /** AI-08: the confirmed Winter 2027 plan, or null when there is none (404). */
+  plan: ["plan"] as const,
   professors: ["professors"] as const,
   /** Starts with `professors`, so invalidating the list refreshes it too. */
   professor: (id: string) => ["professors", "detail", id] as const,
@@ -37,6 +40,27 @@ export function useRemainingRequirements() {
     queryKey: queryKeys.remaining,
     queryFn: async () => unwrap(await api.GET("/api/requirements/remaining")),
   });
+}
+
+/** The confirmed plan (`GET /api/plan`). `null` when none is confirmed yet (404). */
+export function usePlan(enabled = true) {
+  return useQuery<Schedule | null>({
+    queryKey: queryKeys.plan,
+    enabled,
+    queryFn: async () => {
+      try {
+        return unwrap(await api.GET("/api/plan"));
+      } catch (error) {
+        if (error instanceof ApiError && error.status === 404) return null;
+        throw error;
+      }
+    },
+  });
+}
+
+/** The session's conversation with its schedule cards (`GET /api/chat/history`). */
+export async function fetchChatHistory(signal?: AbortSignal): Promise<ChatHistory> {
+  return unwrap(await api.GET("/api/chat/history", { signal }));
 }
 
 /** Records consent (`POST /api/session`), then loads the sample audit fixture. */

@@ -2,7 +2,9 @@ import { Navigate, Route, Routes } from "react-router-dom";
 
 import { AuditConfirm } from "./pages/AuditConfirm";
 import { AuditUpload } from "./pages/AuditUpload";
+import { conversationalPlanner } from "./config";
 import { Consent } from "./pages/Consent";
+import { MyPlan } from "./pages/MyPlan";
 import { Planner } from "./pages/Planner";
 import { MentorFinder } from "./pages/MentorFinder";
 import { Professor } from "./pages/Professor";
@@ -13,14 +15,18 @@ import { Requirements } from "./pages/Requirements";
 export const routerFuture = { v7_startTransition: true, v7_relativeSplatPath: true } as const;
 
 export function AppRoutes() {
+  // AI-08: with the conversational planner, the Schedules tab is "My plan".
+  const myPlan = conversationalPlanner();
   return (
     <PlanningState>
       <Routes>
         <Route element={<Planner />}>
           <Route path="/" element={null} />
           <Route path="/planner" element={null} />
-          <Route path="/schedules" element={null} />
+          {!myPlan && <Route path="/schedules" element={null} />}
         </Route>
+      {myPlan && <Route path="/plan" element={<MyPlan />} />}
+      {myPlan && <Route path="/schedules" element={<Navigate to="/plan" replace />} />}
       <Route path="/consent" element={<Consent />} />
       <Route path="/professors" element={<MentorFinder />} />
       <Route path="/professors/:professorId" element={<Professor />} />

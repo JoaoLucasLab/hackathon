@@ -101,7 +101,76 @@ INTAKE_SCENARIOS = [
     INTAKE_ANY_CREDITS,
 ]
 
-ALL_SCENARIOS = PHRASE_SCENARIOS + GROUNDING_SCENARIOS + INTAKE_SCENARIOS
+# AI-08: one schedule in the chat. Every conversation starts with an intake that gives
+# everything, then "yes" (the first schedule), then the student's reaction.
+# On the fixtures, CAMPUS_BY_2 gives a first schedule with a Friday class (CIT 225,
+# MWF) and MATH 221A at 9:00 with a later section; ANY_DELIVERY gives one with online
+# classes. CSE 210 is in progress on the fixture audit, so it is never scheduled:
+# the "later in the day" phrase uses MATH 221A instead.
+CAMPUS_BY_2 = [
+    "12 to 15 credits, campus classes only, done by 2:00 PM. No specific courses to add "
+    "or skip.",
+    "yes",
+]
+ANY_DELIVERY = [
+    "12 to 15 credits. No time limits, no specific courses, campus or online is fine.",
+    "yes",
+]
+
+
+def _loop(scenario_id: str, base: list[str], *reactions: str) -> Scenario:
+    return Scenario(scenario_id, [*base, *reactions], conversational=True)
+
+
+FEEDBACK_NO_FRIDAY = _loop("loop-no-friday", CAMPUS_BY_2, "no classes on Friday")
+FEEDBACK_PROFESSOR = _loop(
+    "loop-not-that-professor", CAMPUS_BY_2, "I don't want that professor for CIT 225"
+)
+FEEDBACK_LATER = _loop("loop-later-in-day", CAMPUS_BY_2, "can MATH 221A be later in the day")
+FEEDBACK_FEWER_CREDITS = _loop("loop-fewer-credits", CAMPUS_BY_2, "fewer credits")
+FEEDBACK_ONLINE_TO_CAMPUS = _loop(
+    "loop-online-to-campus", ANY_DELIVERY, "move the online one to campus, the MATH 113 one"
+)
+FEEDBACK_DIFFERENT = _loop("loop-different-one", CAMPUS_BY_2, "show me a different one")
+FEEDBACK_SCENARIOS = [
+    FEEDBACK_NO_FRIDAY,
+    FEEDBACK_PROFESSOR,
+    FEEDBACK_LATER,
+    FEEDBACK_FEWER_CREDITS,
+    FEEDBACK_ONLINE_TO_CAMPUS,
+    FEEDBACK_DIFFERENT,
+]
+LOOP_VAGUE = _loop("loop-vague", CAMPUS_BY_2, "I don't like it", "just show me another")
+LOOP_CONFIRM = _loop("loop-confirm", CAMPUS_BY_2, "This works")
+LOOP_NOT_A_YES = _loop(
+    "loop-not-a-yes", CAMPUS_BY_2, "Maybe, I guess", "Is CIT 225 on Fridays?"
+)
+LOOP_CONFIRM_THEN_CHANGE = _loop(
+    "loop-confirm-then-change",
+    CAMPUS_BY_2,
+    "This works",
+    "Actually, change the Tuesday 9:00 class",
+)
+LOOP_NO_FIT = Scenario(
+    "loop-no-fit",
+    [
+        "12 to 15 credits, campus classes only, done by 10:00 AM. No specific courses to "
+        "add or skip.",
+        "yes",
+        "Apply this change",
+    ],
+    conversational=True,
+)
+LOOP_SCENARIOS = [
+    *FEEDBACK_SCENARIOS,
+    LOOP_VAGUE,
+    LOOP_CONFIRM,
+    LOOP_NOT_A_YES,
+    LOOP_CONFIRM_THEN_CHANGE,
+    LOOP_NO_FIT,
+]
+
+ALL_SCENARIOS = PHRASE_SCENARIOS + GROUNDING_SCENARIOS + INTAKE_SCENARIOS + LOOP_SCENARIOS
 
 
 def make_session(scenario: Scenario, monkeypatch: pytest.MonkeyPatch) -> ChatSession:
@@ -151,9 +220,10 @@ class RecordingCaller:
             if isinstance(item, str):
                 chunks.append(item)
             else:
+                # The request is not saved: replay rebuilds it from our own code, and
+                # the tests check that rebuilt request (see ReplayCaller).
                 self.calls.append(
                     {
-                        "request_messages": json.loads(json.dumps(params["messages"])),
                         "text": chunks,
                         "content": item.content,
                         "stop_reason": item.stop_reason,
@@ -163,15 +233,45 @@ class RecordingCaller:
 
 
 class ReplayCaller:
-    """Feeds recorded responses back in order. No network."""
+    """Feeds recorded responses back in order. No network.
+
+    Keeps the messages our code would send to Claude on each call, so tests check
+    what the code sends today (privacy, injected text reaching the model), not a
+    copy saved when the conversation was recorded."""
 
     def __init__(self, calls: list[dict[str, Any]]) -> None:
         self._calls = iter(calls)
+        self.requests: list[list[dict[str, Any]]] = []
 
     def __call__(self, params: dict[str, Any]) -> Iterator[str | TurnResult]:
+        self.requests.append(json.loads(json.dumps(params["messages"])))
         call = next(self._calls)
         yield from call["text"]
         yield TurnResult(content=call["content"], stop_reason=call["stop_reason"])
+
+
+def turn_text(turn: list[ChatEvent]) -> str:
+    return "".join(e.text or "" for e in turn if e.type == "text")
+
+
+def builds(turn: list[ChatEvent]) -> list[dict[str, Any]]:
+    """The `build_schedules` results of one turn (only the calls that ran)."""
+    return [
+        e.data or {} for e in turn if e.type == "tool_result" and e.tool == "build_schedules"
+    ]
+
+
+def build_calls(turn: list[ChatEvent]) -> list[dict[str, Any]]:
+    """The arguments the model sent to `build_schedules` in one turn."""
+    return [e.data or {} for e in turn if e.type == "tool_call" and e.tool == "build_schedules"]
+
+
+def tool_results(turn: list[ChatEvent], tool: str) -> list[dict[str, Any]]:
+    return [e.data or {} for e in turn if e.type == "tool_result" and e.tool == tool]
+
+
+def section_ids(schedule: dict[str, Any]) -> set[str]:
+    return {c["section"]["id"] for c in schedule["classes"]}
 
 
 def run(session: ChatSession, scenario: Scenario, caller: Any) -> Transcript:
@@ -194,6 +294,11 @@ def replay(scenario: Scenario, monkeypatch: pytest.MonkeyPatch) -> tuple[ChatSes
                     "test_chat_record.py")
     recorded = json.loads(path.read_text())
     session = make_session(scenario, monkeypatch)
-    transcript = run(session, scenario, ReplayCaller(recorded["calls"]))
-    transcript.calls = recorded["calls"]
+    caller = ReplayCaller(recorded["calls"])
+    transcript = run(session, scenario, caller)
+    # Each recorded response, with the request our code sent for it on this replay.
+    transcript.calls = [
+        {**call, "request_messages": sent}
+        for call, sent in zip(recorded["calls"], caller.requests, strict=True)
+    ]
     return session, transcript

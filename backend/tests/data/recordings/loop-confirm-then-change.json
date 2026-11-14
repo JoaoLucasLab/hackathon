@@ -1,0 +1,263 @@
+{
+  "id": "loop-confirm-then-change",
+  "messages": [
+    "12 to 15 credits, campus classes only, done by 2:00 PM. No specific courses to add or skip.",
+    "yes",
+    "This works",
+    "Actually, change the Tuesday 9:00 class"
+  ],
+  "calls": [
+    {
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_01RFW6Y177gF5g3xwVKnHDhK",
+          "input": {},
+          "name": "get_remaining_requirements",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "text": [
+        "Here",
+        " is what I have:\n-",
+        " Track: Fall & Win",
+        "ter",
+        "\n- Credits: 12 ",
+        "to 15\n-",
+        " Campus class",
+        "es only\n- No classes ",
+        "ending after 2:00 P",
+        "M\n- Cour",
+        "ses to include or skip: none",
+        "\n- Days",
+        " off",
+        ": no preference\n\nShould I",
+        " build a schedule with these?",
+        "\n<<choices: Build",
+        " it | Change something>>"
+      ],
+      "content": [
+        {
+          "text": "Here is what I have:\n- Track: Fall & Winter\n- Credits: 12 to 15\n- Campus classes only\n- No classes ending after 2:00 PM\n- Courses to include or skip: none\n- Days off: no preference\n\nShould I build a schedule with these?\n<<choices: Build it | Change something>>",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    },
+    {
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_01NkCxVieq238fLkk5b2ehzj",
+          "input": {
+            "constraints": {
+              "credit_min": 12,
+              "credit_max": 15,
+              "earliest_start": null,
+              "latest_end": "14:00",
+              "days_off": [],
+              "include_courses": [],
+              "exclude_courses": [],
+              "exclude_section_ids": [],
+              "delivery_methods": [
+                "campus"
+              ],
+              "only_required": false,
+              "allow_waitlist": false,
+              "only_favorite_professors": false
+            },
+            "avoid_schedules": [],
+            "intake": {
+              "track": null,
+              "use_default_credits": false,
+              "student_agreed": true
+            }
+          },
+          "name": "build_schedules",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "text": [
+        "Option 1 is ",
+        "15 credits and covers six",
+        " requirements: W",
+        "DD 231, CIT",
+        " 225, CSE 212",
+        ", MATH 113, M",
+        "ATH 221A and REL",
+        " 275. Check",
+        " these",
+        " before",
+        " you register.",
+        " W",
+        "DD 231, CIT",
+        " 225 and CSE ",
+        "212 each",
+        " have a pr",
+        "erequisite that is still in",
+        " progress with",
+        " the",
+        " grade pending. RE",
+        "L 275 also",
+        " com",
+        "es with a relig",
+        "ion-",
+        "limit war",
+        "ning: you can add a second relig",
+        "ion course after the first day of the",
+        " semester.\n\nDoes this sch",
+        "edule work for you? Conf",
+        "irm with BYU-",
+        "Idaho Academic Adv",
+        "ising."
+      ],
+      "content": [
+        {
+          "text": "Option 1 is 15 credits and covers six requirements: WDD 231, CIT 225, CSE 212, MATH 113, MATH 221A and REL 275. Check these before you register. WDD 231, CIT 225 and CSE 212 each have a prerequisite that is still in progress with the grade pending. REL 275 also comes with a religion-limit warning: you can add a second religion course after the first day of the semester.\n\nDoes this schedule work for you? Confirm with BYU-Idaho Academic Advising.",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    },
+    {
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_012mCoU1LKWKUTpyRpMX48Be",
+          "input": {
+            "schedule_id": "sch-c0e450d12870"
+          },
+          "name": "confirm_schedule",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "text": [
+        "Saved as your Winter",
+        " 2027 plan. This",
+        " does not register you for classes.",
+        " Confirm with BYU",
+        "-Idaho Academic",
+        " Advising."
+      ],
+      "content": [
+        {
+          "text": "Saved as your Winter 2027 plan. This does not register you for classes. Confirm with BYU-Idaho Academic Advising.",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    },
+    {
+      "text": [],
+      "content": [
+        {
+          "signature": "CAQSvAYKEAgTGAI4AUIIdGhpbmtpbmcSDFeN8x7gldpxPUlq+xoMXY9zVYcJwRmcea1+IjBDnxRbW54fEtkhk9VGLzZMF7RcnQPNC6Qg/hZWojzqiml0wdGGyYSYI0BGQczSf+oq2QWxbDOcvfuAaIYvYTlCqS6D1CxqBLtbVohEbKPM5+M6d2K/HtdnrK8ir34zvQiHqJAYiJisjsgM2L9OTLA4FcbOfPtrqDxVjLObMrRUnAZrNgn10XKPDJ/+reQZRW7IOVlYANrlqaGHwfrCGWzGeQs03OE23hRBnRCY9jvtCocQUkymlAKWQqAD2vbJuH8Pz+56aw6IreLnBUm1RCOQVEscUpgkqB4C9jPUGep0F9zM4VzdKPcTKYJzn7b3KTmnF89O2FIGLRdv70iQCJfHmz9BN96Ntbq4Qc8GRxcoAyAujcKOCN0o9f9K9fEZ6Ml2EjrCp2QNnrPSgiHd3RDMftj7mXsn0NTyMHhNNULiVWOuskJTYaHwpDG9Xgi/Ayf4FRQyM9NGDV1q1Rr3h30YXItk6OdBDvTo6LZC13FV8OTMMm+c2VRbmb+SpmYp8Ftpjg6qHq/1R0XLo4xmWt8JAzw8RZ41pJF++e2nI+vNN9GfNcs/tpKd2xOmHuf5R6oUPb6JyEiMzFdAM0YkwBOTX7qD3tFO5ddtd0PHWaOThKTbQMmgaRDje6v3Oq4qyYuysk2HhM1lLk2prj6G4rrRxMj1goe5AwaIykdEdYY29riDLBCpgOioAkWfQ5GM1/v6s6NF279iOfbET8aCSwcbXVErQE+PjAC9i55TyRfT/WlE+vpt8uUSXGcUb0JGMYU/S4tYD3bVS+PDmCx5Crq5BrK6kDJwd5wg87E7d/WIzoofVK8EXOUv9zDCa9qIYW8XLtAnoiXWolJNTt3wW9frz7CNCZ6fam+bYI2+rWq0RSYzAb999VCH9NUwXjY2bQaNOKdKcxyruDphZqySRetuqP4jRamGYt5ekJO0STn+7nOHFaC5qChIc/1lIA2m7n7QlXYXvfoKYhLvqquzppdXGl77TXyItgTyvxPdjlULGh2FOtW4RxFzd8dxa4CC85cnNUkJu4QEWx5AtNsYAQ==",
+          "thinking": "",
+          "type": "thinking"
+        },
+        {
+          "id": "toolu_011YM36kVbsY1dyWUA9mDdbY",
+          "input": {
+            "constraints": {
+              "credit_min": 12,
+              "credit_max": 15,
+              "earliest_start": null,
+              "latest_end": "14:00",
+              "days_off": [],
+              "include_courses": [],
+              "exclude_courses": [],
+              "exclude_section_ids": [
+                "2027;WI|MATH 221A-02"
+              ],
+              "delivery_methods": [
+                "campus"
+              ],
+              "only_required": false,
+              "allow_waitlist": false,
+              "only_favorite_professors": false
+            },
+            "avoid_schedules": [
+              [
+                "2027;WI;W2|WDD 231-03",
+                "2027;WI|CIT 225-01",
+                "2027;WI|CSE 212-02",
+                "2027;WI|MATH 113-03",
+                "2027;WI|MATH 221A-02",
+                "2027;WI|REL 275-01"
+              ]
+            ],
+            "intake": {
+              "track": null,
+              "use_default_credits": false,
+              "student_agreed": true
+            }
+          },
+          "name": "build_schedules",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "text": [
+        "I moved MATH 221",
+        "A from",
+        " Tuesday and",
+        " Thursday at 9:",
+        "00 to",
+        " Monday,",
+        " Wednesday and Fri",
+        "day at 12:45. To",
+        " make",
+        " it",
+        " fit, MATH 113",
+        ", REL 275 and W",
+        "DD 231 also",
+        " moved to different",
+        " sections. The total is still ",
+        "15 credits. Your conf",
+        "irmed pl",
+        "an stays saved until you conf",
+        "irm a new one.\n\nW",
+        "DD 231, CIT",
+        " 225 and CSE ",
+        "212 still have prerequis",
+        "ites in",
+        " progress with the gr",
+        "ade pending.\n\nDoes this",
+        " schedule work for you?",
+        " Confirm with BYU-",
+        "Idaho Academic",
+        " Advising."
+      ],
+      "content": [
+        {
+          "text": "I moved MATH 221A from Tuesday and Thursday at 9:00 to Monday, Wednesday and Friday at 12:45. To make it fit, MATH 113, REL 275 and WDD 231 also moved to different sections. The total is still 15 credits. Your confirmed plan stays saved until you confirm a new one.\n\nWDD 231, CIT 225 and CSE 212 still have prerequisites in progress with the grade pending.\n\nDoes this schedule work for you? Confirm with BYU-Idaho Academic Advising.",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    }
+  ]
+}

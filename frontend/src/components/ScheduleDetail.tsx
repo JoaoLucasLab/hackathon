@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
 import { useProfessors, useRemainingRequirements, useScheduleExplanation } from "../api/queries";
 import type { Professor, Schedule, ScheduledClass, Section } from "../api/schemas";
@@ -19,7 +19,7 @@ import { TagSquare } from "./ui/TagSquare";
 
 const ADVISING = "Confirm with BYU-Idaho Academic Advising.";
 
-function Warning({ message }: { message: string }) {
+export function Warning({ message }: { message: string }) {
   // A warning, not an error: `warn` text, never red, never role="alert".
   return (
     <p className="flex items-start gap-1.5 text-[13px] text-warn">
@@ -30,7 +30,22 @@ function Warning({ message }: { message: string }) {
 }
 
 /** Professors by id, or null while they load (or failed to load): then show nothing. */
-type ProfessorIndex = Map<string, Professor> | null;
+export type ProfessorIndex = Map<string, Professor> | null;
+
+/** Professors by id and requirement names by id, for class rows (also the chat card). */
+export function useClassRowData(): {
+  byId: ProfessorIndex;
+  reqNames: Map<string, string>;
+  professorsFailed: boolean;
+} {
+  const professors = useProfessors();
+  const requirements = useRemainingRequirements();
+  return {
+    byId: professors.data ? new Map(professors.data.map((p) => [p.id, p])) : null,
+    reqNames: new Map((requirements.data ?? []).map((r) => [r.id, r.name])),
+    professorsFailed: professors.isError,
+  };
+}
 
 function Professors({ section, byId }: { section: Section; byId: ProfessorIndex }) {
   if (byId === null) return null;
@@ -68,14 +83,17 @@ function Backups({ backups, byId }: { backups: Section[]; byId: ProfessorIndex }
   );
 }
 
-function ClassRow({
+export function ClassRow({
   item,
   fills,
   byId,
+  color,
 }: {
   item: ScheduledClass;
   fills: string[];
   byId: ProfessorIndex;
+  /** The course's color from the colored week (a Tailwind bg class), to match it. */
+  color?: string;
 }) {
   const [open, setOpen] = useState(false);
   const s = item.section;
@@ -88,7 +106,11 @@ function ClassRow({
       <div className="flex items-start justify-between gap-4">
         <div className="flex min-w-0 items-start gap-3">
           <span className="mt-1.5">
-            <TagSquare courseCode={s.course_code} size={14} />
+            {color ? (
+              <span aria-hidden="true" className={`inline-block size-3.5 rounded-[3px] ${color}`} />
+            ) : (
+              <TagSquare courseCode={s.course_code} size={14} />
+            )}
           </span>
           <div className="flex min-w-0 flex-col gap-0.5">
             <h3 className="text-base">
@@ -221,31 +243,35 @@ function Why({ schedule }: { schedule: Schedule }) {
 
 interface ScheduleDetailProps {
   schedule: Schedule;
-  onBack: () => void;
+  /** "All schedules". Left out on "My plan", which has no list to go back to. */
+  onBack?: () => void;
+  /** Replaces "Option N" (and "Best fit") as the heading. */
+  heading?: string;
+  /** Replaces the black-and-white week calendar (My plan shows the colored one). */
+  week?: ReactNode;
+  /** Course colors of that week, so each class row's square matches its blocks. */
+  colors?: Map<string, string>;
 }
 
 /** One schedule: the "why", the week calendar, class rows with professors and backups. */
-export function ScheduleDetail({ schedule, onBack }: ScheduleDetailProps) {
-  const professors = useProfessors();
-  const requirements = useRemainingRequirements();
-  const byId: ProfessorIndex = professors.data
-    ? new Map(professors.data.map((p) => [p.id, p]))
-    : null;
-  const reqNames = new Map((requirements.data ?? []).map((r) => [r.id, r.name]));
+export function ScheduleDetail({ schedule, onBack, heading, week, colors }: ScheduleDetailProps) {
+  const { byId, reqNames, professorsFailed } = useClassRowData();
   const titleId = `detail-${schedule.id}`;
 
   return (
     <article aria-labelledby={titleId} className="flex flex-col gap-6">
-      <Button variant="text" className="self-start" onClick={onBack}>
-        <Icon name="chevronLeft" size={16} />
-        All schedules
-      </Button>
+      {onBack && (
+        <Button variant="text" className="self-start" onClick={onBack}>
+          <Icon name="chevronLeft" size={16} />
+          All schedules
+        </Button>
+      )}
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2.5">
           <h1 id={titleId} className="font-serif text-[40px] font-normal leading-none md:text-[52px]">
-            Option {schedule.rank}
+            {heading ?? `Option ${schedule.rank}`}
           </h1>
-          {schedule.rank === 1 && (
+          {!heading && schedule.rank === 1 && (
             <span className="rounded-full bg-ink px-2 py-0.5 text-xs text-surface">Best fit</span>
           )}
         </div>
@@ -254,16 +280,21 @@ export function ScheduleDetail({ schedule, onBack }: ScheduleDetailProps) {
         </p>
       </div>
 
+      {/* A colored week (My plan) leads the page; the plain calendar stays after the why. */}
+      {week && <section aria-label="Week">{week}</section>}
+
       <Why schedule={schedule} />
 
       {(schedule.warnings ?? []).map((w, i) => (
         <Warning key={i} message={w.message} />
       ))}
 
-      <section aria-label="Week" className="flex flex-col gap-2">
-        <h3 className="text-sm font-semibold">Week</h3>
-        <WeekCalendar schedule={schedule} />
-      </section>
+      {!week && (
+        <section aria-label="Week" className="flex flex-col gap-2">
+          <h3 className="text-sm font-semibold">Week</h3>
+          <WeekCalendar schedule={schedule} />
+        </section>
+      )}
 
       <ul aria-label="Classes" className="rounded-card border border-line bg-surface px-6">
         {schedule.classes.map((c) => (
@@ -272,10 +303,11 @@ export function ScheduleDetail({ schedule, onBack }: ScheduleDetailProps) {
             item={c}
             byId={byId}
             fills={(c.requirement_ids ?? []).map((id) => reqNames.get(id) ?? id)}
+            color={colors?.get(c.section.course_code)}
           />
         ))}
       </ul>
-      {professors.isError && (
+      {professorsFailed && (
         <p className="text-sm text-muted">Professor details couldn't load. Try again later.</p>
       )}
 

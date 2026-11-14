@@ -1,0 +1,200 @@
+{
+  "id": "loop-no-fit",
+  "messages": [
+    "12 to 15 credits, campus classes only, done by 10:00 AM. No specific courses to add or skip.",
+    "yes",
+    "Apply this change"
+  ],
+  "calls": [
+    {
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_01LcQUpW3eiczxotAKjDLWuY",
+          "input": {},
+          "name": "get_remaining_requirements",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "text": [
+        "Here is",
+        " what I have:\n- Track",
+        ": Fall & Winter",
+        "\n- Credits: 12 ",
+        "to 15\n- Camp",
+        "us class",
+        "es only\n- All",
+        " classes end",
+        " by 10:00 AM",
+        "\n- No spec",
+        "ific courses to include or skip",
+        "\n- Days",
+        " off: none",
+        "\n\nShould I build a sched",
+        "ule with these?\n<<cho",
+        "ices: Build it | Change",
+        " something>>"
+      ],
+      "content": [
+        {
+          "signature": "CAQSsAUKEAgTGAI4AUIIdGhpbmtpbmcSDBDVSbu6rNeAbyS3ERoMSPtM9WfThwrfivAFIjAMDYy+3qAB9R4n2xnNR4sf8mz32WaFJlOEmmdQn8qR3v7SfsoQVp/9rmVkOvetExYqzQTHj56pnyf7uE06Aken/rfLmXB2bjcI1EaKMz+S3x+b9rg9VuXTysf88fY3BNe/+mZr+Ggy15EWPgD7wv1urw1OtzWLe1cUpZQoLOWokpPz2YjXiVVP4A8wpiqFlmCMMMFZHZjudeObZosDM3A8W00aa1wZKIQRp6hBq6PUDXS4Wqg9CqCPcqgWdZA9T8371CVbv9Ym7MHUT53wPoxc7k4c0Clwy/ocv6bJkfcRuG8G844lmF2SOcSPryxljhgxE3URkQpCSqd4ZyVifi0cMZ9gQaCqZ6RaLGtJVJLg+EcLSB9LXigNAGoNtcw+y58xwbDDyJGpp7olhwvYIEsRtfYwgi1tITBw13fW2/RDhn8mKOmNscDDt7hhPiuL2q4KoGJJjERLMsAPGqCqvO4CSnBP56FuDL74n5f5ozKiaLJLKgRriTnzZjQn0CcQJDDMhg55kFcuXp3su/IcuRXg/G5CCb+4e/6h8T2hZoLhVKIuk1OysrHgUtzny0o5AIONhPoQCoqhCjQCTHETtPgua4SRYum3mZ2L4BW2Q8j55mOZQg+S2kUSDXMxaNVwfwTU/eC9ERXwjIsOHgTGrDxmVQWEJ3YkdguTP/su6jZ907ler3bhMkv6yhb8JJqnVfKpTe44PYv0Q5IS59c8TPjUcQvGwK0R9NykaWf8ZpdsbjuLrNx2BxIOkmaTTrpkSA7OAYEy0Jrr7P9N+BZvXKGBtjncxytLgQ84WCOS++yxOuFTbjgozhe2v8a/8H2e6fkJznJeljdp31N2dNszKr5JGAE=",
+          "thinking": "",
+          "type": "thinking"
+        },
+        {
+          "text": "Here is what I have:\n- Track: Fall & Winter\n- Credits: 12 to 15\n- Campus classes only\n- All classes end by 10:00 AM\n- No specific courses to include or skip\n- Days off: none\n\nShould I build a schedule with these?\n<<choices: Build it | Change something>>",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    },
+    {
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_01BxfXiY8ErViUpbcpj7rUWN",
+          "input": {
+            "constraints": {
+              "credit_min": 12,
+              "credit_max": 15,
+              "earliest_start": null,
+              "latest_end": "10:00",
+              "days_off": [],
+              "include_courses": [],
+              "exclude_courses": [],
+              "exclude_section_ids": [],
+              "delivery_methods": [
+                "campus"
+              ],
+              "only_required": false,
+              "allow_waitlist": false,
+              "only_favorite_professors": false
+            },
+            "avoid_schedules": [],
+            "intake": {
+              "track": null,
+              "use_default_credits": false,
+              "student_agreed": true
+            }
+          },
+          "name": "build_schedules",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "text": [
+        "No schedule fits all",
+        " of",
+        " your",
+        " rules. With camp",
+        "us-",
+        "only classes that",
+        " end by 10:00 A",
+        "M, almost every section is",
+        " ",
+        "ruled out. Many",
+        " of the remaining cour",
+        "ses also",
+        " need CSE 212 first",
+        ".\n\nI suggest all",
+        "owing classes until 12:",
+        "30 instead of 10:",
+        "00. That g",
+        "ives one schedule that",
+        " fits. Do you want me",
+        " to apply that change?"
+      ],
+      "content": [
+        {
+          "text": "No schedule fits all of your rules. With campus-only classes that end by 10:00 AM, almost every section is ruled out. Many of the remaining courses also need CSE 212 first.\n\nI suggest allowing classes until 12:30 instead of 10:00. That gives one schedule that fits. Do you want me to apply that change?",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    },
+    {
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_01AkC4SbKntpJHwsk6prE7RH",
+          "input": {
+            "constraints": {
+              "credit_min": 12,
+              "credit_max": 15,
+              "earliest_start": null,
+              "latest_end": "12:30",
+              "days_off": [],
+              "include_courses": [],
+              "exclude_courses": [],
+              "exclude_section_ids": [],
+              "delivery_methods": [
+                "campus"
+              ],
+              "only_required": false,
+              "allow_waitlist": false,
+              "only_favorite_professors": false
+            },
+            "avoid_schedules": [],
+            "intake": {
+              "track": null,
+              "use_default_credits": false,
+              "student_agreed": true
+            }
+          },
+          "name": "build_schedules",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "text": [
+        "This ",
+        "15-credit schedule cov",
+        "ers",
+        " Database Design,",
+        " Data Structures, Appl",
+        "ied Programming, Calcul",
+        "us II, Book of M",
+        "ormon and",
+        " Web Frontend.",
+        " Four class",
+        "es (",
+        "CIT 225, CS",
+        "E 212, CSE ",
+        "310 and WDD 231",
+        ") have prerequisites that",
+        " are still in progress with",
+        " gr",
+        "ades pending,",
+        " so check those before you",
+        " register.\n\nDoes this sched",
+        "ule work for you? Confir",
+        "m with BYU-Id",
+        "aho Academic Advising",
+        "."
+      ],
+      "content": [
+        {
+          "text": "This 15-credit schedule covers Database Design, Data Structures, Applied Programming, Calculus II, Book of Mormon and Web Frontend. Four classes (CIT 225, CSE 212, CSE 310 and WDD 231) have prerequisites that are still in progress with grades pending, so check those before you register.\n\nDoes this schedule work for you? Confirm with BYU-Idaho Academic Advising.",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    }
+  ]
+}

@@ -69,6 +69,8 @@ services:
       args:
         VITE_API_BASE_URL: ""
         VITE_FEATURE_AUDIT_UPLOAD: ${FEATURE_AUDIT_UPLOAD:-false}
+        # The same value as the backend's flag, so the two halves always agree.
+        VITE_FEATURE_CONVERSATIONAL_PLANNER: ${FEATURE_CONVERSATIONAL_PLANNER:-false}
     image: course-planner-web
     restart: unless-stopped
     depends_on:

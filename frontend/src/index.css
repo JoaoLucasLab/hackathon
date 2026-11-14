@@ -14,6 +14,10 @@
   --halo: #edeae3;
   --perf: #d8d2c6;
   --warn: #8a5300;
+  --warn-tint: #f6ecdc;
+  /* Open seats and checks that passed: dark green text on a light tint (AA contrast). */
+  --ok: #2f6a2f;
+  --ok-tint: #e5f0e1;
   --star: #b57e10;
   --sq-sage: #9dbf8f;
   --sq-clay: #e0a98a;
@@ -70,6 +74,15 @@
   }
   .sw-first {
     background-image: repeating-linear-gradient(135deg, #1a1a1a 0 1px, transparent 1px 4px);
+  }
+  /* A day with no class in the chat card's week: light diagonal hatching. */
+  .glance-free {
+    background-image: repeating-linear-gradient(
+      135deg,
+      var(--line-soft) 0 1px,
+      transparent 1px 6px
+    );
+    border: 1px dashed var(--line);
   }
   .sw-second {
     background-image: radial-gradient(#1a1a1a 1px, transparent 1.2px);

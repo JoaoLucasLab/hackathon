@@ -1,0 +1,211 @@
+{
+  "id": "loop-no-friday",
+  "messages": [
+    "12 to 15 credits, campus classes only, done by 2:00 PM. No specific courses to add or skip.",
+    "yes",
+    "no classes on Friday"
+  ],
+  "calls": [
+    {
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_01SqJaHdeU1mdktMyq2nLBJV",
+          "input": {},
+          "name": "get_remaining_requirements",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "text": [
+        "Here",
+        " is what I have:\n-",
+        " Track: Fall & Win",
+        "ter",
+        "\n- Credits: 12 ",
+        "to 15\n-",
+        " Campus class",
+        "es only\n- No class",
+        "es ending after",
+        " 2:00 PM",
+        "\n- No spec",
+        "ific courses to include",
+        " or skip\n- Days off",
+        ": none\n\nShould I build a",
+        " schedule with these?\n<",
+        "<choices: Build it |",
+        " Change something>>"
+      ],
+      "content": [
+        {
+          "text": "Here is what I have:\n- Track: Fall & Winter\n- Credits: 12 to 15\n- Campus classes only\n- No classes ending after 2:00 PM\n- No specific courses to include or skip\n- Days off: none\n\nShould I build a schedule with these?\n<<choices: Build it | Change something>>",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    },
+    {
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_01M1uM693j7NEhvZ8tVLqAvd",
+          "input": {
+            "constraints": {
+              "credit_min": 12,
+              "credit_max": 15,
+              "earliest_start": null,
+              "latest_end": "14:00",
+              "days_off": [],
+              "include_courses": [],
+              "exclude_courses": [],
+              "exclude_section_ids": [],
+              "delivery_methods": [
+                "campus"
+              ],
+              "only_required": false,
+              "allow_waitlist": false,
+              "only_favorite_professors": false
+            },
+            "avoid_schedules": [],
+            "intake": {
+              "track": null,
+              "use_default_credits": false,
+              "student_agreed": true
+            }
+          },
+          "name": "build_schedules",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "text": [
+        "This ",
+        "15-credit schedule cov",
+        "ers",
+        " Web Frontend (",
+        "WDD 231), Database",
+        " Design (CIT 225",
+        "), Data",
+        " Structures (CSE ",
+        "212), Calculus II (",
+        "MATH 113), Stat",
+        "istics (MATH 221",
+        "A) and RE",
+        "L 275. Four class",
+        "es have pr",
+        "erequisites still",
+        " in progress (p",
+        "ending grade",
+        "): WDD 231, C",
+        "IT 225 ",
+        "and CSE 212. RE",
+        "L 275 also has a note",
+        " about ad",
+        "ding a second religion course",
+        ".\n\nDoes this schedule",
+        " work for you?\nConfir",
+        "m with BYU-Id",
+        "aho Academic Advising",
+        "."
+      ],
+      "content": [
+        {
+          "text": "This 15-credit schedule covers Web Frontend (WDD 231), Database Design (CIT 225), Data Structures (CSE 212), Calculus II (MATH 113), Statistics (MATH 221A) and REL 275. Four classes have prerequisites still in progress (pending grade): WDD 231, CIT 225 and CSE 212. REL 275 also has a note about adding a second religion course.\n\nDoes this schedule work for you?\nConfirm with BYU-Idaho Academic Advising.",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    },
+    {
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_01GvZfYq4GYEdXKhyzpj3Cow",
+          "input": {
+            "constraints": {
+              "credit_min": 12,
+              "credit_max": 15,
+              "earliest_start": null,
+              "latest_end": "14:00",
+              "days_off": [
+                "F"
+              ],
+              "include_courses": [],
+              "exclude_courses": [],
+              "exclude_section_ids": [],
+              "delivery_methods": [
+                "campus"
+              ],
+              "only_required": false,
+              "allow_waitlist": false,
+              "only_favorite_professors": false
+            },
+            "avoid_schedules": [
+              [
+                "2027;WI;W2|WDD 231-03",
+                "2027;WI|CIT 225-01",
+                "2027;WI|CSE 212-02",
+                "2027;WI|MATH 113-03",
+                "2027;WI|MATH 221A-02",
+                "2027;WI|REL 275-01"
+              ]
+            ],
+            "intake": {
+              "track": null,
+              "use_default_credits": false,
+              "student_agreed": true
+            }
+          },
+          "name": "build_schedules",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "text": [
+        "I removed CIT 225",
+        " because",
+        " it me",
+        "ets on F",
+        "ridays,",
+        " and no other C",
+        "IT 225 section fits",
+        " your",
+        " ",
+        "2:00 PM c",
+        "utoff. Friday is",
+        " now free, and the total is ",
+        "12 credits. This",
+        " schedule no",
+        " longer cov",
+        "ers the Database Design requir",
+        "ement.\n\nDoes this sched",
+        "ule work for you?\nConf",
+        "irm with BYU-",
+        "Idaho Academic Adv",
+        "ising."
+      ],
+      "content": [
+        {
+          "text": "I removed CIT 225 because it meets on Fridays, and no other CIT 225 section fits your 2:00 PM cutoff. Friday is now free, and the total is 12 credits. This schedule no longer covers the Database Design requirement.\n\nDoes this schedule work for you?\nConfirm with BYU-Idaho Academic Advising.",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    }
+  ]
+}

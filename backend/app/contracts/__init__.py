@@ -29,7 +29,9 @@ from app.contracts.common import (
 )
 from app.contracts.ops import (
     ChatEvent,
+    ChatHistory,
     ChatRequest,
+    ChatTurn,
     RequestLogEntry,
     SessionRequest,
     SessionResponse,
@@ -55,6 +57,7 @@ from app.contracts.schedules import (
     ADVISING_NOTE,
     BuildSchedulesRequest,
     BuildSchedulesResponse,
+    ConfirmPlanRequest,
     ConstraintSet,
     Excluded,
     ExclusionReason,
@@ -108,7 +111,10 @@ __all__ = [
     "BuildSchedulesRequest",
     "BuildSchedulesResponse",
     "ChatEvent",
+    "ChatHistory",
     "ChatRequest",
+    "ChatTurn",
+    "ConfirmPlanRequest",
     "ConstraintSet",
     "Contract",
     "Course",

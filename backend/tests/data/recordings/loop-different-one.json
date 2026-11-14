@@ -1,0 +1,208 @@
+{
+  "id": "loop-different-one",
+  "messages": [
+    "12 to 15 credits, campus classes only, done by 2:00 PM. No specific courses to add or skip.",
+    "yes",
+    "show me a different one"
+  ],
+  "calls": [
+    {
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_01B6MPnoc6emXF15bYVyEs7z",
+          "input": {},
+          "name": "get_remaining_requirements",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "text": [
+        "Here",
+        " is what I have:",
+        "\n- Track: Fall",
+        " & Winter",
+        "\n- Credits: 12 ",
+        "to 15\n-",
+        " Campus class",
+        "es only\n- No classes ",
+        "ending after 2:00 P",
+        "M\n- Courses:",
+        " none to include or skip",
+        "\n- Days off",
+        ": no preference\n\nShould I",
+        " build a schedule with these?",
+        "\n<<choices: Build",
+        " it | Change something>",
+        ">"
+      ],
+      "content": [
+        {
+          "text": "Here is what I have:\n- Track: Fall & Winter\n- Credits: 12 to 15\n- Campus classes only\n- No classes ending after 2:00 PM\n- Courses: none to include or skip\n- Days off: no preference\n\nShould I build a schedule with these?\n<<choices: Build it | Change something>>",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    },
+    {
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_01WhwgoS1jhxvqBqZDZPMdsR",
+          "input": {
+            "constraints": {
+              "credit_min": 12,
+              "credit_max": 15,
+              "earliest_start": null,
+              "latest_end": "14:00",
+              "days_off": [],
+              "include_courses": [],
+              "exclude_courses": [],
+              "exclude_section_ids": [],
+              "delivery_methods": [
+                "campus"
+              ],
+              "only_required": false,
+              "allow_waitlist": false,
+              "only_favorite_professors": false
+            },
+            "avoid_schedules": [],
+            "intake": {
+              "track": null,
+              "use_default_credits": false,
+              "student_agreed": true
+            }
+          },
+          "name": "build_schedules",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "text": [
+        "This ",
+        "15-credit schedule cov",
+        "ers",
+        " Web Frontend (",
+        "WDD 231), Database",
+        " Design (CIT 225",
+        "), Data",
+        " Structures (CSE ",
+        "212), Calculus II (",
+        "MATH 113), Stat",
+        "istics (MATH 221",
+        "A) and RE",
+        "L 275.",
+        " Please",
+        " check these",
+        " prerequisites,",
+        " which are still in progress with",
+        " a pending grade: WD",
+        "D 131,",
+        " CIT 111",
+        " and CSE 210.",
+        "\n\nDoes this schedule work",
+        " for you? Confirm with",
+        " BYU-Idaho",
+        " Academic Advising."
+      ],
+      "content": [
+        {
+          "text": "This 15-credit schedule covers Web Frontend (WDD 231), Database Design (CIT 225), Data Structures (CSE 212), Calculus II (MATH 113), Statistics (MATH 221A) and REL 275. Please check these prerequisites, which are still in progress with a pending grade: WDD 131, CIT 111 and CSE 210.\n\nDoes this schedule work for you? Confirm with BYU-Idaho Academic Advising.",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    },
+    {
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_011ZXb4sRGEFRDFfrkrtrya2",
+          "input": {
+            "constraints": {
+              "credit_min": 12,
+              "credit_max": 15,
+              "earliest_start": null,
+              "latest_end": "14:00",
+              "days_off": [],
+              "include_courses": [],
+              "exclude_courses": [],
+              "exclude_section_ids": [],
+              "delivery_methods": [
+                "campus"
+              ],
+              "only_required": false,
+              "allow_waitlist": false,
+              "only_favorite_professors": false
+            },
+            "avoid_schedules": [
+              [
+                "2027;WI;W2|WDD 231-03",
+                "2027;WI|CIT 225-01",
+                "2027;WI|CSE 212-02",
+                "2027;WI|MATH 113-03",
+                "2027;WI|MATH 221A-02",
+                "2027;WI|REL 275-01"
+              ]
+            ],
+            "intake": {
+              "track": null,
+              "use_default_credits": false,
+              "student_agreed": true
+            }
+          },
+          "name": "build_schedules",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "text": [
+        "I sw",
+        "apped CIT 225 ",
+        "for CSE 310 (",
+        "Applied Programming,",
+        " M",
+        "on/",
+        "Wed/Fri ",
+        "9:00\u201310:00).",
+        " The total is still 15 cred",
+        "its. C",
+        "SE 310 has",
+        " a C",
+        "SE 210 prerequ",
+        "isite that is still in progress",
+        " with a pending grade, so",
+        " check",
+        " that before",
+        " you",
+        " register.\n\nDoes this sched",
+        "ule work for you? Confir",
+        "m with BYU-Id",
+        "aho Academic Advising",
+        "."
+      ],
+      "content": [
+        {
+          "text": "I swapped CIT 225 for CSE 310 (Applied Programming, Mon/Wed/Fri 9:00\u201310:00). The total is still 15 credits. CSE 310 has a CSE 210 prerequisite that is still in progress with a pending grade, so check that before you register.\n\nDoes this schedule work for you? Confirm with BYU-Idaho Academic Advising.",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    }
+  ]
+}

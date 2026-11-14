@@ -20,6 +20,7 @@ import { ErrorState } from "../components/ui/ErrorState";
 import { Loading } from "../components/ui/Loading";
 import { PageFrame } from "../components/ui/PageFrame";
 import { plural } from "../components/scheduleFormat";
+import { conversationalPlanner } from "../config";
 
 const NO_RULES: ConstraintSet = {
   allow_waitlist: false,
@@ -66,9 +67,12 @@ export function Planner() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const rebuild = useRebuildSchedules();
   const built = useRef(false);
+  // AI-08: the schedule stays in the chat; the page never moves to another tab.
+  const oneAtATime = conversationalPlanner();
 
   function onEvent(event: ChatEvent) {
     if (event.type === "text" || event.type === "tool_call") setAsked(true);
+    if (oneAtATime) return;
     if (event.type === "done" && built.current) {
       built.current = false;
       navigate("/schedules");
@@ -143,7 +147,7 @@ export function Planner() {
   return (
     <PageFrame
       title={selected && isSchedules ? undefined : isSchedules ? (results?.schedules.length ? `${results.schedules.length === 3 ? "Three" : results.schedules.length} schedules fit` : "Your schedules") : "Plan a semester that fits your week"}
-      lead={isSchedules ? (selected ? undefined : "Winter 2027, built from your degree audit and preferences.") : "Tell it what you want in plain words. Compare Winter 2027 schedules built from your degree audit, each class with the requirement it fills."}
+      lead={isSchedules ? (selected ? undefined : "Winter 2027, built from your degree audit and preferences.") : oneAtATime ? "Tell it what you want in plain words. It asks what it needs, then shows one Winter 2027 schedule at a time, each class with the requirement it fills." : "Tell it what you want in plain words. Compare Winter 2027 schedules built from your degree audit, each class with the requirement it fills."}
       home={!isSchedules}
       footnote={<>{isSchedules && seats && <>{seats} </>}Confirm with BYU-Idaho Academic Advising.</>}
     >
@@ -170,7 +174,7 @@ export function Planner() {
             navigate("/consent");
             return false;
           }} />
-        {!results && asked && <p className="mt-4 text-sm text-muted">Schedules appear when the assistant builds them.</p>}
+        {!oneAtATime && !results && asked && <p className="mt-4 text-sm text-muted">Schedules appear when the assistant builds them.</p>}
       </div>
       {isSchedules && selected && <ScheduleDetail schedule={selected} onBack={() => setSelectedId(null)} />}
       {isSchedules && !selected && (results ? (

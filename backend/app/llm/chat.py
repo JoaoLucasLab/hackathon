@@ -1,6 +1,6 @@
 """The chat turn loop (AI-02).
 
-One student message -> Claude (cached system prompt + 8 tools) -> run the tools
+One student message -> Claude (cached system prompt + tools) -> run the tools
 Claude asks for -> send results back -> repeat until Claude answers in text.
 Every step is yielded as a ChatEvent so the endpoint can stream it.
 
@@ -20,7 +20,7 @@ from typing import Any
 import anthropic
 
 from app import config
-from app.contracts import ChatEvent
+from app.contracts import ChatEvent, ChatTurn, Relaxation, Schedule
 
 # Module imports (not names): app.llm.tools imports app.api, whose chat router imports
 # this module, so a name import here would fail when tools is imported first.
@@ -59,6 +59,25 @@ class ChatSession:
 
     ctx: tools.ToolContext
     history: list[dict[str, Any]] = field(default_factory=list)
+    # AI-08: the conversation as the chat showed it (text, the schedule card, quick
+    # replies), so a reload can restore it. `history` is what Claude sees.
+    transcript: list[ChatTurn] = field(default_factory=list)
+
+
+APPLY_RELAXATION = "Apply this change"
+
+
+def _show_build(reply: ChatTurn, output: dict[str, Any]) -> None:
+    """AI-08: what a `build_schedules` result puts on the assistant's message. Exactly
+    one schedule card, or the "no schedule fits" hint. The latest build wins."""
+    schedules = output.get("schedules") or []
+    reply.schedule = Schedule.model_validate(schedules[0]) if schedules else None
+    reply.option = output.get("option") if schedules else None
+    relaxation = output.get("relaxation")
+    reply.relaxation = (
+        Relaxation.model_validate(relaxation) if relaxation and not schedules else None
+    )
+    reply.no_schedule = not schedules
 
 
 def system_prompt_name() -> str:
@@ -118,6 +137,20 @@ def run_turn(session: ChatSession, message: str, caller: Caller) -> Iterator[Cha
     input_errors: Counter[str] = Counter()
     was_built = intake.built
     quick_replies: list[str] = []
+    reply = ChatTurn(role="assistant")
+    session.transcript += [ChatTurn(role="student", text=message), reply]
+    after_tool = False
+
+    def say(text: str) -> ChatEvent:
+        # The same joining rule as the chat panel: text after a tool starts a paragraph.
+        nonlocal after_tool
+        reply.text += ("\n\n" if after_tool and reply.text else "") + text
+        after_tool = False
+        return ChatEvent(type="text", text=text)
+
+    def fail(text: str) -> ChatEvent:
+        reply.error = text
+        return ChatEvent(type="error", text=text)
 
     try:
         for _ in range(MAX_MODEL_CALLS):
@@ -129,7 +162,7 @@ def run_turn(session: ChatSession, message: str, caller: Caller) -> Iterator[Cha
                 if isinstance(item, str):
                     shown = choices.feed(item) if choices else item
                     if shown:
-                        yield ChatEvent(type="text", text=shown)
+                        yield say(shown)
                 else:
                     result = item
             if result is None:
@@ -137,13 +170,13 @@ def run_turn(session: ChatSession, message: str, caller: Caller) -> Iterator[Cha
             if choices:
                 tail = choices.finish()
                 if tail:
-                    yield ChatEvent(type="text", text=tail)
+                    yield say(tail)
                 quick_replies = choices.choices
 
             session.history.append({"role": "assistant", "content": result.content})
 
             if result.stop_reason == "refusal":
-                yield ChatEvent(type="error", text=ERR_DECLINED)
+                yield fail(ERR_DECLINED)
                 break
 
             tool_uses = [b for b in result.content if b.get("type") == "tool_use"]
@@ -153,6 +186,7 @@ def run_turn(session: ChatSession, message: str, caller: Caller) -> Iterator[Cha
             results: list[dict[str, Any]] = []
             give_up = False
             truncated = result.stop_reason == "max_tokens"
+            after_tool = True
             for block in tool_uses:
                 name, args = block["name"], block.get("input", {})
                 if truncated:
@@ -171,6 +205,8 @@ def run_turn(session: ChatSession, message: str, caller: Caller) -> Iterator[Cha
                 except tools.ToolExecutionError as exc:
                     results.append(_tool_result(block["id"], str(exc), True))
                     continue
+                if conversational and name == "build_schedules":
+                    _show_build(reply, output)
                 yield ChatEvent(type="tool_result", tool=name, data=output)
                 results.append(_tool_result(block["id"], json.dumps(output)))
 
@@ -178,19 +214,26 @@ def run_turn(session: ChatSession, message: str, caller: Caller) -> Iterator[Cha
             # history stays valid for the student's next message.
             session.history.append({"role": "user", "content": results})
             if give_up:
-                yield ChatEvent(type="error", text=ERR_RETRY_FAILED)
+                yield fail(ERR_RETRY_FAILED)
                 break
         else:
-            yield ChatEvent(type="error", text=ERR_TOO_LONG)
+            yield fail(ERR_TOO_LONG)
     except client.ClaudeNotConfiguredError:
-        yield ChatEvent(type="error", text=ERR_NOT_CONFIGURED)
+        yield fail(ERR_NOT_CONFIGURED)
     except anthropic.APIError:
         # The SDK already retried rate limits and server errors with backoff.
-        yield ChatEvent(type="error", text=ERR_UNAVAILABLE)
+        yield fail(ERR_UNAVAILABLE)
 
     if conversational:
         intake.end_turn(built_this_turn=intake.built and not was_built)
+        # AI-08: a schedule card has its own two replies ("This works", "Change
+        # something"), and the "no schedule fits" hint has exactly one.
+        if reply.schedule is not None:
+            quick_replies = []
+        elif reply.relaxation is not None:
+            quick_replies = [APPLY_RELAXATION]
         if quick_replies:
+            reply.quick_replies = quick_replies
             yield ChatEvent(type="done", data={"quick_replies": quick_replies})
             return
     yield ChatEvent(type="done")

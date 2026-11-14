@@ -5,12 +5,6 @@
   ],
   "calls": [
     {
-      "request_messages": [
-        {
-          "role": "user",
-          "content": "Only online classes please, I'm not on campus this semester"
-        }
-      ],
       "text": [],
       "content": [
         {
@@ -26,36 +20,6 @@
       "stop_reason": "tool_use"
     },
     {
-      "request_messages": [
-        {
-          "role": "user",
-          "content": "Only online classes please, I'm not on campus this semester"
-        },
-        {
-          "role": "assistant",
-          "content": [
-            {
-              "id": "toolu_016rRcBKdwc6dbhrSGSShhqZ",
-              "input": {},
-              "name": "get_remaining_requirements",
-              "type": "tool_use",
-              "caller": {
-                "type": "direct"
-              }
-            }
-          ]
-        },
-        {
-          "role": "user",
-          "content": [
-            {
-              "type": "tool_result",
-              "tool_use_id": "toolu_016rRcBKdwc6dbhrSGSShhqZ",
-              "content": "{\"track\": \"fall_winter\", \"track_known\": true, \"requirements\": [{\"id\": \"core-data-structures\", \"group\": \"Major Core\", \"name\": \"Programming with Data Structures\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"CSE 212\"], \"courses_counted\": []}, {\"id\": \"core-testing\", \"group\": \"Major Core\", \"name\": \"Software Testing\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"CSE 270\"], \"courses_counted\": []}, {\"id\": \"core-applied\", \"group\": \"Major Core\", \"name\": \"Applied Programming\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 310\"], \"courses_counted\": []}, {\"id\": \"core-web-backend\", \"group\": \"Major Core\", \"name\": \"Web Backend\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 340\", \"CSE 341\"], \"courses_counted\": []}, {\"id\": \"web-frontend\", \"group\": \"Web Foundations\", \"name\": \"Web Frontend Development\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"WDD 231\"], \"courses_counted\": []}, {\"id\": \"db-design\", \"group\": \"Databases\", \"name\": \"Database Design\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CIT 225\"], \"courses_counted\": []}, {\"id\": \"math-calc2\", \"group\": \"Mathematics\", \"name\": \"Calculus II\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"MATH 113\"], \"courses_counted\": []}, {\"id\": \"math-stats\", \"group\": \"Mathematics\", \"name\": \"Statistics\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"MATH 221A\", \"MATH 325\"], \"courses_counted\": []}, {\"id\": \"major-elective\", \"group\": \"Major Electives\", \"name\": \"Computer Science Elective\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 325\", \"CSE 381\", \"CSE 450\"], \"courses_counted\": []}, {\"id\": \"rel-book-of-mormon\", \"group\": \"Religion Cornerstones\", \"name\": \"Teachings and Doctrine of the Book of Mormon\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"REL 275\"], \"courses_counted\": []}]}"
-            }
-          ]
-        }
-      ],
       "text": [],
       "content": [
         {
@@ -89,78 +53,6 @@
       "stop_reason": "tool_use"
     },
     {
-      "request_messages": [
-        {
-          "role": "user",
-          "content": "Only online classes please, I'm not on campus this semester"
-        },
-        {
-          "role": "assistant",
-          "content": [
-            {
-              "id": "toolu_016rRcBKdwc6dbhrSGSShhqZ",
-              "input": {},
-              "name": "get_remaining_requirements",
-              "type": "tool_use",
-              "caller": {
-                "type": "direct"
-              }
-            }
-          ]
-        },
-        {
-          "role": "user",
-          "content": [
-            {
-              "type": "tool_result",
-              "tool_use_id": "toolu_016rRcBKdwc6dbhrSGSShhqZ",
-              "content": "{\"track\": \"fall_winter\", \"track_known\": true, \"requirements\": [{\"id\": \"core-data-structures\", \"group\": \"Major Core\", \"name\": \"Programming with Data Structures\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"CSE 212\"], \"courses_counted\": []}, {\"id\": \"core-testing\", \"group\": \"Major Core\", \"name\": \"Software Testing\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"CSE 270\"], \"courses_counted\": []}, {\"id\": \"core-applied\", \"group\": \"Major Core\", \"name\": \"Applied Programming\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 310\"], \"courses_counted\": []}, {\"id\": \"core-web-backend\", \"group\": \"Major Core\", \"name\": \"Web Backend\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 340\", \"CSE 341\"], \"courses_counted\": []}, {\"id\": \"web-frontend\", \"group\": \"Web Foundations\", \"name\": \"Web Frontend Development\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"WDD 231\"], \"courses_counted\": []}, {\"id\": \"db-design\", \"group\": \"Databases\", \"name\": \"Database Design\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CIT 225\"], \"courses_counted\": []}, {\"id\": \"math-calc2\", \"group\": \"Mathematics\", \"name\": \"Calculus II\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"MATH 113\"], \"courses_counted\": []}, {\"id\": \"math-stats\", \"group\": \"Mathematics\", \"name\": \"Statistics\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"MATH 221A\", \"MATH 325\"], \"courses_counted\": []}, {\"id\": \"major-elective\", \"group\": \"Major Electives\", \"name\": \"Computer Science Elective\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 325\", \"CSE 381\", \"CSE 450\"], \"courses_counted\": []}, {\"id\": \"rel-book-of-mormon\", \"group\": \"Religion Cornerstones\", \"name\": \"Teachings and Doctrine of the Book of Mormon\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"REL 275\"], \"courses_counted\": []}]}"
-            }
-          ]
-        },
-        {
-          "role": "assistant",
-          "content": [
-            {
-              "id": "toolu_01TpDnC6bdbd6tnPXRReZzRK",
-              "input": {
-                "constraints": {
-                  "credit_min": null,
-                  "credit_max": null,
-                  "earliest_start": null,
-                  "latest_end": null,
-                  "days_off": [],
-                  "include_courses": [],
-                  "exclude_courses": [],
-                  "exclude_section_ids": [],
-                  "delivery_methods": [
-                    "online"
-                  ],
-                  "only_required": false,
-                  "allow_waitlist": false,
-                  "only_favorite_professors": false
-                },
-                "max_results": 3
-              },
-              "name": "build_schedules",
-              "type": "tool_use",
-              "caller": {
-                "type": "direct"
-              }
-            }
-          ]
-        },
-        {
-          "role": "user",
-          "content": [
-            {
-              "type": "tool_result",
-              "tool_use_id": "toolu_01TpDnC6bdbd6tnPXRReZzRK",
-              "content": "{\"constraints\": {\"credit_min\": null, \"credit_max\": null, \"earliest_start\": null, \"latest_end\": null, \"days_off\": [], \"include_courses\": [], \"exclude_courses\": [], \"exclude_section_ids\": [], \"delivery_methods\": [\"online\"], \"only_required\": false, \"allow_waitlist\": false, \"only_favorite_professors\": false}, \"schedules\": [{\"id\": \"stub-1\", \"rank\": 1, \"score\": 99.0, \"total_credits\": 15.0, \"optimal\": true, \"classes\": [{\"section\": {\"id\": \"2027;WI|CSE 212-02\", \"course_code\": \"CSE 212\", \"section\": \"02\", \"title\": \"Programming with Data Structures\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-hale\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"12:45:00\", \"end_time\": \"13:45:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 235\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 7, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CSE212-02\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"core-data-structures\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|CSE 310-02\", \"course_code\": \"CSE 310\", \"section\": \"02\", \"title\": \"Applied Programming\", \"credits\": 3.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-hale\"], \"meetings\": [{\"days\": [\"M\", \"W\", \"F\"], \"start_time\": \"12:45:00\", \"end_time\": \"13:45:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 380\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 5, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CSE310-02\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"core-applied\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|MATH 113-02\", \"course_code\": \"MATH 113\", \"section\": \"02\", \"title\": \"Calculus II\", \"credits\": 3.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Mathematics\", \"instructor_ids\": [\"p-nakamura\"], \"meetings\": [{\"days\": [\"M\", \"W\", \"F\"], \"start_time\": \"10:15:00\", \"end_time\": \"11:15:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"RKS 103\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 3, \"total\": 40, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/MATH113-02\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"math-calc2\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|WDD 231-01\", \"course_code\": \"WDD 231\", \"section\": \"01\", \"title\": \"Web Frontend Development I\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Web Design and Development\", \"instructor_ids\": [\"p-okafor\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"11:30:00\", \"end_time\": \"12:30:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 150\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 5, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/WDD231-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"web-frontend\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|REL 275-01\", \"course_code\": \"REL 275\", \"section\": \"01\", \"title\": \"Teachings and Doctrine of the Book of Mormon\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Religious Education\", \"instructor_ids\": [\"p-smith-rel\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"10:15:00\", \"end_time\": \"11:15:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"TAY 120\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 12, \"total\": 80, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/REL275-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"rel-book-of-mormon\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|CIT 225-01\", \"course_code\": \"CIT 225\", \"section\": \"01\", \"title\": \"Database Design and Development\", \"credits\": 3.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Information Technology\", \"instructor_ids\": [\"p-whitfield\"], \"meetings\": [{\"days\": [\"M\", \"W\", \"F\"], \"start_time\": \"11:30:00\", \"end_time\": \"12:30:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 140\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 6, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CIT225-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"db-design\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}], \"why\": {\"preferences_met\": [\"earliest_start\", \"credit_range\"], \"preferences_missed\": [], \"favorite_professor_ids\": []}, \"warnings\": [], \"advising_note\": \"Confirm with BYU-Idaho Academic Advising.\"}, {\"id\": \"stub-2\", \"rank\": 2, \"score\": 98.0, \"total_credits\": 13.0, \"optimal\": true, \"classes\": [{\"section\": {\"id\": \"2027;WI|CSE 212-03\", \"course_code\": \"CSE 212\", \"section\": \"03\", \"title\": \"Programming with Data Structures\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"online\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-barros\"], \"meetings\": [], \"seats\": {\"status\": \"open\", \"open\": 15, \"total\": 40, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CSE212-03\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"core-data-structures\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|MATH 113-03\", \"course_code\": \"MATH 113\", \"section\": \"03\", \"title\": \"Calculus II\", \"credits\": 3.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Mathematics\", \"instructor_ids\": [\"p-nakamura\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"11:30:00\", \"end_time\": \"12:45:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"RKS 103\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 8, \"total\": 40, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/MATH113-03\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"math-calc2\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|CSE 310-02\", \"course_code\": \"CSE 310\", \"section\": \"02\", \"title\": \"Applied Programming\", \"credits\": 3.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-hale\"], \"meetings\": [{\"days\": [\"M\", \"W\", \"F\"], \"start_time\": \"12:45:00\", \"end_time\": \"13:45:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 380\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 5, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CSE310-02\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"core-applied\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|CIT 225-01\", \"course_code\": \"CIT 225\", \"section\": \"01\", \"title\": \"Database Design and Development\", \"credits\": 3.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Information Technology\", \"instructor_ids\": [\"p-whitfield\"], \"meetings\": [{\"days\": [\"M\", \"W\", \"F\"], \"start_time\": \"11:30:00\", \"end_time\": \"12:30:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 140\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 6, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CIT225-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"db-design\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|REL 275-02\", \"course_code\": \"REL 275\", \"section\": \"02\", \"title\": \"Teachings and Doctrine of the Book of Mormon\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Religious Education\", \"instructor_ids\": [\"p-smith-rel\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"12:45:00\", \"end_time\": \"13:45:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"TAY 120\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 25, \"total\": 80, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/REL275-02\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"rel-book-of-mormon\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}], \"why\": {\"preferences_met\": [\"earliest_start\", \"credit_range\", \"days_off:F\"], \"preferences_missed\": [], \"favorite_professor_ids\": []}, \"warnings\": [], \"advising_note\": \"Confirm with BYU-Idaho Academic Advising.\"}, {\"id\": \"stub-3\", \"rank\": 3, \"score\": 97.0, \"total_credits\": 15.0, \"optimal\": true, \"classes\": [{\"section\": {\"id\": \"2027;WI;W2|CSE 212-04\", \"course_code\": \"CSE 212\", \"section\": \"04\", \"title\": \"Programming with Data Structures\", \"credits\": 2.0, \"term_code\": \"2027;WI;W2\", \"block\": \"second\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-smith-cse\"], \"meetings\": [{\"days\": [\"M\", \"W\"], \"start_time\": \"15:15:00\", \"end_time\": \"16:15:00\", \"start_date\": \"2027-02-24\", \"end_date\": \"2027-04-08\", \"room\": \"STC 231\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 9, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI-W2/CSE212-04\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"core-data-structures\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI;W2|CSE 310-03\", \"course_code\": \"CSE 310\", \"section\": \"03\", \"title\": \"Applied Programming\", \"credits\": 3.0, \"term_code\": \"2027;WI;W2\", \"block\": \"second\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-okafor\"], \"meetings\": [{\"days\": [\"M\", \"T\", \"W\", \"R\"], \"start_time\": \"14:00:00\", \"end_time\": \"15:00:00\", \"start_date\": \"2027-02-24\", \"end_date\": \"2027-04-08\", \"room\": \"STC 380\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 13, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI-W2/CSE310-03\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"core-applied\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|MATH 221A-01\", \"course_code\": \"MATH 221A\", \"section\": \"01\", \"title\": \"Business Statistics\", \"credits\": 3.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Mathematics\", \"instructor_ids\": [\"p-reyes\"], \"meetings\": [{\"days\": [\"M\", \"W\", \"F\"], \"start_time\": \"12:45:00\", \"end_time\": \"13:45:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"RKS 105\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 9, \"total\": 40, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/MATH221A-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"math-stats\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|WDD 231-01\", \"course_code\": \"WDD 231\", \"section\": \"01\", \"title\": \"Web Frontend Development I\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Web Design and Development\", \"instructor_ids\": [\"p-okafor\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"11:30:00\", \"end_time\": \"12:30:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 150\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 5, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/WDD231-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"web-frontend\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|REL 275-01\", \"course_code\": \"REL 275\", \"section\": \"01\", \"title\": \"Teachings and Doctrine of the Book of Mormon\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Religious Education\", \"instructor_ids\": [\"p-smith-rel\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"10:15:00\", \"end_time\": \"11:15:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"TAY 120\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 12, \"total\": 80, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/REL275-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"rel-book-of-mormon\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|CIT 225-01\", \"course_code\": \"CIT 225\", \"section\": \"01\", \"title\": \"Database Design and Development\", \"credits\": 3.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Information Technology\", \"instructor_ids\": [\"p-whitfield\"], \"meetings\": [{\"days\": [\"M\", \"W\", \"F\"], \"start_time\": \"11:30:00\", \"end_time\": \"12:30:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 140\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 6, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CIT225-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"db-design\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}], \"why\": {\"preferences_met\": [\"earliest_start\", \"credit_range\"], \"preferences_missed\": [], \"favorite_professor_ids\": []}, \"warnings\": [], \"advising_note\": \"Confirm with BYU-Idaho Academic Advising.\"}], \"excluded\": [], \"relaxation\": null}"
-            }
-          ]
-        }
-      ],
       "text": [],
       "content": [
         {
@@ -212,143 +104,6 @@
       "stop_reason": "tool_use"
     },
     {
-      "request_messages": [
-        {
-          "role": "user",
-          "content": "Only online classes please, I'm not on campus this semester"
-        },
-        {
-          "role": "assistant",
-          "content": [
-            {
-              "id": "toolu_016rRcBKdwc6dbhrSGSShhqZ",
-              "input": {},
-              "name": "get_remaining_requirements",
-              "type": "tool_use",
-              "caller": {
-                "type": "direct"
-              }
-            }
-          ]
-        },
-        {
-          "role": "user",
-          "content": [
-            {
-              "type": "tool_result",
-              "tool_use_id": "toolu_016rRcBKdwc6dbhrSGSShhqZ",
-              "content": "{\"track\": \"fall_winter\", \"track_known\": true, \"requirements\": [{\"id\": \"core-data-structures\", \"group\": \"Major Core\", \"name\": \"Programming with Data Structures\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"CSE 212\"], \"courses_counted\": []}, {\"id\": \"core-testing\", \"group\": \"Major Core\", \"name\": \"Software Testing\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"CSE 270\"], \"courses_counted\": []}, {\"id\": \"core-applied\", \"group\": \"Major Core\", \"name\": \"Applied Programming\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 310\"], \"courses_counted\": []}, {\"id\": \"core-web-backend\", \"group\": \"Major Core\", \"name\": \"Web Backend\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 340\", \"CSE 341\"], \"courses_counted\": []}, {\"id\": \"web-frontend\", \"group\": \"Web Foundations\", \"name\": \"Web Frontend Development\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"WDD 231\"], \"courses_counted\": []}, {\"id\": \"db-design\", \"group\": \"Databases\", \"name\": \"Database Design\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CIT 225\"], \"courses_counted\": []}, {\"id\": \"math-calc2\", \"group\": \"Mathematics\", \"name\": \"Calculus II\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"MATH 113\"], \"courses_counted\": []}, {\"id\": \"math-stats\", \"group\": \"Mathematics\", \"name\": \"Statistics\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"MATH 221A\", \"MATH 325\"], \"courses_counted\": []}, {\"id\": \"major-elective\", \"group\": \"Major Electives\", \"name\": \"Computer Science Elective\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 325\", \"CSE 381\", \"CSE 450\"], \"courses_counted\": []}, {\"id\": \"rel-book-of-mormon\", \"group\": \"Religion Cornerstones\", \"name\": \"Teachings and Doctrine of the Book of Mormon\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"REL 275\"], \"courses_counted\": []}]}"
-            }
-          ]
-        },
-        {
-          "role": "assistant",
-          "content": [
-            {
-              "id": "toolu_01TpDnC6bdbd6tnPXRReZzRK",
-              "input": {
-                "constraints": {
-                  "credit_min": null,
-                  "credit_max": null,
-                  "earliest_start": null,
-                  "latest_end": null,
-                  "days_off": [],
-                  "include_courses": [],
-                  "exclude_courses": [],
-                  "exclude_section_ids": [],
-                  "delivery_methods": [
-                    "online"
-                  ],
-                  "only_required": false,
-                  "allow_waitlist": false,
-                  "only_favorite_professors": false
-                },
-                "max_results": 3
-              },
-              "name": "build_schedules",
-              "type": "tool_use",
-              "caller": {
-                "type": "direct"
-              }
-            }
-          ]
-        },
-        {
-          "role": "user",
-          "content": [
-            {
-              "type": "tool_result",
-              "tool_use_id": "toolu_01TpDnC6bdbd6tnPXRReZzRK",
-              "content": "{\"constraints\": {\"credit_min\": null, \"credit_max\": null, \"earliest_start\": null, \"latest_end\": null, \"days_off\": [], \"include_courses\": [], \"exclude_courses\": [], \"exclude_section_ids\": [], \"delivery_methods\": [\"online\"], \"only_required\": false, \"allow_waitlist\": false, \"only_favorite_professors\": false}, \"schedules\": [{\"id\": \"stub-1\", \"rank\": 1, \"score\": 99.0, \"total_credits\": 15.0, \"optimal\": true, \"classes\": [{\"section\": {\"id\": \"2027;WI|CSE 212-02\", \"course_code\": \"CSE 212\", \"section\": \"02\", \"title\": \"Programming with Data Structures\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-hale\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"12:45:00\", \"end_time\": \"13:45:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 235\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 7, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CSE212-02\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"core-data-structures\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|CSE 310-02\", \"course_code\": \"CSE 310\", \"section\": \"02\", \"title\": \"Applied Programming\", \"credits\": 3.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-hale\"], \"meetings\": [{\"days\": [\"M\", \"W\", \"F\"], \"start_time\": \"12:45:00\", \"end_time\": \"13:45:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 380\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 5, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CSE310-02\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"core-applied\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|MATH 113-02\", \"course_code\": \"MATH 113\", \"section\": \"02\", \"title\": \"Calculus II\", \"credits\": 3.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Mathematics\", \"instructor_ids\": [\"p-nakamura\"], \"meetings\": [{\"days\": [\"M\", \"W\", \"F\"], \"start_time\": \"10:15:00\", \"end_time\": \"11:15:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"RKS 103\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 3, \"total\": 40, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/MATH113-02\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"math-calc2\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|WDD 231-01\", \"course_code\": \"WDD 231\", \"section\": \"01\", \"title\": \"Web Frontend Development I\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Web Design and Development\", \"instructor_ids\": [\"p-okafor\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"11:30:00\", \"end_time\": \"12:30:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 150\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 5, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/WDD231-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"web-frontend\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|REL 275-01\", \"course_code\": \"REL 275\", \"section\": \"01\", \"title\": \"Teachings and Doctrine of the Book of Mormon\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Religious Education\", \"instructor_ids\": [\"p-smith-rel\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"10:15:00\", \"end_time\": \"11:15:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"TAY 120\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 12, \"total\": 80, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/REL275-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"rel-book-of-mormon\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|CIT 225-01\", \"course_code\": \"CIT 225\", \"section\": \"01\", \"title\": \"Database Design and Development\", \"credits\": 3.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Information Technology\", \"instructor_ids\": [\"p-whitfield\"], \"meetings\": [{\"days\": [\"M\", \"W\", \"F\"], \"start_time\": \"11:30:00\", \"end_time\": \"12:30:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 140\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 6, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CIT225-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"db-design\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}], \"why\": {\"preferences_met\": [\"earliest_start\", \"credit_range\"], \"preferences_missed\": [], \"favorite_professor_ids\": []}, \"warnings\": [], \"advising_note\": \"Confirm with BYU-Idaho Academic Advising.\"}, {\"id\": \"stub-2\", \"rank\": 2, \"score\": 98.0, \"total_credits\": 13.0, \"optimal\": true, \"classes\": [{\"section\": {\"id\": \"2027;WI|CSE 212-03\", \"course_code\": \"CSE 212\", \"section\": \"03\", \"title\": \"Programming with Data Structures\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"online\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-barros\"], \"meetings\": [], \"seats\": {\"status\": \"open\", \"open\": 15, \"total\": 40, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CSE212-03\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"core-data-structures\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|MATH 113-03\", \"course_code\": \"MATH 113\", \"section\": \"03\", \"title\": \"Calculus II\", \"credits\": 3.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Mathematics\", \"instructor_ids\": [\"p-nakamura\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"11:30:00\", \"end_time\": \"12:45:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"RKS 103\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 8, \"total\": 40, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/MATH113-03\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"math-calc2\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|CSE 310-02\", \"course_code\": \"CSE 310\", \"section\": \"02\", \"title\": \"Applied Programming\", \"credits\": 3.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-hale\"], \"meetings\": [{\"days\": [\"M\", \"W\", \"F\"], \"start_time\": \"12:45:00\", \"end_time\": \"13:45:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 380\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 5, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CSE310-02\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"core-applied\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|CIT 225-01\", \"course_code\": \"CIT 225\", \"section\": \"01\", \"title\": \"Database Design and Development\", \"credits\": 3.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Information Technology\", \"instructor_ids\": [\"p-whitfield\"], \"meetings\": [{\"days\": [\"M\", \"W\", \"F\"], \"start_time\": \"11:30:00\", \"end_time\": \"12:30:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 140\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 6, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CIT225-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"db-design\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|REL 275-02\", \"course_code\": \"REL 275\", \"section\": \"02\", \"title\": \"Teachings and Doctrine of the Book of Mormon\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Religious Education\", \"instructor_ids\": [\"p-smith-rel\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"12:45:00\", \"end_time\": \"13:45:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"TAY 120\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 25, \"total\": 80, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/REL275-02\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"rel-book-of-mormon\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}], \"why\": {\"preferences_met\": [\"earliest_start\", \"credit_range\", \"days_off:F\"], \"preferences_missed\": [], \"favorite_professor_ids\": []}, \"warnings\": [], \"advising_note\": \"Confirm with BYU-Idaho Academic Advising.\"}, {\"id\": \"stub-3\", \"rank\": 3, \"score\": 97.0, \"total_credits\": 15.0, \"optimal\": true, \"classes\": [{\"section\": {\"id\": \"2027;WI;W2|CSE 212-04\", \"course_code\": \"CSE 212\", \"section\": \"04\", \"title\": \"Programming with Data Structures\", \"credits\": 2.0, \"term_code\": \"2027;WI;W2\", \"block\": \"second\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-smith-cse\"], \"meetings\": [{\"days\": [\"M\", \"W\"], \"start_time\": \"15:15:00\", \"end_time\": \"16:15:00\", \"start_date\": \"2027-02-24\", \"end_date\": \"2027-04-08\", \"room\": \"STC 231\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 9, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI-W2/CSE212-04\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"core-data-structures\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI;W2|CSE 310-03\", \"course_code\": \"CSE 310\", \"section\": \"03\", \"title\": \"Applied Programming\", \"credits\": 3.0, \"term_code\": \"2027;WI;W2\", \"block\": \"second\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-okafor\"], \"meetings\": [{\"days\": [\"M\", \"T\", \"W\", \"R\"], \"start_time\": \"14:00:00\", \"end_time\": \"15:00:00\", \"start_date\": \"2027-02-24\", \"end_date\": \"2027-04-08\", \"room\": \"STC 380\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 13, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI-W2/CSE310-03\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"core-applied\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|MATH 221A-01\", \"course_code\": \"MATH 221A\", \"section\": \"01\", \"title\": \"Business Statistics\", \"credits\": 3.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Mathematics\", \"instructor_ids\": [\"p-reyes\"], \"meetings\": [{\"days\": [\"M\", \"W\", \"F\"], \"start_time\": \"12:45:00\", \"end_time\": \"13:45:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"RKS 105\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 9, \"total\": 40, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/MATH221A-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"math-stats\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|WDD 231-01\", \"course_code\": \"WDD 231\", \"section\": \"01\", \"title\": \"Web Frontend Development I\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Web Design and Development\", \"instructor_ids\": [\"p-okafor\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"11:30:00\", \"end_time\": \"12:30:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 150\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 5, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/WDD231-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"web-frontend\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|REL 275-01\", \"course_code\": \"REL 275\", \"section\": \"01\", \"title\": \"Teachings and Doctrine of the Book of Mormon\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Religious Education\", \"instructor_ids\": [\"p-smith-rel\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"10:15:00\", \"end_time\": \"11:15:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"TAY 120\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 12, \"total\": 80, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/REL275-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"rel-book-of-mormon\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|CIT 225-01\", \"course_code\": \"CIT 225\", \"section\": \"01\", \"title\": \"Database Design and Development\", \"credits\": 3.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Information Technology\", \"instructor_ids\": [\"p-whitfield\"], \"meetings\": [{\"days\": [\"M\", \"W\", \"F\"], \"start_time\": \"11:30:00\", \"end_time\": \"12:30:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 140\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 6, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CIT225-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"db-design\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}], \"why\": {\"preferences_met\": [\"earliest_start\", \"credit_range\"], \"preferences_missed\": [], \"favorite_professor_ids\": []}, \"warnings\": [], \"advising_note\": \"Confirm with BYU-Idaho Academic Advising.\"}], \"excluded\": [], \"relaxation\": null}"
-            }
-          ]
-        },
-        {
-          "role": "assistant",
-          "content": [
-            {
-              "signature": "CAQSqAYKEAgTGAI4AUIIdGhpbmtpbmcSDHxBADHHhwtOjBEZZBoM9SwHZxV8GtbcurEoIjAwbud5qZ6YJqPLo3GMk6mgxuMnAlH9qUhSVjuSpo4IBV6FYfcfqjpt95yX7Z3J240qxQWx8ZQaxlYLxJcRTXC7sb+786Hirc1e6Ivp2d84tDb0xm2jKfECRkjs2L0aLebd5cyDOWljMvt64KZEhb01DmDsjeA4eDxZQaszoCb/8C3lnr2XGU1a+wKVwvT8Flgd1xcjSr05smhMECzXtfSofwynh7KE6zLWUC66WmBlLhDG1di4zuJgCdXBk8+9/nkduiT4eM958fxNhFzmGiZlWyPQsCbsElqPjCNoFAWp5m8pg18D4VuMcfYglaXKKyjRJmlg2Fvg4jWMJ4rMEx6uE+XcyXDjo7WJ2pbuCN3uwVCXlm5GETB14UE2jsy8jPz/WP4ekYjwl6kqcy9+pL+WxRpeT79untrkqxXoEYRxvWXEK+RM8Qq/4En6LHnEXOCQTVBi1mwH4im4aUTFT8UtBPGNS/+aCe61O57OTSy0JYnwutt1GwWlyDD/3kxawFiy9d71fuCqFmlHfQZKFcpYY5BvtTypDMQ2dKWGLJiioy61ZeH8uPTf1Mdk3QDbN3joL5vzpqgX7KMsL7pT54/i+vWIAQkKqLBbHQoZ1nRSMWfDEr7V8XFNYkNZ6wi0OltZumMcn6rvSL4mJRNeKmLO6Af/VPYr0Hz01szB8rJp/jYgJ5MQE9WO93117n5CaxRejoq86DrHpOxclN75U9oCmSqzSBplGWBqDKU2mLa2PpK+l/vxF6yPp+zwKr7mU/tQrtXgCwUngcfpjcbXsebqEXC52gC7Oq1H0XON/lROu8jiUUaf6ba4RmEcGojkVpo2mzKBE1pU5QDWfdb/3rAQlTz9Jgx6OLO0+8VpvYViM8tCcSDfHMv2sHIhi1Fw7hhT7Jg1CdrtNSA430O8SfP8wh/pxvCtMrfeKUF2yMBBdL7UL+GRMV07HSFWMBBbT36FwgShzjoBlLGr54epVqqCAypE6n6NIFzjNZs6HnaIcWYTFATOhEZIGAE=",
-              "thinking": "",
-              "type": "thinking"
-            },
-            {
-              "id": "toolu_014mziQY1UT7qdamjFGSPFar",
-              "input": {
-                "course_codes": [
-                  "CSE 212",
-                  "CSE 270",
-                  "CSE 310",
-                  "CSE 340",
-                  "CSE 341",
-                  "WDD 231",
-                  "CIT 225",
-                  "MATH 113",
-                  "MATH 221A",
-                  "MATH 325"
-                ],
-                "delivery_method": "online"
-              },
-              "name": "search_sections",
-              "type": "tool_use",
-              "caller": {
-                "type": "direct"
-              }
-            },
-            {
-              "id": "toolu_01EU8JcG3YymTALHF7A3TxVL",
-              "input": {
-                "course_codes": [
-                  "CSE 325",
-                  "CSE 381",
-                  "CSE 450",
-                  "REL 275"
-                ],
-                "delivery_method": "online"
-              },
-              "name": "search_sections",
-              "type": "tool_use",
-              "caller": {
-                "type": "direct"
-              }
-            }
-          ]
-        },
-        {
-          "role": "user",
-          "content": [
-            {
-              "type": "tool_result",
-              "tool_use_id": "toolu_014mziQY1UT7qdamjFGSPFar",
-              "content": "{\"courses\": [{\"course_code\": \"CSE 212\", \"title\": \"Programming with Data Structures\", \"credits\": 2.0, \"description\": \"Fixture description for Programming with Data Structures.\", \"sections\": [{\"id\": \"2027;WI|CSE 212-03\", \"course_code\": \"CSE 212\", \"section\": \"03\", \"title\": \"Programming with Data Structures\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"online\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-barros\"], \"meetings\": [], \"seats\": {\"status\": \"open\", \"open\": 15, \"total\": 40, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CSE212-03\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}]}, {\"course_code\": \"CSE 270\", \"title\": \"Software Testing\", \"credits\": 2.0, \"description\": \"Fixture description for Software Testing.\", \"sections\": []}, {\"course_code\": \"CSE 310\", \"title\": \"Applied Programming\", \"credits\": 3.0, \"description\": \"Fixture description for Applied Programming.\", \"sections\": []}, {\"course_code\": \"CSE 340\", \"title\": \"Web Backend Development\", \"credits\": 3.0, \"description\": \"Fixture description for Web Backend Development.\", \"sections\": []}, {\"course_code\": \"CSE 341\", \"title\": \"Web Services\", \"credits\": 3.0, \"description\": \"Fixture description for Web Services.\", \"sections\": []}, {\"course_code\": \"WDD 231\", \"title\": \"Web Frontend Development I\", \"credits\": 2.0, \"description\": \"Fixture description for Web Frontend Development I.\", \"sections\": []}, {\"course_code\": \"CIT 225\", \"title\": \"Database Design and Development\", \"credits\": 3.0, \"description\": \"Fixture description for Database Design and Development.\", \"sections\": []}, {\"course_code\": \"MATH 113\", \"title\": \"Calculus II\", \"credits\": 3.0, \"description\": \"Fixture description for Calculus II.\", \"sections\": [{\"id\": \"2027;WI|MATH 113-04\", \"course_code\": \"MATH 113\", \"section\": \"04\", \"title\": \"Calculus II\", \"credits\": 3.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"online\", \"class_type\": \"Lecture\", \"department\": \"Mathematics\", \"instructor_ids\": [\"p-nakamura\"], \"meetings\": [], \"seats\": {\"status\": \"open\", \"open\": 22, \"total\": 40, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/MATH113-04\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}]}, {\"course_code\": \"MATH 221A\", \"title\": \"Business Statistics\", \"credits\": 3.0, \"description\": \"Fixture description for Business Statistics.\", \"sections\": [{\"id\": \"2027;WI;W1|MATH 221A-03\", \"course_code\": \"MATH 221A\", \"section\": \"03\", \"title\": \"Business Statistics\", \"credits\": 3.0, \"term_code\": \"2027;WI;W1\", \"block\": \"first\", \"delivery_method\": \"online\", \"class_type\": \"Lecture\", \"department\": \"Mathematics\", \"instructor_ids\": [\"p-reyes\"], \"meetings\": [], \"seats\": {\"status\": \"open\", \"open\": 25, \"total\": 50, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI-W1/MATH221A-03\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}]}, {\"course_code\": \"MATH 325\", \"title\": \"Intermediate Statistics\", \"credits\": 3.0, \"description\": \"Fixture description for Intermediate Statistics.\", \"sections\": []}], \"not_found\": []}"
-            },
-            {
-              "type": "tool_result",
-              "tool_use_id": "toolu_01EU8JcG3YymTALHF7A3TxVL",
-              "content": "{\"courses\": [{\"course_code\": \"CSE 325\", \"title\": \".NET Software Development\", \"credits\": 3.0, \"description\": \"Fixture description for .NET Software Development.\", \"sections\": []}, {\"course_code\": \"CSE 381\", \"title\": \"Applied Algorithms\", \"credits\": 3.0, \"description\": \"Fixture description for Applied Algorithms.\", \"sections\": []}, {\"course_code\": \"CSE 450\", \"title\": \"Machine Learning\", \"credits\": 3.0, \"description\": \"Fixture description for Machine Learning.\", \"sections\": []}, {\"course_code\": \"REL 275\", \"title\": \"Teachings and Doctrine of the Book of Mormon\", \"credits\": 2.0, \"description\": \"Fixture description for Teachings and Doctrine of the Book of Mormon.\", \"sections\": []}], \"not_found\": []}"
-            }
-          ]
-        }
-      ],
       "text": [
         "I sear",
         "ched for online sections only, and",

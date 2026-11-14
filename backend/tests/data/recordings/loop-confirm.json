@@ -1,0 +1,161 @@
+{
+  "id": "loop-confirm",
+  "messages": [
+    "12 to 15 credits, campus classes only, done by 2:00 PM. No specific courses to add or skip.",
+    "yes",
+    "This works"
+  ],
+  "calls": [
+    {
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_01RCgmAMNvVxJmtcMWCzAAuC",
+          "input": {},
+          "name": "get_remaining_requirements",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "text": [
+        "Here",
+        " is what I have:",
+        "\n- Track: Fall",
+        " & Winter",
+        "\n- Credits: 12 ",
+        "to 15\n- Campus",
+        " classes only\n- No class",
+        "es ending after",
+        " 2:00 PM",
+        "\n- No",
+        " specific courses to include",
+        " or skip\n- Days off",
+        ": none",
+        "\n\nShould I build a sched",
+        "ule with these?\n<<cho",
+        "ices: Build it | Change",
+        " something>>"
+      ],
+      "content": [
+        {
+          "text": "Here is what I have:\n- Track: Fall & Winter\n- Credits: 12 to 15\n- Campus classes only\n- No classes ending after 2:00 PM\n- No specific courses to include or skip\n- Days off: none\n\nShould I build a schedule with these?\n<<choices: Build it | Change something>>",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    },
+    {
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_011ZyPShmd3ddv6rcKz7Rhar",
+          "input": {
+            "constraints": {
+              "credit_min": 12,
+              "credit_max": 15,
+              "earliest_start": null,
+              "latest_end": "14:00",
+              "days_off": [],
+              "include_courses": [],
+              "exclude_courses": [],
+              "exclude_section_ids": [],
+              "delivery_methods": [
+                "campus"
+              ],
+              "only_required": false,
+              "allow_waitlist": false,
+              "only_favorite_professors": false
+            },
+            "avoid_schedules": [],
+            "intake": {
+              "track": null,
+              "use_default_credits": false,
+              "student_agreed": true
+            }
+          },
+          "name": "build_schedules",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "text": [
+        "This schedule has",
+        " 15 credits.",
+        " It covers WDD 231",
+        ", CIT 225, C",
+        "SE 212, MATH",
+        " 113, MATH 221",
+        "A and REL 275.",
+        " Check",
+        " the war",
+        "nings. Your",
+        " prerequisites for",
+        " WDD 231, CI",
+        "T 225 and CSE",
+        " 212 are still in",
+        " progress, with",
+        " gr",
+        "ades pending. The app",
+        " also",
+        " says you can add a second religion",
+        " course only after the first day of the",
+        " semester.\n\nDoes this sch",
+        "edule work for you?",
+        "\nConfirm with BY",
+        "U-Idaho Academ",
+        "ic Advising."
+      ],
+      "content": [
+        {
+          "text": "This schedule has 15 credits. It covers WDD 231, CIT 225, CSE 212, MATH 113, MATH 221A and REL 275. Check the warnings. Your prerequisites for WDD 231, CIT 225 and CSE 212 are still in progress, with grades pending. The app also says you can add a second religion course only after the first day of the semester.\n\nDoes this schedule work for you?\nConfirm with BYU-Idaho Academic Advising.",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    },
+    {
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_01XyLz5njUgvjB3mAR945xdo",
+          "input": {
+            "schedule_id": "sch-c0e450d12870"
+          },
+          "name": "confirm_schedule",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "text": [
+        "Saved as your Winter",
+        " 2027 plan. This",
+        " does not register you for classes.",
+        " Confirm with BYU",
+        "-Idaho Academic",
+        " Advising."
+      ],
+      "content": [
+        {
+          "text": "Saved as your Winter 2027 plan. This does not register you for classes. Confirm with BYU-Idaho Academic Advising.",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    }
+  ]
+}

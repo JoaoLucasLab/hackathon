@@ -1,12 +1,15 @@
 import { LayoutDashboard, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { APP_NAME, TERM_LABEL } from "../../config";
+import { APP_NAME, TERM_LABEL, conversationalPlanner } from "../../config";
 
 export function NavBar() {
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
-  const links = [{ to: "/", label: "Plan" }, { to: "/schedules", label: "Schedules" }, { to: "/professors", label: "Professors" }];
+  const schedules = conversationalPlanner()
+    ? { to: "/plan", label: "My plan" }
+    : { to: "/schedules", label: "Schedules" };
+  const links = [{ to: "/", label: "Plan" }, schedules, { to: "/professors", label: "Professors" }];
   return (
     <header className="sticky top-4 z-20 mx-auto mt-4 w-full max-w-[1168px] px-5 md:px-6">
       <nav aria-label="Main" className="relative flex min-h-[62px] items-center justify-between rounded-nav border border-line bg-surface px-[18px]">

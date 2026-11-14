@@ -1,0 +1,236 @@
+{
+  "id": "loop-vague",
+  "messages": [
+    "12 to 15 credits, campus classes only, done by 2:00 PM. No specific courses to add or skip.",
+    "yes",
+    "I don't like it",
+    "just show me another"
+  ],
+  "calls": [
+    {
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_01Pp5HkSyHCZLcSRxhxtj16x",
+          "input": {},
+          "name": "get_remaining_requirements",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "text": [
+        "Here",
+        " is what I have:",
+        "\n- Track: Fall",
+        " & Winter",
+        "\n- Credits: 12 ",
+        "to 15\n-",
+        " Campus class",
+        "es only\n- No classes ",
+        "ending after 2:00 P",
+        "M\n- No spec",
+        "ific courses to include",
+        " or skip\n- Days off",
+        ": none",
+        "\n\nShould I build a sched",
+        "ule with these?\n<<cho",
+        "ices: Build it | Change",
+        " something>>"
+      ],
+      "content": [
+        {
+          "text": "Here is what I have:\n- Track: Fall & Winter\n- Credits: 12 to 15\n- Campus classes only\n- No classes ending after 2:00 PM\n- No specific courses to include or skip\n- Days off: none\n\nShould I build a schedule with these?\n<<choices: Build it | Change something>>",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    },
+    {
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_017FAhE7AwvjvDs4SPW4EP4W",
+          "input": {
+            "constraints": {
+              "credit_min": 12,
+              "credit_max": 15,
+              "earliest_start": null,
+              "latest_end": "14:00",
+              "days_off": [],
+              "include_courses": [],
+              "exclude_courses": [],
+              "exclude_section_ids": [],
+              "delivery_methods": [
+                "campus"
+              ],
+              "only_required": false,
+              "allow_waitlist": false,
+              "only_favorite_professors": false
+            },
+            "avoid_schedules": [],
+            "intake": {
+              "track": null,
+              "use_default_credits": false,
+              "student_agreed": true
+            }
+          },
+          "name": "build_schedules",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "text": [
+        "This ",
+        "15-credit schedule cov",
+        "ers",
+        " Web Frontend (",
+        "WDD 231), Database",
+        " Design (CIT 225",
+        "), Data",
+        " Structures (CSE ",
+        "212), Calculus II (",
+        "MATH 113), Stat",
+        "istics (MATH 221",
+        "A) and RE",
+        "L 275.",
+        " Four class",
+        "es have prerequisites",
+        " that are still in progress with",
+        " pending grades: WDD",
+        " 231 ",
+        "(WDD 131), C",
+        "IT 225 (CI",
+        "T 111)",
+        " and CSE 212 (",
+        "CSE 210). Check",
+        " those before you",
+        " register.\n\nDoes this sched",
+        "ule work for you?\nConf",
+        "irm with BYU-",
+        "Idaho Academic Adv",
+        "ising."
+      ],
+      "content": [
+        {
+          "text": "This 15-credit schedule covers Web Frontend (WDD 231), Database Design (CIT 225), Data Structures (CSE 212), Calculus II (MATH 113), Statistics (MATH 221A) and REL 275. Four classes have prerequisites that are still in progress with pending grades: WDD 231 (WDD 131), CIT 225 (CIT 111) and CSE 212 (CSE 210). Check those before you register.\n\nDoes this schedule work for you?\nConfirm with BYU-Idaho Academic Advising.",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    },
+    {
+      "text": [
+        "S",
+        "orry to",
+        " hear that. What would you like",
+        " to change?",
+        " For example, cert",
+        "ain days, class",
+        " times, a",
+        " course",
+        ", or the",
+        " number",
+        " of credits."
+      ],
+      "content": [
+        {
+          "text": "Sorry to hear that. What would you like to change? For example, certain days, class times, a course, or the number of credits.",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    },
+    {
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_01Qo9w1BE23LQX7JhFNDHa8W",
+          "input": {
+            "constraints": {
+              "credit_min": 12,
+              "credit_max": 15,
+              "earliest_start": null,
+              "latest_end": "14:00",
+              "days_off": [],
+              "include_courses": [],
+              "exclude_courses": [],
+              "exclude_section_ids": [],
+              "delivery_methods": [
+                "campus"
+              ],
+              "only_required": false,
+              "allow_waitlist": false,
+              "only_favorite_professors": false
+            },
+            "avoid_schedules": [
+              [
+                "2027;WI;W2|WDD 231-03",
+                "2027;WI|CIT 225-01",
+                "2027;WI|CSE 212-02",
+                "2027;WI|MATH 113-03",
+                "2027;WI|MATH 221A-02",
+                "2027;WI|REL 275-01"
+              ]
+            ],
+            "intake": {
+              "track": null,
+              "use_default_credits": false,
+              "student_agreed": true
+            }
+          },
+          "name": "build_schedules",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "text": [
+        "I sw",
+        "apped CIT 225 ",
+        "for",
+        " CSE 310 ",
+        "(Applied Programming,",
+        " Monday,",
+        " Wednesday and Fri",
+        "day ",
+        "9:00\u201310:00).",
+        " The total is",
+        " still 15 credits. C",
+        "SE 310,",
+        " C",
+        "SE 212 and WD",
+        "D 231 each",
+        " have a",
+        " prerequisite that is still",
+        " in progress with",
+        " a pending grade, so check",
+        " those before you register.\n\nDoes",
+        " this schedule work for you?",
+        "\nConfirm with BY",
+        "U-Idaho Academ",
+        "ic Advising."
+      ],
+      "content": [
+        {
+          "text": "I swapped CIT 225 for CSE 310 (Applied Programming, Monday, Wednesday and Friday 9:00\u201310:00). The total is still 15 credits. CSE 310, CSE 212 and WDD 231 each have a prerequisite that is still in progress with a pending grade, so check those before you register.\n\nDoes this schedule work for you?\nConfirm with BYU-Idaho Academic Advising.",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    }
+  ]
+}

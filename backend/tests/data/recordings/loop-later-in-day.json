@@ -1,0 +1,222 @@
+{
+  "id": "loop-later-in-day",
+  "messages": [
+    "12 to 15 credits, campus classes only, done by 2:00 PM. No specific courses to add or skip.",
+    "yes",
+    "can MATH 221A be later in the day"
+  ],
+  "calls": [
+    {
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_01CWH7s3UFrfsAdFi5z6jKm5",
+          "input": {},
+          "name": "get_remaining_requirements",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "text": [
+        "Here",
+        " is what I have:\n-",
+        " Track: Fall & Win",
+        "ter",
+        "\n- Credits: 12 ",
+        "to 15\n-",
+        " Campus classes only",
+        "\n- No classes ",
+        "ending after 2:00 P",
+        "M\n- No",
+        " specific courses to include",
+        " or skip\n- Days off",
+        ": none",
+        "\n\nShould I build a sched",
+        "ule with these?\n<<cho",
+        "ices: Build it | Change",
+        " something>>"
+      ],
+      "content": [
+        {
+          "text": "Here is what I have:\n- Track: Fall & Winter\n- Credits: 12 to 15\n- Campus classes only\n- No classes ending after 2:00 PM\n- No specific courses to include or skip\n- Days off: none\n\nShould I build a schedule with these?\n<<choices: Build it | Change something>>",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    },
+    {
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_0144Usv7PM38gu7vrv2Uqu9Y",
+          "input": {
+            "constraints": {
+              "credit_min": 12,
+              "credit_max": 15,
+              "earliest_start": null,
+              "latest_end": "14:00",
+              "days_off": [],
+              "include_courses": [],
+              "exclude_courses": [],
+              "exclude_section_ids": [],
+              "delivery_methods": [
+                "campus"
+              ],
+              "only_required": false,
+              "allow_waitlist": false,
+              "only_favorite_professors": false
+            },
+            "avoid_schedules": [],
+            "intake": {
+              "track": null,
+              "use_default_credits": false,
+              "student_agreed": true
+            }
+          },
+          "name": "build_schedules",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "text": [
+        "This schedule is",
+        " 15 credits. It cov",
+        "ers",
+        " Web Frontend, Database",
+        " Design, Data",
+        " Structures, Calculus",
+        " II, Statistics and",
+        " RE",
+        "L 275. Check the war",
+        "nings: WDD 131",
+        ", CIT 111",
+        " and CSE 210 ",
+        "are still in prog",
+        "ress with",
+        " gr",
+        "ades pending.",
+        "\n\nDoes this schedule work",
+        " for you?",
+        "\nConfirm with BY",
+        "U-Idaho Academ",
+        "ic Advising."
+      ],
+      "content": [
+        {
+          "text": "This schedule is 15 credits. It covers Web Frontend, Database Design, Data Structures, Calculus II, Statistics and REL 275. Check the warnings: WDD 131, CIT 111 and CSE 210 are still in progress with grades pending.\n\nDoes this schedule work for you?\nConfirm with BYU-Idaho Academic Advising.",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    },
+    {
+      "text": [],
+      "content": [
+        {
+          "signature": "CAQS+wYKEAgTGAI4AUIIdGhpbmtpbmcSDBxoXNKFiwuCBSnxhBoMJHryw+L84iYhZX2UIjBsBwfXVX6clQ2HOvcfKk5rdV2n4IqGwKOTtZMtc4W3aV7SmBNYluXqnlEIj5iS3PEqmAZoM4iDe90vtQgMoOTS6f065ep8KOfZaLF8sE2WF1AYSZmJGMikKUxKGb0TvDpksMaiFPQ/3r+eeg9xAHh5GsXEjyW1CuJuFIJbdDxqcZ7oM5DRnx2vcoNRKpSrNuu1yjGq9c+HZV/PSZbCBmDsKzv3fziMswQARhr7vJzKDy1Au8FK0hp3AwJAJC5HgiDKHWWUkOa7zjSQyeM+fTjyoXdyj1EugaWp0tcO9PZxHjog4s40v6/xblOQbWdNuqZj5Kgm425WQ6mXEh2PUvkjvZOO3zfSQ7mVolPUB+xPBanFsOoudAXsiVbygv4OHr2QjM2ClaMJI4/D9NWscrQSdNpwEWpUKTA7jHwb/o3J5arEUxloJ0oxm/FQWCWMD41XuxgpikxBAk9Kzw9JgLW3dMjXrt10wp31MBaRnhWuEc8UxeuMS6PkfW5Z96iIMPo0ahYbV9c9TyK+zu6UjoJ4PoAbGCH9ORfBYvW9Vp/b9jZc0FeC8NdeZmqRp/P9QkxSTBlaDFSBU1H3qHHQZO3g/YDLtn4fM0i1qc5t2LlpN0rHBNx0TIJL33+js460KkxOj/ajLd0Vu2s2PxPgYBGWvh9RrwHLChuuepYMi1IkHy2y0ClpXkSq30tnv+S9hX7y6FPPGVoFQ9KDZyNgI3w+SY1NZFS9J2GoBP3kiw4VmuAB/V3f5Ud4I3nbzVN407RNjpBPGCDj3QBOwNS5pOkS0gPZPz0nwjTnmOD4pwAP6w9JenUYeYRNzOxgMB9XGGWFOkapR+oISsP2bNgoxMOmmuBzyAmVgebbb9K9bjRPln1wHSM4GbaBsUoOpEzehyOFKF7uVIS8pvSJeavKoatmCd4x4CjYOUlbU/QNCI33J38gd87cx7b0hXFFQ4CBwaFYNdmfW1ubv4SChHqA59WJxVvg+dqVcDeNp//yRomp4PANsVkZXLbLZ2RZmWRC7iKmA1WZzo+XZFvEOhk0vn/RWx4O2Lg+cvxmqMO44cN1FIhrFZ7kTfnTlr/xohOo/Lz4LGXn0M3t2WFPtTgmUcBpx93UWFEIQQHGHYUYAQ==",
+          "thinking": "",
+          "type": "thinking"
+        },
+        {
+          "id": "toolu_013VGk4sHMArnE5sXPHsXmxm",
+          "input": {
+            "constraints": {
+              "credit_min": 12,
+              "credit_max": 15,
+              "earliest_start": null,
+              "latest_end": "14:00",
+              "days_off": [],
+              "include_courses": [],
+              "exclude_courses": [],
+              "exclude_section_ids": [
+                "2027;WI|MATH 221A-02"
+              ],
+              "delivery_methods": [
+                "campus"
+              ],
+              "only_required": false,
+              "allow_waitlist": false,
+              "only_favorite_professors": false
+            },
+            "avoid_schedules": [
+              [
+                "2027;WI;W2|WDD 231-03",
+                "2027;WI|CIT 225-01",
+                "2027;WI|CSE 212-02",
+                "2027;WI|MATH 113-03",
+                "2027;WI|MATH 221A-02",
+                "2027;WI|REL 275-01"
+              ]
+            ],
+            "intake": {
+              "track": null,
+              "use_default_credits": false,
+              "student_agreed": true
+            }
+          },
+          "name": "build_schedules",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "text": [
+        "MATH 221A now",
+        " me",
+        "ets",
+        " Monday,",
+        " Wednesday and Fri",
+        "day from",
+        " 12:45 to 1",
+        ":45 PM.",
+        " It",
+        " used",
+        " to me",
+        "et Tuesday and",
+        " Thursday from 9:00",
+        " to 10:15 A",
+        "M. To make that f",
+        "it, I",
+        " also moved three",
+        " other classes:",
+        "\n- MATH 113 ",
+        "is",
+        " now section 02.\n- RE",
+        "L 275 is now section ",
+        "03.\n- WDD ",
+        "231 is now section 01.",
+        "\n\nThe total is still 15 ",
+        "credits. The WDD ",
+        "231, CIT 225 ",
+        "and CSE 212 pr",
+        "erequisite warnings still",
+        " apply.\n\nDoes this sch",
+        "edule work for you?",
+        "\nConfirm with BYU-",
+        "Idaho Academic",
+        " Advising."
+      ],
+      "content": [
+        {
+          "text": "MATH 221A now meets Monday, Wednesday and Friday from 12:45 to 1:45 PM. It used to meet Tuesday and Thursday from 9:00 to 10:15 AM. To make that fit, I also moved three other classes:\n- MATH 113 is now section 02.\n- REL 275 is now section 03.\n- WDD 231 is now section 01.\n\nThe total is still 15 credits. The WDD 231, CIT 225 and CSE 212 prerequisite warnings still apply.\n\nDoes this schedule work for you?\nConfirm with BYU-Idaho Academic Advising.",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    }
+  ]
+}

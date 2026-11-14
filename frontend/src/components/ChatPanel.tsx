@@ -1,11 +1,20 @@
 import { ArrowUp, LoaderCircle, Plus } from "lucide-react";
-import { useId, useRef, type FormEvent, type KeyboardEvent } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useId, useRef, type FormEvent, type KeyboardEvent } from "react";
 
 import { Link } from "react-router-dom";
 import { streamChat } from "../api/chat";
-import type { ChatEvent } from "../api/schemas";
+import { fetchChatHistory, queryKeys, usePlan } from "../api/queries";
+import type { ChatEvent, Relaxation, SavedChatTurn, Schedule } from "../api/schemas";
+import { conversationalPlanner } from "../config";
 import { usePlanningState, type ChatTurn } from "../pages/PlanningState";
+import { ChatScheduleCard } from "./ChatScheduleCard";
+import { plural } from "./scheduleFormat";
 import { Icon, ICON_STROKE } from "./ui/Icon";
+
+/** AI-08: the two replies under the latest schedule card. */
+export const THIS_WORKS = "This works";
+export const CHANGE_SOMETHING = "Change something";
 
 /** What the student sees while a tool runs. Never the raw tool name or arguments. */
 const TOOL_STATUS: Record<string, string> = {
@@ -13,6 +22,7 @@ const TOOL_STATUS: Record<string, string> = {
   search_sections: "Looking up sections",
   check_prerequisites: "Checking prerequisites",
   build_schedules: "Building schedules",
+  confirm_schedule: "Saving your plan",
   get_professor_profile: "Looking up the professor",
   toggle_favorite_professor: "Updating your favorites",
   find_mentors: "Finding mentors",
@@ -26,6 +36,30 @@ const STARTERS = [
   { label: "Favorite professors", text: "Only my favorite professors" },
 ];
 const STARTER_COLORS = ["bg-sq-sage", "bg-sq-clay", "bg-sq-sky", "bg-sq-butter"];
+
+/** AI-08: what a `build_schedules` result puts on the reply: one card, or "nothing fits". */
+function buildFrom(event: ChatEvent): Pick<ChatTurn, "schedule" | "option" | "noSchedule" | "relaxation"> | null {
+  if (event.type !== "tool_result" || event.tool !== "build_schedules" || !event.data) return null;
+  const data = event.data as { schedules?: Schedule[]; option?: number; relaxation?: Relaxation | null };
+  const schedule = data.schedules?.[0];
+  if (schedule) return { schedule, option: data.option ?? 1, noSchedule: false, relaxation: null };
+  return { schedule: undefined, option: undefined, noSchedule: true, relaxation: data.relaxation ?? null };
+}
+
+/** A turn saved on the server (`GET /api/chat/history`), as the panel keeps it. */
+function fromSaved(turn: SavedChatTurn, id: number): ChatTurn {
+  return {
+    id,
+    role: turn.role,
+    text: turn.text ?? "",
+    error: turn.error ?? undefined,
+    quickReplies: turn.quick_replies?.length ? turn.quick_replies : undefined,
+    schedule: turn.schedule ?? undefined,
+    option: turn.option ?? undefined,
+    noSchedule: turn.no_schedule || undefined,
+    relaxation: turn.relaxation ?? null,
+  };
+}
 
 /** The `done` event may carry fixed answers for the question the assistant just asked. */
 function quickRepliesFrom(event: ChatEvent): string[] | undefined {
@@ -45,9 +79,37 @@ export function ChatPanel({ onEvent, beforeSend }: ChatPanelProps) {
   const inputId = useId();
   const {
     draft, setDraft, turns, setTurns, busy, setBusy,
-    sendError, setSendError, nextTurnId, activeRequest,
+    sendError, setSendError, nextTurnId, restored, activeRequest,
   } = usePlanningState();
   const lastEvent = useRef<ChatEvent["type"] | null>(null);
+  const input = useRef<HTMLTextAreaElement>(null);
+  const queryClient = useQueryClient();
+  const oneAtATime = conversationalPlanner();
+  const plan = usePlan(oneAtATime);
+  const confirmedId = plan.data?.id ?? null;
+
+  // AI-08: a reload keeps the conversation and its cards. Asked once per page load.
+  useEffect(() => {
+    if (!oneAtATime || restored.current) return;
+    // Marked done only when the request finishes: React's dev double-mount aborts
+    // the first one, and the second must still run.
+    const controller = new AbortController();
+    fetchChatHistory(controller.signal)
+      .then((history) => {
+        if (controller.signal.aborted) return;
+        restored.current = true;
+        const saved = history.turns ?? [];
+        if (saved.length === 0) return;
+        setTurns((current) =>
+          current.length > 0 ? current : saved.map((t) => fromSaved(t, nextTurnId.current++)),
+        );
+      })
+      .catch(() => {
+        // No saved conversation (or the server is unreachable): start empty.
+        if (!controller.signal.aborted) restored.current = true;
+      });
+    return () => controller.abort();
+  }, [oneAtATime, restored, setTurns, nextTurnId]);
 
   async function send(message: string) {
     const text = message.trim();
@@ -84,6 +146,12 @@ export function ChatPanel({ onEvent, beforeSend }: ChatPanelProps) {
             text: turn.text + (afterTool && turn.text ? "\n\n" : "") + (event.text ?? ""),
             status: undefined,
           }));
+        } else if (event.type === "tool_result" && oneAtATime) {
+          const built = buildFrom(event);
+          if (built) updateReply((turn) => ({ ...turn, ...built }));
+          if (event.tool === "confirm_schedule") {
+            void queryClient.invalidateQueries({ queryKey: queryKeys.plan });
+          }
         } else if (event.type === "tool_call") {
           updateReply((turn) => ({ ...turn, status: TOOL_STATUS[event.tool ?? ""] ?? "Working" }));
         } else if (event.type === "error") {
@@ -126,6 +194,40 @@ export function ChatPanel({ onEvent, beforeSend }: ChatPanelProps) {
   // Quick replies belong to the question just asked: only the latest turn shows them.
   const lastTurn = turns[turns.length - 1];
   const quickReplies = !busy && lastTurn?.role === "assistant" ? lastTurn.quickReplies : undefined;
+  // AI-08: only the newest card is open; older ones collapse to one line.
+  const latestCardId = [...turns].reverse().find((t) => t.schedule)?.id ?? null;
+  // "This works" / "Change something" belong to a card the student has not answered yet.
+  const cardReplies =
+    oneAtATime && !busy && lastTurn?.role === "assistant" && lastTurn.schedule &&
+    lastTurn.schedule.id !== confirmedId;
+
+  function changeSomething() {
+    input.current?.focus();
+  }
+
+  // In the card's footer, as in the design: the main action on the right.
+  const cardActions = (
+    <ul aria-label="Does this schedule work?" className="flex shrink-0 gap-2">
+      <li>
+        <button
+          type="button"
+          onClick={changeSomething}
+          className="min-h-11 rounded-btn border border-line bg-surface px-4 text-[15px] text-ink transition-colors duration-150 hover:bg-field"
+        >
+          {CHANGE_SOMETHING}
+        </button>
+      </li>
+      <li>
+        <button
+          type="button"
+          onClick={() => void send(THIS_WORKS)}
+          className="min-h-11 rounded-btn bg-ink px-4 text-[15px] font-semibold text-surface transition-colors duration-150 hover:bg-[#333]"
+        >
+          {THIS_WORKS}
+        </button>
+      </li>
+    </ul>
+  );
 
   return (
     <section aria-label="Chat" className="flex flex-col gap-5">
@@ -141,6 +243,24 @@ export function ChatPanel({ onEvent, beforeSend }: ChatPanelProps) {
               <li key={t.id} className="flex max-w-[65ch] flex-col gap-2">
                 <span className="sr-only">Assistant: </span>
                 {t.text && <p className="whitespace-pre-wrap">{t.text}</p>}
+                {t.schedule && (
+                  <ChatScheduleCard
+                    // Re-mount when it stops being the newest card, so it collapses.
+                    key={`${t.schedule.id}-${t.id === latestCardId}`}
+                    schedule={t.schedule}
+                    option={t.option ?? 1}
+                    confirmed={t.schedule.id === confirmedId}
+                    defaultOpen={t.id === latestCardId}
+                    actions={cardReplies && t.id === lastTurn?.id ? cardActions : undefined}
+                  />
+                )}
+                {t.noSchedule && (
+                  <p className="rounded-card border border-line bg-surface px-4 py-3 text-sm">
+                    {t.relaxation
+                      ? `No schedule fits all of your rules. If you ${t.relaxation.change}, ${plural(t.relaxation.schedules_available, "schedule")} would fit.`
+                      : "No other schedule fits all of your rules. Tell the assistant which rule to loosen."}
+                  </p>
+                )}
                 {t.status && (
                   <p role="status" className="flex items-center gap-2 text-sm text-muted">
                     <LoaderCircle
@@ -190,6 +310,7 @@ export function ChatPanel({ onEvent, beforeSend }: ChatPanelProps) {
         </label>
         <textarea
           id={inputId}
+          ref={input}
           rows={2}
           value={draft}
           onChange={(e) => setDraft(e.target.value)}

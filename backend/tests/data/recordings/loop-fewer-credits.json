@@ -1,0 +1,225 @@
+{
+  "id": "loop-fewer-credits",
+  "messages": [
+    "12 to 15 credits, campus classes only, done by 2:00 PM. No specific courses to add or skip.",
+    "yes",
+    "fewer credits"
+  ],
+  "calls": [
+    {
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_01Dpt7qPoJc9VGVXbWLXHTVX",
+          "input": {},
+          "name": "get_remaining_requirements",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "text": [
+        "Here",
+        " is what I have:\n-",
+        " Track: Fall & Win",
+        "ter",
+        "\n- Credits: 12 ",
+        "to 15\n-",
+        " Campus class",
+        "es only\n-",
+        " Class",
+        "es must end",
+        " by 2:00 PM",
+        "\n- No spec",
+        "ific courses to include or skip",
+        "\n- Days and",
+        " start",
+        " times",
+        ": no preference\n\nShould I",
+        " build a schedule with these?",
+        "\n<<choices: Build",
+        " it | Change something>",
+        ">"
+      ],
+      "content": [
+        {
+          "text": "Here is what I have:\n- Track: Fall & Winter\n- Credits: 12 to 15\n- Campus classes only\n- Classes must end by 2:00 PM\n- No specific courses to include or skip\n- Days and start times: no preference\n\nShould I build a schedule with these?\n<<choices: Build it | Change something>>",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    },
+    {
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_012rGksfeQ7e9FPL3MYMaP5u",
+          "input": {
+            "constraints": {
+              "credit_min": 12,
+              "credit_max": 15,
+              "earliest_start": null,
+              "latest_end": "14:00",
+              "days_off": [],
+              "include_courses": [],
+              "exclude_courses": [],
+              "exclude_section_ids": [],
+              "delivery_methods": [
+                "campus"
+              ],
+              "only_required": false,
+              "allow_waitlist": false,
+              "only_favorite_professors": false
+            },
+            "avoid_schedules": [],
+            "intake": {
+              "track": null,
+              "use_default_credits": false,
+              "student_agreed": true
+            }
+          },
+          "name": "build_schedules",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "text": [
+        "This ",
+        "15-credit schedule cov",
+        "ers",
+        " Web Frontend (",
+        "WDD 231), Database",
+        " Design (CIT 225",
+        "), Data",
+        " Structures (CSE ",
+        "212), Calculus II (",
+        "MATH 113), Stat",
+        "istics (MATH 221",
+        "A) and RE",
+        "L 275. Four of its",
+        " classes have pr",
+        "erequisites that are still",
+        " in progress with",
+        " gr",
+        "ades pending: WDD ",
+        "231, CIT 225 ",
+        "and CSE 212 ",
+        "are",
+        " in",
+        " that group",
+        ". Please check those before you",
+        " register.\n\nDoes this sched",
+        "ule work for you?",
+        "\nConfirm with BY",
+        "U-Idaho Academ",
+        "ic Advising."
+      ],
+      "content": [
+        {
+          "text": "This 15-credit schedule covers Web Frontend (WDD 231), Database Design (CIT 225), Data Structures (CSE 212), Calculus II (MATH 113), Statistics (MATH 221A) and REL 275. Four of its classes have prerequisites that are still in progress with grades pending: WDD 231, CIT 225 and CSE 212 are in that group. Please check those before you register.\n\nDoes this schedule work for you?\nConfirm with BYU-Idaho Academic Advising.",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    },
+    {
+      "text": [],
+      "content": [
+        {
+          "signature": "CAQSjQcKEAgTGAI4AUIIdGhpbmtpbmcSDJfgcG33TZvX44hphhoM7LxxHxl8jurgUEJvIjDxgJFZSxqRPkjqC2mnqeOmbX52BgnPZvxIlT4VvheBSTKhH9Rnby9YVfLYbU0ptrcqqgbXikp1ZjQQInPLXCIJZHxuWZhULJ4pmefup2iYGDxN4FK7AkrIp2gvWGjAehOA3lfNF2BICxVm4oiuZCX9g6fP/S4P8ukCuxhoSnHdLY1ngsDMb9LuK7iCZAbdRz3ehcvSvRgAVLLdSi2GXRWBlUf1COMAT2TaqLqyHCwD5FtXIwGLOKAMfgabxwHQg6ESmcloqzDAOoexhQVAQOt3JpyQEFn9a8fkJi6kfG9W3zJlpvJkW9V9oX2JvqB3bKGljX2j0vbeKYEVfb4t7GQ6IyL3bfRFBAmrir4Ga0OXJIgSWjNwPhWzuAEiG46eYZDL8384hoZjhPUmhWFnRU60fLma3Vp+8CPePVmyBlMOvAzVwE7cTkfqjJM/SAY/LKHaos43wH4WaPSQbM3CEGfrqnLw+g/Y1seU7vUD9/Aa2Hn/zUeUgNplsX2xVo1xSgosRRnbxR9bNpGjPAsKDJMZ116vUAvWk7xCRYu1p63NlJiKKvMYX0vTv7TdH2U+3ZmxPviqH1FnBdGy01gzhylBhc2IWUB+8BI9942AFihEay7q7j36eTEFbDYqZShBTIZDyLgRsxIWHaAG507Vv/cY08FkpAZhiZvV5l9+oPbQSZl+jvnVLRSYrv08jXv/2TCNVahSt7x+84QwjSpoTKLaBgObTq4N2Tozs05wtR6552fXz4NcpSpLYniMytAQCkZHnw31Xte8hrWKSX9T9/ayzAYQXgcoDPqzzBkYzY2wVzC21Hv7VS5g3v/qk5FyQ6PqetzQJY8PbHhpaUzrmlV105BnjS67wuGP3JTOxUsCAt+xVcxEUdHmr/NNW1CRnHdO53F+ohg38DgYBiubkRF2QqF1QIBeoyDEFNrLJiBKIJB0ataXNLz2RU5FuU0PWxV2YkfyJ37+yE02VU6cZ242LxAHGzOyb9fOmakCe1ovos/KVjrd99dbqiugVsZywNi6sgPIgFPkXBld6oqUCldx3i952UQMQStjAgO2SzfV+/Q1s52USoygywQDwVyzlNWOlOrylLbbIEi8mhLzDHl+Z93FEInkiwXOifHiJw9v8MRS5jWpFqLwzqCwFPIYAQ==",
+          "thinking": "",
+          "type": "thinking"
+        },
+        {
+          "id": "toolu_01PswqDqDfJxxo8xHcNudcbB",
+          "input": {
+            "constraints": {
+              "credit_min": 12,
+              "credit_max": 14,
+              "earliest_start": null,
+              "latest_end": "14:00",
+              "days_off": [],
+              "include_courses": [],
+              "exclude_courses": [],
+              "exclude_section_ids": [],
+              "delivery_methods": [
+                "campus"
+              ],
+              "only_required": false,
+              "allow_waitlist": false,
+              "only_favorite_professors": false
+            },
+            "avoid_schedules": [
+              [
+                "2027;WI;W2|WDD 231-03",
+                "2027;WI|CIT 225-01",
+                "2027;WI|CSE 212-02",
+                "2027;WI|MATH 113-03",
+                "2027;WI|MATH 221A-02",
+                "2027;WI|REL 275-01"
+              ]
+            ],
+            "intake": {
+              "track": null,
+              "use_default_credits": false,
+              "student_agreed": true
+            }
+          },
+          "name": "build_schedules",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "text": [
+        "I remov",
+        "ed CIT 225 (",
+        "Database Design), which br",
+        "ings the total down to 12 ",
+        "credits. The new range",
+        " is 12 to 14",
+        ".",
+        " One",
+        " corre",
+        "ction to",
+        " what",
+        " I said ear",
+        "lier: only three class",
+        "es had pending prerequis",
+        "ites,",
+        " not four. In",
+        " this schedule, WDD",
+        " 231 and CSE ",
+        "212 still have pr",
+        "erequisites in",
+        " progress with",
+        " grades pending, so check",
+        " those before you register.\n\nDoes",
+        " this schedule work for you?",
+        "\nConfirm with BY",
+        "U-Idaho Academ",
+        "ic Advising."
+      ],
+      "content": [
+        {
+          "text": "I removed CIT 225 (Database Design), which brings the total down to 12 credits. The new range is 12 to 14. One correction to what I said earlier: only three classes had pending prerequisites, not four. In this schedule, WDD 231 and CSE 212 still have prerequisites in progress with grades pending, so check those before you register.\n\nDoes this schedule work for you?\nConfirm with BYU-Idaho Academic Advising.",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    }
+  ]
+}

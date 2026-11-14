@@ -1,4 +1,5 @@
-"""The eight chat tools (AI-02).
+"""The chat tools: eight (AI-02), plus `confirm_schedule` with the conversational
+planner on (AI-08).
 
 Each tool has:
 - a strict JSON schema sent to Claude (`strict: true`, `additionalProperties: false`,
@@ -39,6 +40,7 @@ from app.contracts import (
     MentorGoal,
     MentorSearchRequest,
     PrereqExpression,
+    Schedule,
     Track,
 )
 from app.engine.candidates import remaining_requirements as unmet_requirements
@@ -63,6 +65,9 @@ class ToolContext:
     favorite_professor_ids: set[str] = field(default_factory=set)
     # AI-07: readiness checklist for the first schedule (used when the flag is on).
     intake: intake_rules.IntakeState = field(default_factory=intake_rules.IntakeState)
+    # AI-08: the schedules the chat showed and the confirmed plan. The API passes the
+    # session's shared object (see api/chat.py), so GET /api/plan sees the same plan.
+    plan: schedules_api.PlanState = field(default_factory=schedules_api.PlanState)
 
 
 # --- JSON schema helpers (strict mode: every property required, no extras) ---------
@@ -167,6 +172,10 @@ class BuildSchedulesArgs(_Args):
     avoid_schedules: list[list[str]] = Field(default_factory=list, max_length=50)
     # Required by the tool schema when FEATURE_CONVERSATIONAL_PLANNER is on.
     intake: BuildIntakeArgs | None = None
+
+
+class ConfirmScheduleArgs(_Args):
+    schedule_id: str = Field(min_length=1, max_length=64)
 
 
 class ProfessorProfileArgs(_Args):
@@ -312,8 +321,12 @@ def build_schedules(ctx: ToolContext, args: BuildSchedulesArgs) -> Json:
         _intake_gate(ctx, args)
     if conversational:
         # ENG-07: one schedule at a time; the model cannot ask for more.
+        # AI-08: every schedule this session already saw is avoided too, so a
+        # rejected schedule never comes back even when the model forgets to list it.
         request = BuildSchedulesRequest(
-            constraints=args.constraints, max_results=1, avoid_schedules=args.avoid_schedules
+            constraints=args.constraints,
+            max_results=1,
+            avoid_schedules=ctx.plan.avoid_lists(args.avoid_schedules),
         )
     else:
         request = BuildSchedulesRequest(
@@ -321,9 +334,49 @@ def build_schedules(ctx: ToolContext, args: BuildSchedulesArgs) -> Json:
         )
     response = schedules_api.build_schedules(request, ctx.favorite_professor_ids)
     ctx.constraints = args.constraints
+    result = {"constraints": _dump(args.constraints), **_dump(response)}
     if conversational:
         intake_rules.mark_built(ctx.intake)
-    return {"constraints": _dump(args.constraints), **_dump(response)}
+        if response.schedules:
+            previous = ctx.plan.last_shown
+            schedule = response.schedules[0]
+            # The card label ("Option 2"), and the facts for "what changed".
+            result["option"] = ctx.plan.record_shown(schedule)
+            result["changed_from_previous"] = (
+                _schedule_changes(previous, schedule) if previous else None
+            )
+    return result
+
+
+def _schedule_changes(before: Schedule, after: Schedule) -> Json:
+    """Structured difference between two schedules. Claude words it; no free text here."""
+    old = {c.section.id for c in before.classes}
+    new = {c.section.id for c in after.classes}
+    return {
+        "previous_schedule_id": before.id,
+        "added_section_ids": sorted(new - old),
+        "removed_section_ids": sorted(old - new),
+        "kept_section_ids": sorted(new & old),
+        "total_credits_before": before.total_credits,
+        "total_credits_after": after.total_credits,
+    }
+
+
+def confirm_schedule(ctx: ToolContext, args: ConfirmScheduleArgs) -> Json:
+    try:
+        # Same function as PUT /api/plan.
+        schedule = schedules_api.confirm_schedule(ctx.plan, args.schedule_id)
+    except schedules_api.PlanError as exc:
+        raise ToolExecutionError(str(exc)) from exc
+    return {
+        "confirmed": True,
+        "schedule_id": schedule.id,
+        "total_credits": schedule.total_credits,
+        "registered": False,
+        "note": "Saved as the student's plan in this app. This does not register the "
+        "student for classes.",
+        "advising_note": schedule.advising_note,
+    }
 
 
 def get_professor_profile(ctx: ToolContext, args: ProfessorProfileArgs) -> Json:
@@ -539,7 +592,8 @@ def _conversational_build_tool() -> Tool:
         base.name,
         "Build one Winter 2027 schedule. Send the complete set of constraints the student "
         "wants now, including earlier ones still in force, and every schedule the student "
-        "rejected. Returns an error starting "
+        "rejected. The result has `option` (the card number the student sees) and, after "
+        "the first schedule, `changed_from_previous`. Returns an error starting "
         '"not ready" when something must be asked first: then ask the student, do not '
         "retry in the same turn. No schedules with exhausted true means every fitting "
         "schedule was rejected: ask what to change.",
@@ -555,22 +609,41 @@ def _conversational_build_tool() -> Tool:
     )
 
 
-def tool_definitions() -> list[ToolParam]:
-    """Tool list for the Messages API. Fixed order, so the prompt cache keeps hitting.
+# AI-08: the ninth tool, only with FEATURE_CONVERSATIONAL_PLANNER on.
+CONFIRM_SCHEDULE = Tool(
+    "confirm_schedule",
+    "Save the schedule shown last as the student's Winter 2027 plan. Call it only after "
+    "the student clearly says that schedule works. It accepts only the id of the schedule "
+    "from the latest build_schedules result; any other id is an error. It does not "
+    "register the student for classes.",
+    _obj({"schedule_id": _str("The `id` of the schedule in the latest build_schedules result.")}),
+    ConfirmScheduleArgs,
+    confirm_schedule,
+)
+
+
+def active_tools() -> tuple[Tool, ...]:
+    """The tools Claude has now. Fixed order, so the prompt cache keeps hitting.
     The flag is constant for the life of the process, so the list is too."""
     if config.FEATURE_CONVERSATIONAL_PLANNER:
-        return [
-            (_conversational_build_tool() if t.name == "build_schedules" else t).definition()
-            for t in TOOLS
-        ]
-    return [t.definition() for t in TOOLS]
+        return (
+            *(_conversational_build_tool() if t.name == "build_schedules" else t for t in TOOLS),
+            CONFIRM_SCHEDULE,
+        )
+    return TOOLS
+
+
+def tool_definitions() -> list[ToolParam]:
+    """Tool list for the Messages API."""
+    return [t.definition() for t in active_tools()]
 
 
 def run_tool(ctx: ToolContext, name: str, raw_input: Any) -> Json:
     """Validate Claude's arguments with Pydantic, then run the tool."""
-    tool = TOOLS_BY_NAME.get(name)
+    by_name = {t.name: t for t in active_tools()}
+    tool = by_name.get(name)
     if tool is None:
-        raise ToolInputError(f"Unknown tool {name!r}. Use one of: {', '.join(TOOLS_BY_NAME)}.")
+        raise ToolInputError(f"Unknown tool {name!r}. Use one of: {', '.join(by_name)}.")
     try:
         args = tool.args_model.model_validate(raw_input)
     except ValidationError as exc:

@@ -5,12 +5,6 @@
   ],
   "calls": [
     {
-      "request_messages": [
-        {
-          "role": "user",
-          "content": "I want 14 credits and add CSE 999"
-        }
-      ],
       "text": [],
       "content": [
         {
@@ -40,55 +34,6 @@
       "stop_reason": "tool_use"
     },
     {
-      "request_messages": [
-        {
-          "role": "user",
-          "content": "I want 14 credits and add CSE 999"
-        },
-        {
-          "role": "assistant",
-          "content": [
-            {
-              "id": "toolu_015nMnpyopQFdML5SVV9A6gQ",
-              "input": {},
-              "name": "get_remaining_requirements",
-              "type": "tool_use",
-              "caller": {
-                "type": "direct"
-              }
-            },
-            {
-              "id": "toolu_01FNsZgCvPTX1isWboFUeQkM",
-              "input": {
-                "course_codes": [
-                  "CSE 999"
-                ],
-                "delivery_method": null
-              },
-              "name": "search_sections",
-              "type": "tool_use",
-              "caller": {
-                "type": "direct"
-              }
-            }
-          ]
-        },
-        {
-          "role": "user",
-          "content": [
-            {
-              "type": "tool_result",
-              "tool_use_id": "toolu_015nMnpyopQFdML5SVV9A6gQ",
-              "content": "{\"track\": \"fall_winter\", \"track_known\": true, \"default_credit_range\": {\"credit_min\": 12.0, \"credit_max\": 15.0}, \"requirements\": [{\"id\": \"core-data-structures\", \"group\": \"Major Core\", \"name\": \"Programming with Data Structures\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"CSE 212\"], \"courses_counted\": []}, {\"id\": \"core-testing\", \"group\": \"Major Core\", \"name\": \"Software Testing\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"CSE 270\"], \"courses_counted\": []}, {\"id\": \"core-applied\", \"group\": \"Major Core\", \"name\": \"Applied Programming\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 310\"], \"courses_counted\": []}, {\"id\": \"core-web-backend\", \"group\": \"Major Core\", \"name\": \"Web Backend\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 340\", \"CSE 341\"], \"courses_counted\": []}, {\"id\": \"web-frontend\", \"group\": \"Web Foundations\", \"name\": \"Web Frontend Development\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"WDD 231\"], \"courses_counted\": []}, {\"id\": \"db-design\", \"group\": \"Databases\", \"name\": \"Database Design\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CIT 225\"], \"courses_counted\": []}, {\"id\": \"math-calc2\", \"group\": \"Mathematics\", \"name\": \"Calculus II\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"MATH 113\"], \"courses_counted\": []}, {\"id\": \"math-stats\", \"group\": \"Mathematics\", \"name\": \"Statistics\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"MATH 221A\", \"MATH 325\"], \"courses_counted\": []}, {\"id\": \"major-elective\", \"group\": \"Major Electives\", \"name\": \"Computer Science Elective\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 325\", \"CSE 381\", \"CSE 450\"], \"courses_counted\": []}, {\"id\": \"rel-book-of-mormon\", \"group\": \"Religion Cornerstones\", \"name\": \"Teachings and Doctrine of the Book of Mormon\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"REL 275\"], \"courses_counted\": []}]}"
-            },
-            {
-              "type": "tool_result",
-              "tool_use_id": "toolu_01FNsZgCvPTX1isWboFUeQkM",
-              "content": "{\"courses\": [], \"not_found\": [\"CSE 999\"]}"
-            }
-          ]
-        }
-      ],
       "text": [
         "I couldn't find CS",
         "E 999 in the",
