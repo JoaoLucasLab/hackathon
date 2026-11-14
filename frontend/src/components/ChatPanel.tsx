@@ -205,6 +205,30 @@ export function ChatPanel({ onEvent, beforeSend }: ChatPanelProps) {
     input.current?.focus();
   }
 
+  // In the card's footer, as in the design: the main action on the right.
+  const cardActions = (
+    <ul aria-label="Does this schedule work?" className="flex shrink-0 gap-2">
+      <li>
+        <button
+          type="button"
+          onClick={changeSomething}
+          className="min-h-11 rounded-btn border border-line bg-surface px-4 text-[15px] text-ink transition-colors duration-150 hover:bg-field"
+        >
+          {CHANGE_SOMETHING}
+        </button>
+      </li>
+      <li>
+        <button
+          type="button"
+          onClick={() => void send(THIS_WORKS)}
+          className="min-h-11 rounded-btn bg-ink px-4 text-[15px] font-semibold text-surface transition-colors duration-150 hover:bg-[#333]"
+        >
+          {THIS_WORKS}
+        </button>
+      </li>
+    </ul>
+  );
+
   return (
     <section aria-label="Chat" className="flex flex-col gap-5">
       {turns.length > 0 && (
@@ -227,6 +251,7 @@ export function ChatPanel({ onEvent, beforeSend }: ChatPanelProps) {
                     option={t.option ?? 1}
                     confirmed={t.schedule.id === confirmedId}
                     defaultOpen={t.id === latestCardId}
+                    actions={cardReplies && t.id === lastTurn?.id ? cardActions : undefined}
                   />
                 )}
                 {t.noSchedule && (
@@ -257,29 +282,6 @@ export function ChatPanel({ onEvent, beforeSend }: ChatPanelProps) {
             ),
           )}
         </ol>
-      )}
-
-      {cardReplies && (
-        <ul aria-label="Does this schedule work?" className="flex flex-wrap gap-2">
-          <li>
-            <button
-              type="button"
-              onClick={() => void send(THIS_WORKS)}
-              className="min-h-11 rounded-btn bg-ink px-4 text-[15px] font-semibold text-surface transition-colors duration-150 hover:bg-[#333]"
-            >
-              {THIS_WORKS}
-            </button>
-          </li>
-          <li>
-            <button
-              type="button"
-              onClick={changeSomething}
-              className="min-h-11 rounded-btn border border-line bg-surface px-4 text-[15px] text-ink transition-colors duration-150 hover:bg-field"
-            >
-              {CHANGE_SOMETHING}
-            </button>
-          </li>
-        </ul>
       )}
 
       {quickReplies && (

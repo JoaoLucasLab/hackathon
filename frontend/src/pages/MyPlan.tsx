@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 
 import { usePlan } from "../api/queries";
-import { ScheduleDetail } from "../components/ScheduleDetail";
+import { ScheduleDetail, useClassRowData } from "../components/ScheduleDetail";
+import { WeekGlance, courseColors } from "../components/WeekGlance";
 import { Empty } from "../components/ui/Empty";
 import { ErrorState } from "../components/ui/ErrorState";
 import { Loading } from "../components/ui/Loading";
@@ -16,6 +17,7 @@ import { TERM_LABEL } from "../config";
 export function MyPlan() {
   const navigate = useNavigate();
   const plan = usePlan();
+  const { reqNames } = useClassRowData();
   const seats = plan.data
     ? plan.data.classes.map((c) => c.section.seats.as_of).sort()[0]
     : undefined;
@@ -40,7 +42,19 @@ export function MyPlan() {
       />
     );
   } else {
-    body = <ScheduleDetail schedule={plan.data} heading={`${TERM_LABEL} plan`} />;
+    body = (
+      <ScheduleDetail
+        schedule={plan.data}
+        heading={`${TERM_LABEL} plan`}
+        colors={courseColors(plan.data)}
+        week={
+          // The same colored week as the chat card: each course in its own color.
+          <div className="rounded-card border border-line bg-surface p-4 md:p-5">
+            <WeekGlance schedule={plan.data} reqNames={reqNames} />
+          </div>
+        }
+      />
+    );
   }
 
   return (

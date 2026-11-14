@@ -97,13 +97,21 @@ describe("one schedule in the chat", () => {
     const card = await screen.findByRole("article", { name: "Option 1" });
     expect(screen.getAllByRole("article")).toHaveLength(1);
     expect(within(card).getAllByTestId("calendar-event").length).toBeGreaterThan(0);
+    // The week at a glance: span in the header, a free day, one row per class with seats.
+    expect(within(card).getByText("Mon to Fri · 10:15 AM–1:45 PM")).toBeInTheDocument();
+    const glance = within(card).getByRole("list", { name: "Classes at a glance" });
+    expect(within(glance).getAllByRole("listitem")).toHaveLength(FIRST.classes.length);
+    expect(within(glance).getAllByText(/^\d+ seats? open$/)).toHaveLength(FIRST.classes.length);
+    expect(within(card).getByText(/^Seats as of /)).toBeInTheDocument();
+    expect(within(card).getByRole("list", { name: "Checks" })).toHaveTextContent("No conflicts");
+    // The full details sit behind "Class details".
+    await user.click(within(card).getByRole("button", { name: "Class details" }));
     // Each class says which requirement it fills.
     const fills = await within(card).findAllByText(/^Fills:/);
     expect(fills).toHaveLength(FIRST.classes.length);
     expect(fills[0]?.parentElement).toHaveTextContent("Fills: Programming with Data Structures");
     expect(await within(card).findAllByRole("button", { name: /^Star / })).not.toHaveLength(0);
     expect(within(card).getAllByText("See on Rate My Professors").length).toBeGreaterThan(0);
-    expect(within(card).getAllByText(/Seats as of/).length).toBeGreaterThan(0);
     expect(within(card).getByText("Confirm with BYU-Idaho Academic Advising.")).toBeInTheDocument();
     expect(screen.getByText(ASK)).toBeInTheDocument();
     // The page stays on the chat: no move to the old 3-card screen.

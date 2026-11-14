@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
 import { useProfessors, useRemainingRequirements, useScheduleExplanation } from "../api/queries";
 import type { Professor, Schedule, ScheduledClass, Section } from "../api/schemas";
@@ -87,10 +87,13 @@ export function ClassRow({
   item,
   fills,
   byId,
+  color,
 }: {
   item: ScheduledClass;
   fills: string[];
   byId: ProfessorIndex;
+  /** The course's color from the colored week (a Tailwind bg class), to match it. */
+  color?: string;
 }) {
   const [open, setOpen] = useState(false);
   const s = item.section;
@@ -103,7 +106,11 @@ export function ClassRow({
       <div className="flex items-start justify-between gap-4">
         <div className="flex min-w-0 items-start gap-3">
           <span className="mt-1.5">
-            <TagSquare courseCode={s.course_code} size={14} />
+            {color ? (
+              <span aria-hidden="true" className={`inline-block size-3.5 rounded-[3px] ${color}`} />
+            ) : (
+              <TagSquare courseCode={s.course_code} size={14} />
+            )}
           </span>
           <div className="flex min-w-0 flex-col gap-0.5">
             <h3 className="text-base">
@@ -240,10 +247,14 @@ interface ScheduleDetailProps {
   onBack?: () => void;
   /** Replaces "Option N" (and "Best fit") as the heading. */
   heading?: string;
+  /** Replaces the black-and-white week calendar (My plan shows the colored one). */
+  week?: ReactNode;
+  /** Course colors of that week, so each class row's square matches its blocks. */
+  colors?: Map<string, string>;
 }
 
 /** One schedule: the "why", the week calendar, class rows with professors and backups. */
-export function ScheduleDetail({ schedule, onBack, heading }: ScheduleDetailProps) {
+export function ScheduleDetail({ schedule, onBack, heading, week, colors }: ScheduleDetailProps) {
   const { byId, reqNames, professorsFailed } = useClassRowData();
   const titleId = `detail-${schedule.id}`;
 
@@ -269,16 +280,21 @@ export function ScheduleDetail({ schedule, onBack, heading }: ScheduleDetailProp
         </p>
       </div>
 
+      {/* A colored week (My plan) leads the page; the plain calendar stays after the why. */}
+      {week && <section aria-label="Week">{week}</section>}
+
       <Why schedule={schedule} />
 
       {(schedule.warnings ?? []).map((w, i) => (
         <Warning key={i} message={w.message} />
       ))}
 
-      <section aria-label="Week" className="flex flex-col gap-2">
-        <h3 className="text-sm font-semibold">Week</h3>
-        <WeekCalendar schedule={schedule} />
-      </section>
+      {!week && (
+        <section aria-label="Week" className="flex flex-col gap-2">
+          <h3 className="text-sm font-semibold">Week</h3>
+          <WeekCalendar schedule={schedule} />
+        </section>
+      )}
 
       <ul aria-label="Classes" className="rounded-card border border-line bg-surface px-6">
         {schedule.classes.map((c) => (
@@ -287,6 +303,7 @@ export function ScheduleDetail({ schedule, onBack, heading }: ScheduleDetailProp
             item={c}
             byId={byId}
             fills={(c.requirement_ids ?? []).map((id) => reqNames.get(id) ?? id)}
+            color={colors?.get(c.section.course_code)}
           />
         ))}
       </ul>
