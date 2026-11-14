@@ -10,8 +10,21 @@ from __future__ import annotations
 
 import uuid
 from datetime import UTC, datetime
+from typing import Any
 
-from sqlalchemy import DateTime, Dialect, Text, TypeDecorator, Uuid
+from sqlalchemy import (
+    JSON,
+    BigInteger,
+    DateTime,
+    Dialect,
+    ForeignKey,
+    Integer,
+    LargeBinary,
+    Text,
+    TypeDecorator,
+    Uuid,
+)
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -36,6 +49,15 @@ class Base(DeclarativeBase):
     pass
 
 
+# `bigint GENERATED ALWAYS AS IDENTITY` on Postgres; SQLite only autoincrements INTEGER.
+_Id = BigInteger().with_variant(Integer(), "sqlite")
+_Json = JSON().with_variant(JSONB(), "postgresql")
+
+
+def _student_fk() -> Any:
+    return ForeignKey("students.id", ondelete="CASCADE")
+
+
 class Student(Base):
     """One anonymous session. No name, email, password or BYU-Idaho ID number, ever."""
 
@@ -47,3 +69,46 @@ class Student(Base):
     consented_at: Mapped[datetime | None] = mapped_column(UtcDateTime)
     track: Mapped[str | None] = mapped_column(Text)
     catalog_year: Mapped[str | None] = mapped_column(Text)
+
+
+class Audit(Base):
+    """A confirmed DegreeAudit as JSON encrypted with DATA_KEY (app/db/crypto.py).
+    Never the PDF, a name or an ID number. The newest row is the current audit."""
+
+    __tablename__ = "audits"
+
+    id: Mapped[int] = mapped_column(_Id, primary_key=True, autoincrement=True)
+    student_id: Mapped[uuid.UUID] = mapped_column(Uuid, _student_fk())
+    audit_encrypted: Mapped[bytes] = mapped_column(LargeBinary)
+    confirmed_at: Mapped[datetime | None] = mapped_column(UtcDateTime)
+    created_at: Mapped[datetime] = mapped_column(UtcDateTime, default=_now)
+
+
+class Constraints(Base):
+    """The ConstraintSet behind the chips, one per student."""
+
+    __tablename__ = "constraints"
+
+    student_id: Mapped[uuid.UUID] = mapped_column(Uuid, _student_fk(), primary_key=True)
+    value: Mapped[dict[str, Any]] = mapped_column(_Json)
+    updated_at: Mapped[datetime] = mapped_column(UtcDateTime, default=_now)
+
+
+class Favorite(Base):
+    __tablename__ = "favorites"
+
+    student_id: Mapped[uuid.UUID] = mapped_column(Uuid, _student_fk(), primary_key=True)
+    professor_id: Mapped[str] = mapped_column(Text, primary_key=True)
+    created_at: Mapped[datetime] = mapped_column(UtcDateTime, default=_now)
+
+
+class Chat(Base):
+    """One chat message (a ChatTurn as JSON), encrypted with DATA_KEY."""
+
+    __tablename__ = "chats"
+
+    id: Mapped[int] = mapped_column(_Id, primary_key=True, autoincrement=True)
+    student_id: Mapped[uuid.UUID] = mapped_column(Uuid, _student_fk())
+    role: Mapped[str] = mapped_column(Text)  # 'user' or 'assistant'
+    message_encrypted: Mapped[bytes] = mapped_column(LargeBinary)
+    created_at: Mapped[datetime] = mapped_column(UtcDateTime, default=_now)

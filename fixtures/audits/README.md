@@ -14,3 +14,7 @@ two majors (`cs-major`, `software-engineering-minor`, the second with no track s
 and one transfer student (`transfer-student`). Replace them with replies recorded from
 real audits only after removing every name, ID number and other personal detail, and
 re-check `expected.json` by hand against the PDF. Never commit the PDFs themselves.
+
+`fake-id-number.json` (DATA-06, `backend/tests/test_crypto.py`) is the sample audit
+with two **made-up** student ID numbers in its text, to prove the store removes them
+before saving.

@@ -111,6 +111,7 @@ export interface paths {
          * Clear Chat History
          * @description Starts a new conversation: drops the transcript, what Claude saw and the rules.
          *     The audit, favorites and the confirmed plan stay (they live outside the chat).
+         *     The stored messages and rules go too (DATA-06), or a restart would bring them back.
          */
         delete: operations["clear_chat_history_api_chat_history_delete"];
         options?: never;
@@ -1488,6 +1489,13 @@ export interface operations {
                 };
                 content?: never;
             };
+            /** @description More than 5 uploads in an hour. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
         };
     };
     sample_audit_api_audit_sample_post: {
@@ -1540,6 +1548,13 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
+            };
+            /** @description More than 20 messages in 5 minutes. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

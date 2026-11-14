@@ -16,11 +16,11 @@ import uuid
 from datetime import UTC, datetime
 from typing import Literal
 
-from fastapi import APIRouter, Request, Response
+from fastapi import APIRouter, HTTPException, Request, Response
 
 from app import config
 from app.contracts import SessionRequest, SessionResponse, Student
-from app.db import engine
+from app.db import engine, student_store
 from app.db.models import Student as StudentRow
 
 router = APIRouter(prefix="/api", tags=["session"])
@@ -56,6 +56,24 @@ def unsign(value: str | None) -> uuid.UUID | None:
         return None
 
 
+SESSION_GONE = "This session was deleted. Reload the page to start a new one."
+
+
+def stored_student(sid: str | None) -> uuid.UUID | None:
+    """The student behind a `sid` cookie value, for reading and writing their stored data.
+
+    None for a cookie that is missing or not signed by us (local dev and tests use
+    plain ids such as "local"): that data stays in memory only. A signed cookie whose
+    row is gone (`DELETE /api/me`) gets 404, so a deleted session cannot come back.
+    """
+    student_id = unsign(sid)
+    if student_id is None:
+        return None
+    if not student_store.exists(student_id):
+        raise HTTPException(404, SESSION_GONE)
+    return student_id
+
+
 def get_or_create(student_id: uuid.UUID | None, *, consent: bool = False) -> StudentRow:
     """The student with this id, or a new row when the id is None or unknown.
     Marks the row as seen now, and records the consent time the first time `consent` is set."""
@@ -87,6 +105,11 @@ def current_student(request: Request, response: Response, *, consent: bool = Fal
             samesite=_samesite,
         )
     return student
+
+
+def clear_cookie(response: Response) -> None:
+    """Asks the browser to drop the `sid` cookie (same attributes as when it was set)."""
+    response.delete_cookie(COOKIE, path="/", secure=True, httponly=True, samesite=_samesite)
 
 
 @router.post("/session", response_model=SessionResponse)

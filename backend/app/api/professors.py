@@ -3,9 +3,9 @@ fixtures), with the public directory profile scripts/populate_db.py attached (DA
 bio, sources, research flag, topic tags). Favorites are AI-03.
 
 Favorites live in memory, keyed by the `sid` cookie (the same key as the chat
-session), until DATA-01 adds the database. The chat's ToolContext holds the very
-same set object, so starring in the UI and through `toggle_favorite_professor`
-always agree.
+session), and for a signed session cookie in the `favorites` table (DATA-06). The
+chat's ToolContext holds the very same set object, so starring in the UI and through
+`toggle_favorite_professor` always agree (app/api/chat.py stores the chat's changes).
 """
 
 from datetime import UTC, datetime
@@ -13,7 +13,9 @@ from datetime import UTC, datetime
 from fastapi import APIRouter, HTTPException, Request
 
 from app.api import catalog_data
+from app.api import session as session_api
 from app.contracts import FavoriteProfessor, FavoriteUpdate, Professor
+from app.db import student_store
 
 router = APIRouter(prefix="/api", tags=["professors"])
 
@@ -26,7 +28,14 @@ def session_id(request: Request) -> str:
 
 def favorites_for(sid: str) -> set[str]:
     """The live favorite set for a session (shared, not a copy)."""
-    return _favorites.setdefault(sid, set())
+    if sid not in _favorites:
+        student_id = session_api.stored_student(sid)
+        _favorites[sid] = student_store.load_favorites(student_id) if student_id else set()
+    return _favorites[sid]
+
+
+def forget(sid: str) -> None:
+    _favorites.pop(sid, None)
 
 
 def find_professors(q: str | None = None) -> list[Professor]:
@@ -78,4 +87,10 @@ def get_professor(professor_id: str, request: Request) -> Professor:
 
 @router.put("/professors/{professor_id}/favorite", response_model=FavoriteProfessor)
 def set_favorite(professor_id: str, body: FavoriteUpdate, request: Request) -> FavoriteProfessor:
-    return save_favorite(favorites_for(session_id(request)), professor_id, body.favorite)
+    sid = session_id(request)
+    favorites = favorites_for(sid)
+    result = save_favorite(favorites, professor_id, body.favorite)
+    student_id = session_api.stored_student(sid)
+    if student_id is not None:
+        student_store.save_favorites(student_id, favorites)
+    return result
