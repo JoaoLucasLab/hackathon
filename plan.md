@@ -87,7 +87,7 @@ backend/
     api/                   # FastAPI routers (stubs first, real code later)
     contracts/             # Pydantic schemas; change only through a "contract" PR
     db/                    # SQLAlchemy models + Alembic migrations (Data owner)
-    http/                  # PublicHttpClient, request log
+    http/                  # empty: DATA-02 (PublicHttpClient, request log) was skipped
     engine/                # conflicts, prereqs, candidates, solver, mentors
     llm/                   # Claude client, tools, prompts
     schools/
@@ -121,7 +121,7 @@ docs/demo-script.md
 | `POST /api/mentors/search` | Ranked `MentorMatch` list with structured reasons | ENG-06 |
 | `POST /api/mentors/{id}/email-draft` | Draft text, never sent | AI-05 |
 | `DELETE /api/me` | Deletes audit, chats, favorites, session | DATA-06 |
-| `GET /admin/request-log`, `/admin/request-log.csv` | Outbound request log | DATA-02 |
+| `GET /admin/request-log`, `/admin/request-log.csv` | Outbound request log | Stays the ENG-01 stub (DATA-02 skipped) |
 
 The chat tools keep the names from the brief: `get_remaining_requirements`, `search_sections`, `check_prerequisites`, `build_schedules`, `get_professor_profile`, `toggle_favorite_professor`, `find_mentors`, `draft_outreach_email`. Each tool calls the same Python function as its endpoint.
 
@@ -132,9 +132,9 @@ Data delivers the database, the request log and three loaders, all built and tes
 | ID | Block | Hours | Size | Depends on |
 | --- | --- | --- | --- | --- |
 | DATA-01 | Repo, CI, database, first deploy | 0 to 1.5 | M | None |
-| DATA-02 | Public HTTP client, request log, public-access test | 1.5 to 3 | M | DATA-01 |
-| DATA-03 | Class schedule importer | 3 to 5.5 | L | DATA-02, ENG-02 |
-| DATA-04 | Catalog loader (our own script and database) | 5.5 to 7 | M | DATA-02 |
+| DATA-02 | Public HTTP client, request log, public-access test (**skipped**) | - | - | - |
+| DATA-03 | Class schedule importer | 3 to 5.5 | L | ENG-02 |
+| DATA-04 | Catalog loader (our own script and database) | 5.5 to 7 | M | DATA-01 |
 | DATA-05 | Professors: directory profiles, name matching, RMP link | 7 to 8.5 | M | DATA-03 |
 | DATA-06 | Privacy, security, demo snapshot | 8.5 to 10 | M | DATA-01, AI-04 |
 
@@ -158,6 +158,8 @@ Tests: `test_health.py`, `test_session_cookie.py`, migration up and down.
 
 ### DATA-02 · Public HTTP client, request log, public-access test
 
+**Status: skipped (Nov 14, 2026). Not needed for the hackathon; do not build it.** The app makes no outbound requests during the demo: the data comes from `scripts/scrape_course_search.py`, run beforehand and loaded with `scripts/populate_db.py`, and that scraper already applies the public-data rules itself (no login, only the anonymous `ASP.NET_SessionId` cookie, a delay between requests, stop on a login redirect). The only other planned importer, directory profiles (DATA-05), is item 4 on the cut list. `/admin/request-log` stays the ENG-01 stub. Revisit only if the team builds another live importer. The original scope is kept below for reference.
+
 One client that every importer must use. It enforces the public-data rules in code, so the rules cannot be forgotten later. Folders: `backend/app/http/client.py`, `backend/app/http/request_log.py`, `backend/app/api/admin.py`.
 
 Acceptance criteria:
@@ -178,7 +180,7 @@ Tests: `test_http_client.py`, `test_request_log.py`, `test_public_access.py`.
 
 Turns Public Course Search pages into `Section` rows. It is developed against three pages saved by hand before the hackathon, so no live request is needed to finish it. Folders: `backend/app/schools/byui/schedule_importer.py`, `fixtures/html/course_search/`.
 
-Already built in `scripts/scrape_course_search.py` (see "Already done"): term and block mapping, seat status with `seats_as_of`, source URL and fetched-at on every row, skip-and-log with a run summary, `__VIEWSTATE` paging, subjects first, and a repeatable load (`scripts/populate_db.py`). What is left is moving it into `schools/byui/`, making its requests through `PublicHttpClient` (DATA-02), and the tests below.
+Already built in `scripts/scrape_course_search.py` (see "Already done"): term and block mapping, seat status with `seats_as_of`, source URL and fetched-at on every row, skip-and-log with a run summary, `__VIEWSTATE` paging, subjects first, and a repeatable load (`scripts/populate_db.py`). What is left is moving it into `schools/byui/` and the tests below (DATA-02 was skipped, so there is no `PublicHttpClient` to switch to).
 
 Acceptance criteria:
 
@@ -460,7 +462,6 @@ Acceptance criteria:
 - [ ] One Playwright test runs the whole demo script on the snapshot against the deployed URL: consent, audit, three chat messages, schedules, star a professor, mentor search, email draft. It passes 3 times in a row.
 - [ ] With the API delayed by 3 seconds, every screen on the demo path shows its loading state. With the API returning 500, each shows its error state.
 - [ ] An automated accessibility check finds no critical issue on the five main screens, and the demo path can be completed with the keyboard only.
-- [ ] The footer links to the request log. It shows `cookie_sent` false on every row, or "0 outbound requests: running on fixtures" when no importer ran.
 - [ ] `docs/demo-runbook.md` says who clicks, the exact messages to type, and the fallback at each step.
 - [ ] A backup video of one full successful run is recorded by Hour 11.
 - [ ] A script pings `/health` every 5 minutes during judging so the free backend does not sleep.
@@ -490,7 +491,7 @@ Checkpoints               ^                           ^                         
 | 2 | ENG-01 Contracts and fixtures | Hour 1.5 | DATA-01, AI-01 | Yes |
 | 3 | AI-01 App shell, consent, typed client | Hour 1.5 | DATA-01, ENG-01 | No |
 | 4 | ENG-02 Parsers and conflict checker | Hour 2.5 | DATA-02, AI-02 | Yes |
-| 5 | DATA-02 HTTP client, request log | Hour 3 | ENG-03, AI-02 | No |
+| 5 | DATA-02 HTTP client, request log (**skipped**) | - | - | No |
 | 6 | ENG-03 Scheduler core | Hour 4.5 | DATA-03, AI-02 | Yes |
 | 7 | AI-02 Chat to constraints, first schedules | Hour 4.5 | DATA-03, ENG-03 | Yes |
 | 8 | DATA-03 Class schedule importer | Hour 5.5 | ENG-04, AI-03 | No |
@@ -518,7 +519,6 @@ graph LR
   classDef ai fill:#fef3c7,stroke:#b45309,color:#111;
 
   D1[DATA-01 Repo, CI, DB, deploy]:::data
-  D2[DATA-02 HTTP client, request log]:::data
   D3[DATA-03 Schedule importer]:::data
   D4[DATA-04 Catalog loader]:::data
   D5[DATA-05 Professors, RMP link]:::data
@@ -538,15 +538,13 @@ graph LR
 
   D1 --> E1
   D1 --> A1
-  D1 --> D2
   E1 --> A1
   E1 --> E2
   E1 --> A2
   A1 --> A2
   E2 --> E3
   E2 --> D3
-  D2 --> D3
-  D2 --> D4
+  D1 --> D4
   E3 --> A3
   A2 --> A3
   E3 -.-> A2
@@ -597,7 +595,7 @@ Cut from the top when a checkpoint is missed by more than 30 minutes. Each cut n
 | 6 | Live audit upload on stage (AI-04) | "Use sample audit", plus a recorded clip of a real parse |
 | 7 | Mentor finder (ENG-06, AI-05) | Professor pages with stars only |
 
-Never cut: chat to schedules on a calendar, the prerequisite check, the consent screen, and the request log.
+Never cut: chat to schedules on a calendar, the prerequisite check and the consent screen. (The request log was on this list; it was dropped with DATA-02, see that block.)
 
 ### Stretch goals
 
