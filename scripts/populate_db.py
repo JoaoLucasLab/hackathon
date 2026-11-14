@@ -2,12 +2,22 @@
 """Load the cleaned course data into the local Postgres database.
 
 Reads scripts/out/course_search_clean.json (written by data_cleaner.py) and
-fills the tables from backend/app/db/schema.sql. Run the schema first.
+fills the tables from backend/app/db/schema.sql. Run the schema first. The
+JSON file is also the backup of what was loaded.
 
-Full refresh: every run deletes all rows in the catalog tables and loads the
-file again, so the database always matches the latest scrape. Delete and load
-happen in one transaction: if anything fails, nothing changes and the old data
-stays.
+Class schedule: full refresh. Every run deletes all rows in the schedule tables
+(terms, sections, meetings, professors...) and loads the file again, so the
+database always matches the latest scrape.
+
+Courses (the catalog, DATA-04) are compared instead: a new course is inserted,
+a changed course is updated, an unchanged course is not touched, and a course
+no longer in the file is removed, so a second run with the same file changes 0
+course rows. The run prints how many were added, updated, unchanged and
+removed. Each course stores its catalog year (derived from the term: Winter
+2027 is in the 2026-2027 catalog; --catalog-year overrides it).
+
+Everything runs in one transaction: if anything fails, nothing changes and the
+old data stays.
 
 Standard library only: the script builds the SQL and pipes it into psql inside
 the Docker container (`docker exec -i ... psql`), so nothing extra needs to be
@@ -46,7 +56,7 @@ COURSE_CODE = re.compile(r"^[A-Z]{2,5} \d{3}[A-Z]?$")
 
 SECTION_TYPE = "Section Requirement"  # requisite rows about the section, not the course
 
-# Every table this script owns. All of them are emptied and reloaded on each run.
+# Every table this script writes. All but KEPT are emptied and reloaded on each run.
 TABLES = [
     "universities",
     "scrape_runs",
@@ -58,6 +68,8 @@ TABLES = [
     "professors",
     "section_instructors",
 ]
+# Upserted, not emptied: unchanged courses are not touched (DATA-04).
+KEPT = {"universities", "courses"}
 
 
 # ------------------------------------------------------------------- SQL literals
@@ -138,9 +150,44 @@ def term_rows(term_codes: set[str], block_labels: dict[str, str]) -> list[str]:
     return sql
 
 
-def course_rows(code: str, s: dict) -> list[str]:
-    """One course from its first section: title, department, description, areas and
-    prerequisites are the same for every section of a course."""
+def catalog_year(term_code: str) -> str:
+    """The catalog a term belongs to. The school year starts in Fall:
+    '2026;FA' -> '2026-2027'; '2027;WI' and '2027;SP' -> '2026-2027'."""
+    year, season = int(term_code.split(";")[0]), term_code.split(";")[1]
+    start = year if season == "FA" else year - 1
+    return f"{start}-{start + 1}"
+
+
+# Course columns compared on every run. The upsert writes a row only when one of
+# them changes, so an unchanged course is not touched. RETURNING tells added (true)
+# from updated (false); unchanged rows return nothing.
+COURSE_COLUMNS = (
+    "title",
+    "department",
+    "description",
+    "course_areas",
+    "prereq",
+    "credits",
+    "prereq_text",
+    "catalog_year",
+    "source_url",
+)
+COURSE_UPSERT = (
+    "ON CONFLICT (university_id, code) DO UPDATE SET "
+    + ", ".join(f"{c} = EXCLUDED.{c}" for c in COURSE_COLUMNS)
+    + ", updated_at = now() WHERE ("
+    + ", ".join(f"courses.{c}" for c in COURSE_COLUMNS)
+    + ") IS DISTINCT FROM ("
+    + ", ".join(f"EXCLUDED.{c}" for c in COURSE_COLUMNS)
+    + ") RETURNING (xmax = 0) AS added"
+)
+
+
+def course_rows(code: str, sections: list[dict], year: str) -> list[str]:
+    """One course from its sections: title, department, description, areas and
+    prerequisites are the same for every section, so they come from the first one.
+    A variable-credit course (CSE 290R: 1, 2 or 3) stores the most a section offers."""
+    s = sections[0]
     sql = [
         insert(
             "courses",
@@ -152,8 +199,12 @@ def course_rows(code: str, s: dict) -> list[str]:
                 "description": lit(s["description"] or ""),
                 "course_areas": text_array(s["course_areas"]),
                 "prereq": jsonb(s["prereq"]),
+                "credits": lit(max(x["credits"] for x in sections)),
+                "prereq_text": lit(s.get("requisites_expression")),
+                "catalog_year": lit(year),
                 "source_url": lit(s["source_url"]),
             },
+            suffix=COURSE_UPSERT,
         )
     ]
     # Section Requirement rows belong to the section (sections.section_requirements),
@@ -268,7 +319,7 @@ def section_rows(s: dict, run: str) -> list[str]:
     return sql
 
 
-def build_sql(data: dict) -> str:
+def build_sql(data: dict, year: str | None = None) -> str:
     sections = data["sections"]
     run = (
         f"(SELECT id FROM scrape_runs WHERE university_id = {UNI} "
@@ -276,17 +327,22 @@ def build_sql(data: dict) -> str:
         f"AND scraped_at = {lit(data['scraped_at'])})"
     )
     block_labels = {s["term_code"]: s["block"] for s in sections if s["block"]}
-    first_section = {}
+    by_course: dict[str, list[dict]] = {}
     for s in sections:
-        first_section.setdefault(s["course"], s)
+        by_course.setdefault(s["course"], []).append(s)
+    year = year or catalog_year(data["term"])
 
     sql = [
         "BEGIN;",
         # Start from empty tables. No CASCADE on purpose: if another table (for example
         # a student's favorites) ever points at these rows, the refresh stops with an
         # error instead of silently deleting that data too.
-        f"TRUNCATE {', '.join(TABLES)} RESTART IDENTITY;",
-        insert("universities", {"short_code": lit(UNIVERSITY[0]), "name": lit(UNIVERSITY[1])}),
+        f"TRUNCATE {', '.join(t for t in TABLES if t not in KEPT)} RESTART IDENTITY;",
+        insert(
+            "universities",
+            {"short_code": lit(UNIVERSITY[0]), "name": lit(UNIVERSITY[1])},
+            suffix="ON CONFLICT (short_code) DO NOTHING",
+        ),
         insert(
             "scrape_runs",
             {
@@ -300,8 +356,13 @@ def build_sql(data: dict) -> str:
         ),
     ]
     sql += term_rows({data["term"]} | {s["term_code"] for s in sections}, block_labels)
-    for code, s in first_section.items():
-        sql += course_rows(code, s)
+    for code, course_sections in by_course.items():
+        sql += course_rows(code, course_sections, year)
+    # A course that is no longer in the scrape is removed (its sections are already gone).
+    sql.append(
+        f"DELETE FROM courses WHERE university_id = {UNI} AND code <> ALL "
+        f"({text_array(sorted(by_course))}) RETURNING 'removed';"
+    )
     for s in sections:
         sql += section_rows(s, run)
     sql.append("COMMIT;")
@@ -370,6 +431,7 @@ def main() -> int:
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     ap.add_argument("--in", dest="src", default=str(OUT_DIR / "course_search_clean.json"))
+    ap.add_argument("--catalog-year", help="e.g. 2026-2027 (default: derived from the term)")
     ap.add_argument("--container", default="my-postgres-myplan")
     ap.add_argument("--user", default="app_user")
     ap.add_argument("--database", default="app_db")
@@ -386,7 +448,7 @@ def main() -> int:
             file=sys.stderr,
         )
         return 1
-    sql = build_sql(data)
+    sql = build_sql(data, args.catalog_year)
 
     if args.sql_out:
         Path(args.sql_out).write_text(sql, encoding="utf-8")
@@ -395,11 +457,19 @@ def main() -> int:
         return 0
 
     before = counts(args)
-    psql(args, sql)
+    # One line per written course: "t" (added), "f" (updated) or "removed".
+    returned = psql(args, sql).split()
     after = counts(args)
-    print(f"Replaced all data in {args.database} with {args.src}:")
+    print(f"Refreshed {args.database} from {args.src}:")
     for table in TABLES:
         print(f"  {table:<20} {before[table]:>5} -> {after[table]:>5} rows")
+    total = len({s["course"] for s in data["sections"]})
+    added, updated, removed = (returned.count(k) for k in ("t", "f", "removed"))
+    year = args.catalog_year or catalog_year(data["term"])
+    print(
+        f"Courses (catalog {year}): {added} added, {updated} updated, "
+        f"{total - added - updated} unchanged, {removed} removed"
+    )
     return 0
 
 

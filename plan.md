@@ -99,7 +99,7 @@ frontend/
   src/api/                 # types.ts generated from /openapi.json, never edited
   src/pages/  src/components/
 fixtures/                  # audit.json, sections.json, courses.json, professors.json,
-                           # catalog_seed.json, html/ (saved pages), audits/ (test PDFs)
+                           # html/ (saved pages), audits/ (test PDFs)
 docs/demo-script.md
 .github/workflows/ci.yml
 ```
@@ -191,18 +191,19 @@ Tests: `test_schedule_importer.py` on the saved pages (done; the idempotency run
 
 ### DATA-04 · Catalog loader
 
-Our own script loads courses and their raw prerequisite text into our own database, through the `CatalogImporter` interface. Each run compares the source with the database and writes only what is different. The catalog is ours: we do not use Kuali or its API. Folders: `backend/app/schools/byui/catalog_seed.py`, `fixtures/catalog_seed.json`.
+The course catalog comes from our own scrape of the public Course Search, saved as a JSON backup and loaded into our own database. Each run compares every course with the database and writes only what is different. The catalog is ours: we do not use Kuali or its API. Files: `scripts/refresh_data.py` (scrape, clean, load), `scripts/populate_db.py` (load), `backend/app/db/schema.sql`.
+
+**Status: done (Nov 14, 2026).** Changed from the first plan: there is no `fixtures/catalog_seed.json` and no `SeedCatalogImporter`. A hand-typed seed would only copy what the scrape already has and go stale, so the catalog columns (credits, raw prerequisite text, catalog year) come straight from `scripts/out/course_search_clean.json`. Not stored, because Course Search does not show them: equivalent courses, the catalog's own prerequisite wording, and courses not offered this term. `scripts/refresh_data.py` is the one command to schedule; it loads nothing if the scrape looks incomplete (the scraper exits with 1 when it stopped or a subject failed). Check by hand: the catalog year (derived from the term, `2027;WI` -> `2026-2027`; `--catalog-year` overrides it) and CSE 290R (1 to 3 credits, stored as 3).
 
 Acceptance criteria:
 
-- [ ] `SeedCatalogImporter` loads at least 40 courses in the demo subjects from `fixtures/catalog_seed.json`: code, title, credits, description, raw prerequisite text, equivalent courses, and the URL of the public catalog page each was read from.
-- [ ] `CSE111` in the seed is stored as `CSE 111`.
-- [ ] A prerequisite that says `CS101 (last offered 2023)` keeps `CS 101` as a valid option in the stored text.
-- [ ] The catalog year is stored with the data, so the snapshot says which catalog it holds.
-- [ ] Each run compares every course with the database: new courses are inserted, changed courses are updated, and unchanged courses are not touched. The run summary prints how many were added, updated and unchanged.
-- [ ] A second run with the same source changes 0 rows. The run summary lists every section whose course is missing from the catalog.
+- [x] `scripts/refresh_data.py` scrapes Course Search, keeps the JSON as a backup in `scripts/out/`, and loads it into the database. If the scrape is incomplete or any step fails, the database and the last good JSON are not changed. Only one copy runs at a time.
+- [x] Every course (88 in CSE, CIT and MATH) is stored with code, title, credits, description, raw prerequisite text and the URL it was read from. A variable-credit course stores the most a section offers.
+- [x] The catalog year is stored with every course, so the snapshot says which catalog it holds.
+- [x] Each run compares every course with the database: new courses are inserted, changed courses are updated, unchanged courses are not touched, and courses no longer in the scrape are removed. The run summary prints how many were added, updated, unchanged and removed.
+- [x] A second run with the same file changes 0 course rows.
 
-Tests: `test_catalog_seed.py`.
+Tests: `test_populate_db.py` (the SQL, the catalog year, the incomplete-scrape check). The two-run check on a real database was done by hand (CI has no Postgres).
 
 ### DATA-05 · Professors: directory profiles, name matching, RMP link
 
@@ -303,7 +304,7 @@ Tests: `test_solver_small.py`, `test_solver_properties.py`, `test_candidates.py`
 
 Turns prerequisite text into a `PrereqExpression` tree and checks it against the student's completed and in-progress courses. Structure is parsed in code first; Claude Haiku is only the fallback. Folders: `backend/app/engine/prereqs/parser.py`, `backend/app/engine/prereqs/evaluator.py`, `backend/app/llm/prereq_fallback.py`.
 
-Already built: `scripts/data_cleaner.py` makes the tree from Course Search's structured requisite rows for every course offered in Winter 2027 (88 courses, all valid, none unparsed), so those courses need no text parsing and no Haiku call. Review it and reuse it rather than writing a second tree builder. The text parser below is still needed for catalog text (`catalog_seed.json`), and the evaluator is not started.
+Already built: `scripts/data_cleaner.py` makes the tree from Course Search's structured requisite rows for every course offered in Winter 2027 (88 courses, all valid, none unparsed), so those courses need no text parsing and no Haiku call. Review it and reuse it rather than writing a second tree builder. The text parser below is still needed for prerequisite text from other sources (for example a course not offered this term), and the evaluator is not started.
 
 Acceptance criteria:
 
@@ -667,7 +668,7 @@ When a block is blocked:
 
 - [ ] Send the permission request to BYU-Idaho.
 - [ ] Save by hand into `fixtures/html/`: two Course Search results pages, one section-details page, two directory profile pages.
-- [ ] Type `fixtures/catalog_seed.json`: about 40 courses in the demo subjects with their prerequisite text, read from the public catalog pages. (Courses offered in Winter 2027 already have their requisites from Course Search, see "Already done"; the seed is still needed for the catalog year and for courses not offered this term.)
+- [x] ~~Type `fixtures/catalog_seed.json`~~ Dropped (Nov 14, 2026): the catalog comes from the Course Search scrape, see DATA-04.
 - [ ] Collect 3 degree-audit PDFs with consent, remove personal details, and hand-check the expected JSON for each.
 - [ ] Create the accounts: GitHub repo, Render, Neon, and a Claude API key with a spend limit.
 - [ ] Look up BYU-Idaho's school id on Rate My Professors in a browser and put it in config.

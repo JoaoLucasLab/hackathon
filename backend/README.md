@@ -83,9 +83,16 @@ writes `course_search.json` only at the end. Run one copy at a time.
 python3 scripts/populate_db.py
 ```
 
-Every run **deletes all rows** in the 9 tables and loads the file again, so the
-database always matches the latest file. Delete and load run in one
-transaction: if anything fails, nothing changes and the old data stays.
+It loads `scripts/out/course_search_clean.json` in one transaction (if anything
+fails, nothing changes and the old data stays):
+
+- **The class schedule**: every run **deletes all rows** in the schedule tables
+  (terms, sections, meetings, professors...) and loads the file again, so the
+  database always matches the latest scrape.
+- **The courses** (with credits, raw prerequisite text and catalog year): each
+  course is compared with the database. New ones are added, changed ones
+  updated, ones no longer in the file removed, and unchanged ones not touched,
+  so a second run changes 0 course rows.
 
 It prints the row count of each table before and after. On an empty database,
 with the current data:
@@ -102,6 +109,12 @@ with the current data:
   section_instructors      0 ->   295 rows
 ```
 
+Then one line for the courses:
+
+```
+Courses (catalog 2026-2027): 0 added, 0 updated, 88 unchanged, 0 removed
+```
+
 ## 5. Check it
 
 ```bash
@@ -110,11 +123,27 @@ docker exec -it my-postgres-myplan psql -U app_user -d app_db -c "SELECT c.code,
 
 ## Update the data later
 
+One command scrapes, cleans and loads:
+
 ```bash
-python3 scripts/scrape_course_search.py
-python3 scripts/data_cleaner.py
-python3 scripts/populate_db.py
+python3 scripts/refresh_data.py                # about 25 minutes (live scrape)
+python3 scripts/refresh_data.py --skip-scrape  # clean and load the last scrape again
 ```
+
+It loads nothing if the scrape looks incomplete (the scraper stopped, a subject
+has no sections, or there are far fewer sections than last time; `--force`
+loads a real drop). The database and the last good files then stay as they
+were. Only one copy runs at a time.
+
+To run it on a schedule, add a cron line (`crontab -e`), at most once a day,
+with the full path to the Python that has the backend's packages:
+
+```
+0 3 * * * cd /path/to/repo && /path/to/python scripts/refresh_data.py >> scripts/out/refresh.log 2>&1
+```
+
+The computer must be awake at that time. On the WSL server, pass the database
+container's names (`--container course-planner-db --user ... --database ...`).
 
 ## Stop or reset
 

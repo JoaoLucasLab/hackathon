@@ -36,6 +36,7 @@ jobs:
           backend/tests/test_fixtures_valid.py
           backend/tests/test_layering.py
           backend/tests/test_schedule_importer.py
+          backend/tests/test_populate_db.py
           backend/tests/test_schedule_string.py
           backend/tests/test_course_code.py
           backend/tests/test_conflicts.py

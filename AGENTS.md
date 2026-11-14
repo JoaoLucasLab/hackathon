@@ -58,8 +58,9 @@ When you are asked to work on something:
 - `LIVE_SOURCES` is empty by default, which means zero outbound requests to
   BYU-Idaho. Do not change the default. Do not run a live importer unless a human
   on the team asks you to in this session. Never run one in CI or in tests.
-- The course catalog comes from our own script and our own database, loaded
-  from `fixtures/catalog_seed.json`. We do not use Kuali or its API.
+- The course catalog comes from our own scrape of the public Course Search
+  (`scripts/refresh_data.py`: scrape, clean, load into our own database). The
+  scraped JSON in `scripts/out/` is the backup. We do not use Kuali or its API.
 - Honor `Crawl-delay: 10` on `www.byui.edu`. Responses are not cached: each scraper
   run downloads everything again (about 25 minutes for CSE, CIT and MATH), so run
   it only when the data needs refreshing, and run one copy at a time.
@@ -134,7 +135,7 @@ frontend/
   src/api/                 # types.ts is generated, never edited by hand
   src/pages/  src/components/
 fixtures/                  # audit.json, sections.json, courses.json, professors.json,
-                           # catalog_seed.json, html/, audits/
+                           # html/, audits/
 backend/Dockerfile         # backend image (context: repo root)
 frontend/Dockerfile        # build + nginx; proxies /api to the backend (context: repo root)
 frontend/nginx.conf.template
@@ -174,6 +175,7 @@ the block noted; do not invent a different name.
 | `docker compose up` | Starts Postgres locally | DATA-01 |
 | `make migrate` | `alembic upgrade head` | DATA-01 |
 | `make seed` | Loads all fixtures into an empty database | ENG-01 |
+| `python3 scripts/refresh_data.py` | Scrapes Course Search (live, about 25 minutes), keeps the JSON backup in `scripts/out/`, loads the database; `--skip-scrape` reloads the last scrape | DATA-04 |
 | `make snapshot` / `make restore-snapshot` | Writes / restores `snapshots/demo.sql.gz` | DATA-06 |
 | `pytest` | Backend tests | DATA-01 |
 | `ruff check .` and `mypy backend` | Lint and type check | DATA-01 |
