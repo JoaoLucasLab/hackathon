@@ -2,7 +2,11 @@
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
 import pytest
+from pydantic import TypeAdapter
 from tests.engine_helpers import audit, requirement, section
 
 from app.contracts import (
@@ -305,3 +309,115 @@ def test_warnings_reach_the_built_schedule() -> None:
     cls = response.schedules[0].classes[0]
     assert [w.message for w in cls.warnings] == [f"{CHECK}: junior standing"]
     assert response.schedules[0].warnings == cls.warnings
+
+
+# --- Trees from the Course Search scrape (DATA-04) ------------------------------------
+# DATA-04 stores, per course, the tree built by scripts/data_cleaner.py in `prereq` and
+# the site's "requisites_expression" in `prereq_text`. The trees below are copied from
+# scripts/out/course_search_clean.json (public catalog data).
+
+CLEAN_JSON = Path(__file__).resolve().parents[2] / "scripts" / "out" / "course_search_clean.json"
+_TREE: TypeAdapter[PrereqExpression] = TypeAdapter(PrereqExpression)
+
+
+def _c(code: str, concurrent_ok: bool = False) -> dict[str, object]:
+    return {
+        "type": "course",
+        "course_code": code,
+        "min_grade": "C-",
+        "concurrent_ok": concurrent_ok,
+    }
+
+
+CSE_111 = _TREE.validate_python(
+    {
+        "type": "any",
+        "items": [
+            _c("CS 101"),
+            _c("CSE 110"),
+            _c("CIT 160"),
+            _c("PW 100T"),
+            {"type": "condition", "text": "LUC exam: SCORE >= 110"},
+        ],
+    }
+)
+CSE_131 = _TREE.validate_python(
+    {
+        "type": "any",
+        "items": [
+            {"type": "all", "items": [_c("CSE 111"), _c("CSE 130")]},
+            {"type": "all", "items": [_c("CS 124"), _c("CSE 130")]},
+        ],
+    }
+)
+CSE_121C = _TREE.validate_python(_c("CSE 111", concurrent_ok=True))
+CSE_111_TEXT = (
+    "[9656] Course Prerequisite: CS 101 (C- or better) OR [9658] Course Prerequisite: "
+    "CSE 110 (C- or better) OR [9659] Course Prerequisite: CIT 160 (C- or better) OR "
+    "[9841] Course Prerequisite: PW 100T (C- or better) OR [10549] Course Prerequisite: "
+    "Literacy and Understanding Computing exam must be taken with a SCORE score of 110 "
+    "or greater."
+)
+
+
+def _eval(expr: PrereqExpression, *record: AuditCourse):  # type: ignore[no-untyped-def]
+    return evaluate(expr, StudentRecord(list(record)))
+
+
+@pytest.mark.parametrize(
+    ("record", "status"),
+    [
+        ((took("CSE 110", "C-"),), PrereqStatus.met),
+        ((took("PW 100T", "A"),), PrereqStatus.met),
+        ((took("CSE 110", None, IN_PROGRESS),), PrereqStatus.met),
+        # Below C- or none of the courses: the LUC exam is still possible, so a warning.
+        ((took("CSE 110", "D"),), PrereqStatus.met_with_warnings),
+        ((), PrereqStatus.met_with_warnings),
+    ],
+)
+def test_course_search_tree_cse_111(record: tuple[AuditCourse, ...], status: PrereqStatus) -> None:
+    result = _eval(CSE_111, *record)
+    assert result.status == status
+    if status == PrereqStatus.met_with_warnings:
+        assert [n.message for n in result.notes] == [f"{CHECK}: LUC exam: SCORE >= 110"]
+
+
+def test_course_search_tree_any_of_all_groups() -> None:
+    assert _eval(CSE_131, took("CS 124"), took("CSE 130")).status == PrereqStatus.met
+    result = _eval(CSE_131, took("CSE 111"))
+    assert result.status == PrereqStatus.not_met
+    assert result.reason == (
+        "prerequisite: needs one of (CSE 111 with C- or better and CSE 130 with C- or "
+        "better), (CS 124 with C- or better and CSE 130 with C- or better)"
+    )
+
+
+def test_course_search_co_requisite() -> None:
+    assert _eval(CSE_121C, took("CSE 111")).status == PrereqStatus.met
+    pending = _eval(CSE_121C, took("CSE 111", None, IN_PROGRESS))
+    assert pending.status == PrereqStatus.met
+    assert pending.notes[0].kind == "pending_grade"
+    assert _eval(CSE_121C).status == PrereqStatus.met_with_warnings
+
+
+def test_stored_tree_means_the_site_text_is_never_parsed() -> None:
+    """A DATA-04 row has both; the tree is used and the fallback (Haiku) is never called."""
+
+    def no_parse(text: str | None) -> PrereqExpression:
+        raise AssertionError(f"parsed {text!r}")
+
+    checker = PrereqChecker(
+        [course("CSE 111", CSE_111_TEXT, prereq=CSE_111)], [took("CS 101")], parse=no_parse
+    )
+    assert checker.check("CSE 111").status == PrereqStatus.met
+
+
+@pytest.mark.skipif(not CLEAN_JSON.exists(), reason="no scrape in scripts/out")
+def test_every_scraped_tree_validates_and_evaluates() -> None:
+    data = json.loads(CLEAN_JSON.read_text(encoding="utf-8"))
+    trees = {s["course"]: s["prereq"] for s in data["sections"]}
+    assert trees
+    for code, tree in trees.items():
+        assert tree is not None, f"{code}: prereq is null (unreadable requisites)"
+        result = evaluate(_TREE.validate_python(tree), StudentRecord([]))
+        assert isinstance(result.status, PrereqStatus), code

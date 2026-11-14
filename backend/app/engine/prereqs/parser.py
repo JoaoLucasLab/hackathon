@@ -5,8 +5,11 @@ Structure is read in code. Text this parser cannot read raises `PrereqParseError
 stored as `unparsed` (a warning, never "no prerequisites").
 
 Course Search's structured requisite rows already become trees in
-`scripts/data_cleaner.py`; this parser is for free text such as the catalog's
-`prereq_text`.
+`scripts/data_cleaner.py`, and DATA-04 stores that tree in `courses.prereq` next
+to the site's "requisites_expression" in `courses.prereq_text`. `PrereqChecker`
+uses the stored tree, so that text is never parsed here (its "[group] Course
+Prerequisite: ..." form would go to the fallback). This parser is for plain
+catalog-style text: the fixtures and courses that come without a tree.
 
 What it reads:
 - course codes (`CSE 111`, `CSE111`, `CSE 111-01`); a bare number after a course
