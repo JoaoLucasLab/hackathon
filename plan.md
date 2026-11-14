@@ -33,6 +33,21 @@ One variable, `LIVE_SOURCES`, lists the sources the importers may call. It is em
 
 Whether the copyright terms cover a learning project is BYU-Idaho's question to answer, not mine. This design means a late or missing answer costs you nothing in the demo.
 
+## Already done (do not redo)
+
+Built on Nov 13, 2026, ahead of the blocks below. Acceptance criteria these meet were removed from their blocks; criteria that are only partly met stay in their blocks with a note. Build on these files instead of starting over.
+
+| What | Where | Covers |
+| --- | --- | --- |
+| Live Course Search scraper: sections, meetings, seats, instructors, descriptions and the "Course Requisites" rows (AND/OR, group, type, minimum grade). Subjects come from `SUBJECTS` (CSE, CIT, MATH); writes `scripts/out/course_search.json` | `scripts/scrape_course_search.py` | Most of DATA-03 |
+| Requisite rows turned into `PrereqExpression` trees that validate against the ENG-01 contract (88 courses, 0 unparsed): co-requisites as `concurrent_ok`, exams (LUC, ACT, SAT, ALEKS, Math Path) as conditions, wildcards like `MATH 221*` expanded, section rules kept apart as `section_requirements` | `scripts/data_cleaner.py` | Part of ENG-04 (for courses offered this term) |
+| Postgres schema: universities, scrape_runs, terms, courses, course_requisites, sections, meetings, professors, section_instructors | `backend/app/db/schema.sql` | Part of DATA-01 |
+| Loader: full refresh in one transaction (an error changes nothing) | `scripts/populate_db.py` | DATA-03 idempotency, part of DATA-05 |
+| Local database | `backend/compose/compose.yaml` (Postgres 18, port 5433) | Part of DATA-01 |
+| Decision: Course Search needs the anonymous `ASP.NET_SessionId` cookie; it is the only cookie allowed | `AGENTS.md`, Risks table | Pre-hackathon cookie check |
+
+Findings for the contracts (need a contract PR): the site has seat status `reopened`, delivery methods "In-Person", "Online", "Blended", "Virtual Live", "Professionally Mentored" (the contract has campus / online / hybrid), and exam requirements with scores (no exam type in `PrereqExpression` yet).
+
 ## Changes to the three concerns
 
 Six pieces moved, because Data and AI & Product were both too big for one person in 12 hours while Planning Engine had room. The three concerns keep their names and their main purpose.
@@ -127,6 +142,8 @@ Data delivers the database, the request log and three loaders, all built and tes
 
 Creates the skeleton everyone branches from, the database tables, the anonymous session and a live hello-world. Folders: `backend/app/db/`, `backend/app/main.py`, `.github/workflows/ci.yml`, `docker-compose.yml`. The empty skeleton with CI merges in the first 20 minutes so the other two can branch.
 
+Already built: `backend/app/db/schema.sql` creates the catalog and schedule tables (universities, terms, courses, sections, meetings, professors, plus scrape_runs, course_requisites and section_instructors), and `backend/compose/compose.yaml` runs Postgres locally. Make it the first Alembic migration instead of designing those tables again; the student-side tables below are still to do.
+
 Acceptance criteria:
 
 - [ ] `docker compose up` then `make migrate` creates these tables: universities, terms, courses, sections, meetings, professors, professor\_sources, students, audits, constraints, favorites, chats, request\_log, raw\_responses, llm\_cache.
@@ -147,13 +164,13 @@ Acceptance criteria:
 
 - [ ] With `LIVE_SOURCES` empty, the client makes no network call and raises `LiveImportDisabled`.
 - [ ] A test fails if any file under `importers/` or `schools/` imports `requests` or `httpx` directly.
-- [ ] Each run starts with an empty cookie jar. Setting a `Cookie` or `Authorization` header for `*.byui.edu` raises `ForbiddenHeaderError`.
+- [ ] Each run starts with an empty cookie jar. Setting an `Authorization` header, or any cookie other than the anonymous `ASP.NET_SessionId` from `student.byui.edu`, for `*.byui.edu` raises `ForbiddenHeaderError`.
 - [ ] Two requests to www.byui.edu are at least 10 seconds apart (tested with a fake clock). Other hosts use `DEFAULT_DELAY_S`, 2 seconds by default.
 - [ ] The raw response is saved in `raw_responses` before any parsing. A second fetch of the same URL and term makes 0 network calls.
 - [ ] Every request writes one `request_log` row: time, method, URL, status, `cookie_sent`, `auth_sent`.
 - [ ] `GET /admin/request-log` shows the newest 200 rows as a plain HTML table. `/admin/request-log.csv` downloads all rows.
 - [ ] The User-Agent is `<app-name>/0.1 (student hackathon project; contact: <IMPORTER_CONTACT_EMAIL>)`. The client refuses to start if that variable is empty.
-- [ ] The public-access test replays each importer on recorded responses and fails on any 401 or 403, any redirect whose target contains `login`, and any log row with `cookie_sent` or `auth_sent` true.
+- [ ] The public-access test replays each importer on recorded responses and fails on any 401 or 403, any redirect whose target contains `login`, any log row with `auth_sent` true, and any log row whose `cookie_sent` is a cookie other than the anonymous `ASP.NET_SessionId`.
 
 Tests: `test_http_client.py`, `test_request_log.py`, `test_public_access.py`.
 
@@ -161,16 +178,12 @@ Tests: `test_http_client.py`, `test_request_log.py`, `test_public_access.py`.
 
 Turns Public Course Search pages into `Section` rows. It is developed against three pages saved by hand before the hackathon, so no live request is needed to finish it. Folders: `backend/app/schools/byui/schedule_importer.py`, `fixtures/html/course_search/`.
 
+Already built in `scripts/scrape_course_search.py` (see "Already done"): term and block mapping, seat status with `seats_as_of`, source URL and fetched-at on every row, skip-and-log with a run summary, `__VIEWSTATE` paging, subjects first, and a repeatable load (`scripts/populate_db.py`). What is left is moving it into `schools/byui/`, making its requests through `PublicHttpClient` (DATA-02), and the tests below.
+
 Acceptance criteria:
 
 - [ ] From the saved pages (results page 1, results page 2, one section-details page) the parser produces rows that match a checked-in expected JSON: course, section, title, credits, meetings, class type, delivery method, instructors, seat status, department.
-- [ ] `CSE 110-01` with `TR 12:45-01:45PM (01/06/2027 - 04/08/2027) STC 231` is stored as course `CSE 110`, section `01`, one meeting on Tuesday and Thursday, 12:45 to 13:45, 2027-01-06 to 2027-04-08, room `STC 231`. The importer calls ENG-02's parser and has no parser of its own.
-- [ ] Term values `2027;WI`, `2027;WI;W1` and `2027;WI;W2` map to full semester, First Block and Second Block.
-- [ ] `Closed (0 out of 30 seats)` is stored as status closed, 0 open, 30 total, with a `seats_as_of` time.
-- [ ] Running the importer twice on the same pages leaves every row count unchanged.
-- [ ] Every row keeps its source URL and fetched-at time.
-- [ ] A page that fails to parse is logged and skipped. The run ends with a summary of pages succeeded, failed and skipped, and exit code 0.
-- [ ] Live mode follows paging through `__VIEWSTATE` postbacks and imports `DEMO_SUBJECTS` first. It never runs in CI.
+- [ ] `CSE 110-01` with `TR 12:45-01:45PM (01/06/2027 - 04/08/2027) STC 231` is stored as course `CSE 110`, section `01`, one meeting on Tuesday and Thursday, 12:45 to 13:45, 2027-01-06 to 2027-04-08, room `STC 231`. The importer calls ENG-02's parser and has no parser of its own. (Course, section, days, dates and room are already stored this way; the times are still the raw `12:45-01:45PM` until ENG-02's parser is called.)
 
 Tests: `test_schedule_importer.py` on the saved pages, including the idempotency run.
 
@@ -195,8 +208,7 @@ Builds one `Professor` per person from the class schedule, attaches the public d
 
 Acceptance criteria:
 
-- [ ] `Last, First M.` is split into last, first and middle. A section with two instructors produces two professors.
-- [ ] Two people with the same name in different departments stay two rows (test with two `Smith, John` fixtures).
+- [ ] Two people with the same name in different departments stay two rows (test with two `Smith, John` fixtures). (`scripts/populate_db.py` already keeps them apart, for example "Howard, Daris W." in CSE and Mathematics; the test is still missing.)
 - [ ] On two saved profile pages, the parser extracts Education, Interests, Work experience, Research and Biography as `ProfessorSource` rows, each with source URL and fetched-at time. A missing section gives an empty value, not an error.
 - [ ] Each match stores a confidence from 0 to 1. Below 0.8 the profile is not shown, and the pair is listed in the run summary. `fixtures/professor_overrides.json` can fix a match by hand.
 - [ ] `rmp_link()` returns `https://www.ratemyprofessors.com/search/professors/<RMP_SCHOOL_ID>?q=<First>%20<Last>`. The school id is looked up once by hand and kept in config.
@@ -288,6 +300,8 @@ Tests: `test_solver_small.py`, `test_solver_properties.py`, `test_candidates.py`
 ### ENG-04 · Prerequisites: parse and evaluate
 
 Turns prerequisite text into a `PrereqExpression` tree and checks it against the student's completed and in-progress courses. Structure is parsed in code first; Claude Haiku is only the fallback. Folders: `backend/app/engine/prereqs/parser.py`, `backend/app/engine/prereqs/evaluator.py`, `backend/app/llm/prereq_fallback.py`.
+
+Already built: `scripts/data_cleaner.py` makes the tree from Course Search's structured requisite rows for every course offered in Winter 2027 (88 courses, all valid, none unparsed), so those courses need no text parsing and no Haiku call. Review it and reuse it rather than writing a second tree builder. The text parser below is still needed for catalog text (`catalog_seed.json`), and the evaluator is not started.
 
 Acceptance criteria:
 
@@ -614,7 +628,7 @@ The three risks most likely to hurt the demo are a late critical-path block, an 
 | Risk | Mitigation | Covered by |
 | --- | --- | --- |
 | BYU-Idaho's answer is late, or is no | Fixtures and the catalog seed carry the demo. `LIVE_SOURCES` stays empty. The demo states the permission status honestly. | DATA-02, DATA-04 |
-| Course Search paging needs a session cookie, which breaks the "no Cookie header" rule | Test by hand before the hackathon with cookies blocked. If it needs one, stay on saved pages and ask BYU-Idaho; do not weaken the rule quietly. | DATA-03 |
+| Course Search paging needs a session cookie | Confirmed Nov 13: search postbacks need the anonymous `ASP.NET_SessionId` (no login). The team decided to allow that one cookie and no other; this is stated in `AGENTS.md`. Mention it in the permission request to BYU-Idaho. | DATA-03 |
 | Scraper is slow or breaks on postbacks | Built and tested on saved pages. Demo subjects first. The demo runs on the snapshot. | DATA-03, DATA-06 |
 | The catalog switches to a new year on Dec 1 | Our script loads one catalog year into our database; the year is stored with the snapshot. | DATA-04 |
 | Prerequisite text does not parse | Haiku fallback with validation; leftovers are stored as `unparsed` and shown as a warning. | ENG-04 |
@@ -643,8 +657,7 @@ When a block is blocked:
 
 - [ ] Send the permission request to BYU-Idaho.
 - [ ] Save by hand into `fixtures/html/`: two Course Search results pages, one section-details page, two directory profile pages.
-- [ ] Check by hand whether Course Search paging still works with cookies blocked.
-- [ ] Type `fixtures/catalog_seed.json`: about 40 courses in the demo subjects with their prerequisite text, read from the public catalog pages.
+- [ ] Type `fixtures/catalog_seed.json`: about 40 courses in the demo subjects with their prerequisite text, read from the public catalog pages. (Courses offered in Winter 2027 already have their requisites from Course Search, see "Already done"; the seed is still needed for the catalog year and for courses not offered this term.)
 - [ ] Collect 3 degree-audit PDFs with consent, remove personal details, and hand-check the expected JSON for each.
 - [ ] Create the accounts: GitHub repo, Render, Neon, and a Claude API key with a spend limit.
 - [ ] Look up BYU-Idaho's school id on Rate My Professors in a browser and put it in config.

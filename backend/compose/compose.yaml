@@ -1,0 +1,17 @@
+services:
+  db:
+    image: postgres:18
+    container_name: my-postgres-myplan
+    restart: unless-stopped
+    # Values come from backend/.env (not in git): run compose with --env-file backend/.env.
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?set POSTGRES_USER in backend/.env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in backend/.env}
+      POSTGRES_DB: ${POSTGRES_DB:?set POSTGRES_DB in backend/.env}
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+volumes:
+  postgres_data:
