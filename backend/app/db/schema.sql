@@ -14,6 +14,7 @@
 --   term / term_code / block                              -> terms
 --   courses{code: {prereq, requisites}}                   -> courses.prereq, course_requisites
 --   section title, department, description, course_areas  -> courses (same for every section of a course)
+--   section credits (max), requisites_expression          -> courses.credits, courses.prereq_text
 --   sections[]                                            -> sections
 --   sections[].meetings[] + sections[].locations[]        -> meetings (same position = same meeting)
 --   sections[].instructors[]                              -> professors, section_instructors
@@ -85,12 +86,19 @@ CREATE TABLE IF NOT EXISTS courses (
                        OR (jsonb_typeof(prereq) = 'object'
                            AND prereq ->> 'type' IN ('all', 'any', 'course', 'condition', 'unparsed'))
                    ),
-    catalog_year   text,                              -- filled by the catalog loader (DATA-04)
+    -- Catalog columns (DATA-04), filled by scripts/populate_db.py from the scrape.
+    credits        numeric(4, 2) CHECK (credits >= 0), -- most a section offers (CSE 290R: 1-3 -> 3)
+    prereq_text    text,                              -- "requisites_expression", as the site lists it
+    catalog_year   text,                              -- e.g. '2026-2027', derived from the term
     source_url     text,
     created_at     timestamptz NOT NULL DEFAULT now(),
     updated_at     timestamptz NOT NULL DEFAULT now(),
     UNIQUE (university_id, code)
 );
+
+-- Columns added by DATA-04, for databases created before it.
+ALTER TABLE courses ADD COLUMN IF NOT EXISTS credits     numeric(4, 2) CHECK (credits >= 0);
+ALTER TABLE courses ADD COLUMN IF NOT EXISTS prereq_text text;
 
 -- The raw rows of the "Course Requisites" page, in page order: the source the
 -- prereq tree was built from. Kept so the tree can be rebuilt or checked.

@@ -7,3 +7,8 @@ __pycache__/
 *.egg-info/
 .env
 backend/compose/.env
+
+# scripts/refresh_data.py: files of a run in progress, lock and log
+scripts/out/*.new.json
+scripts/out/.refresh.lock
+scripts/out/refresh.log

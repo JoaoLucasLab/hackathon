@@ -478,15 +478,18 @@ def main() -> int:
     requisites: dict[str, dict] = {}
     sections: list[dict] = []
     started = datetime.now(UTC)
+    complete = True  # False when the run stopped or a subject failed
     print(f"Term {args.term}, subjects: {' '.join(subjects)}", flush=True)
     for subject in subjects:
         try:
             sections += scrape_subject(args.term, subject, args.limit, requisites, stats)
         except StopScrape as e:
             print(f"STOPPED: {e}", file=sys.stderr)
+            complete = False
             break
         except Exception as e:  # one bad subject is logged and skipped
             print(f"  {subject}: failed ({e})", file=sys.stderr)
+            complete = False
 
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -510,7 +513,9 @@ def main() -> int:
         f"{stats['requisite_pages']} requisite pages fetched, {stats['requests']} requests. "
         f"Wrote {out}"
     )
-    return 0
+    # Exit code 1 when data is missing, so scripts/refresh_data.py does not load a
+    # partial file into the database.
+    return 0 if complete else 1
 
 
 if __name__ == "__main__":
