@@ -1,0 +1,66 @@
+# BYU-Idaho school rules (ENG-05). Read by schools/byui/rules.py.
+# Change values here, not in code: the engine picks them up with no code change.
+
+university_id: byui
+
+# Credit range used when the student gives none.
+credit_default_min: 12
+credit_default_max: 15
+# Highest maximum the relaxation step may suggest.
+credit_max_limit: 18
+
+# Term code season suffix ("2027;WI", "2027;WI;W1") -> season name.
+term_seasons:
+  FA: fall
+  WI: winter
+  SP: spring
+
+# Campus students have a two-semester track. Off-track semesters allow only
+# online sections. The `online` track has no on-track semester: online only.
+tracks:
+  fall_winter: [fall, winter]
+  winter_spring: [winter, spring]
+  spring_fall: [spring, fall]
+  online: []
+
+religion:
+  subjects: [REL]
+  max_at_registration: 1
+  note: "You can add a second religion course after the first day of the semester."
+
+waitlist:
+  max_credits: 12
+
+audit_max_age_days: 30
+
+# Score weights. Each is points per unit:
+#   requirement         per unmet audit requirement the schedule fills
+#   credit              per credit
+#   preference          per preference met (see engine/explain.py keys)
+#   favorite_professor  per class taught by a favorite professor
+#   open_seats          per class, times the share of seats still open
+#   unlocks             per other remaining requirement a class is a prerequisite for
+#   gap_per_hour        subtracted per hour of idle time between classes in a day
+weights:
+  requirement: 100
+  credit: 1
+  preference: 5
+  favorite_professor: 20
+  open_seats: 3
+  unlocks: 15
+  gap_per_hour: 4
+
+# When nothing fits, these constraints are loosened one at a time, in this order.
+# The first one that gives schedules is suggested. Exclusions the student typed
+# (exclude_courses, exclude_section_ids) are never loosened.
+relaxation_order:
+  - only_favorite_professors
+  - earliest_start
+  - latest_end
+  - days_off
+  - delivery_methods
+  - allow_waitlist
+  - only_required
+  - credit_min
+  - credit_max
+  - include_courses

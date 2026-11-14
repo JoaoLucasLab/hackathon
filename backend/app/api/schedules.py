@@ -1,16 +1,20 @@
-"""Schedule building (ENG-03). ENG-05 adds school rules, relaxation and backups.
+"""Schedule building (ENG-03, ENG-05).
 
 Prerequisites (ENG-04) are checked against the audit: sections the student is not
 eligible for are left out with a reason, and conditions to verify become warnings.
+School rules (track, religion, waitlist cap, credit range, score weights,
+relaxation order) come from the registered school's `SchoolRules`.
 
 The audit is the fixture audit until AI-04 stores the session's own audit, and
 sections come from the fixtures until DATA-03 loads them into the database.
 """
 
-from fastapi import APIRouter
+from collections.abc import Iterable
 
-from app import config
+from fastapi import APIRouter, Request
+
 from app.api import fixture_data
+from app.api import professors as professors_api
 from app.contracts import (
     BuildSchedulesRequest,
     BuildSchedulesResponse,
@@ -20,6 +24,7 @@ from app.contracts import (
 from app.engine import solver
 from app.engine.prereqs.evaluator import PrereqChecker
 from app.llm.prereq_fallback import parse_with_fallback
+from app.schools.base import default_school
 
 router = APIRouter(prefix="/api", tags=["schedules"])
 
@@ -29,8 +34,10 @@ def prereq_checker(audit: DegreeAudit) -> PrereqChecker:
     return PrereqChecker(fixture_data.courses(), audit.courses, parse=parse_with_fallback)
 
 
-@router.post("/schedules/build", response_model=BuildSchedulesResponse)
-def build_schedules(body: BuildSchedulesRequest) -> BuildSchedulesResponse:
+def build_schedules(
+    body: BuildSchedulesRequest, favorite_professor_ids: Iterable[str] = ()
+) -> BuildSchedulesResponse:
+    """Same function behind the endpoint and the `build_schedules` chat tool."""
     # TODO(AI-02): None should mean the session's saved constraints; the chat tool
     # always sends them, so until the endpoint can see the session it uses defaults.
     constraints = body.constraints or ConstraintSet()
@@ -40,7 +47,15 @@ def build_schedules(body: BuildSchedulesRequest) -> BuildSchedulesResponse:
         fixture_data.sections(),
         constraints,
         max_results=body.max_results,
-        credit_range=(config.CREDIT_DEFAULT_MIN, config.CREDIT_DEFAULT_MAX),
-        time_limit_s=config.SOLVER_TIME_LIMIT_S,
+        favorite_professor_ids=favorite_professor_ids,
         prereqs=prereq_checker(audit),
+        rules=default_school().rules,
     )
+
+
+@router.post("/schedules/build", response_model=BuildSchedulesResponse, name="build_schedules")
+def build_schedules_endpoint(
+    body: BuildSchedulesRequest, request: Request
+) -> BuildSchedulesResponse:
+    favorites = professors_api.favorites_for(professors_api.session_id(request))
+    return build_schedules(body, favorites)

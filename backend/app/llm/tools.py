@@ -255,7 +255,8 @@ def check_prerequisites(ctx: ToolContext, args: CheckPrerequisitesArgs) -> Json:
 
 def build_schedules(ctx: ToolContext, args: BuildSchedulesArgs) -> Json:
     response = schedules_api.build_schedules(
-        BuildSchedulesRequest(constraints=args.constraints, max_results=args.max_results)
+        BuildSchedulesRequest(constraints=args.constraints, max_results=args.max_results),
+        ctx.favorite_professor_ids,
     )
     ctx.constraints = args.constraints
     return {"constraints": _dump(args.constraints), **_dump(response)}

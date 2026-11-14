@@ -13,7 +13,9 @@ Results:
 
 Unparsed text is never treated as "no prerequisites": it is always a warning.
 Equivalent courses count as the course they replace, both from the catalog
-(`Course.equivalents`) and from the audit (`AuditCourse.equivalent_of`).
+(`Course.equivalents`) and from the audit (`AuditCourse.equivalent_of`). The
+DATA-04 catalog (Course Search) does not list equivalents, so for real courses
+they come from the audit and from the OR options already in the tree.
 """
 
 from __future__ import annotations
