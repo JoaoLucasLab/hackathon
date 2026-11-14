@@ -1,0 +1,20 @@
+# Build context for backend/Dockerfile is the repo root. Keep it small and keep
+# secrets out of images.
+.git
+.github
+.venv
+**/__pycache__
+**/*.pyc
+.pytest_cache
+.mypy_cache
+.ruff_cache
+**/*.egg-info
+**/.DS_Store
+**/.env
+**/.env.*
+!**/.env.example
+frontend
+scripts/out
+snapshots
+e2e
+deploy

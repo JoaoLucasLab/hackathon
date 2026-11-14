@@ -1,0 +1,45 @@
+# nginx for the frontend image. ${BACKEND_URL} is filled in by the nginx image's
+# envsubst step at start-up. Other $variables below are nginx's own.
+
+server {
+    listen 80;
+    server_name _;
+    root /usr/share/nginx/html;
+
+    # Audit upload limit is 10 MB (DATA-06). Allow a little over so the backend,
+    # not nginx, answers 413 with the app's own message.
+    client_max_body_size 12m;
+
+    # Backend paths. Keep this list in sync with the FastAPI routers.
+    location ~ ^/(api|admin)(/|$) {
+        proxy_pass ${BACKEND_URL};
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        # TLS ends at Tailscale Funnel; tell the backend the browser used https.
+        proxy_set_header X-Forwarded-Proto https;
+        # The chat endpoint streams Server-Sent Events: no buffering, long reads.
+        proxy_buffering off;
+        proxy_cache off;
+        proxy_read_timeout 300s;
+    }
+
+    location ~ ^/(health|docs|redoc|openapi\.json)$ {
+        proxy_pass ${BACKEND_URL};
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+    }
+
+    # Hashed build assets can be cached forever.
+    location /assets/ {
+        try_files $uri =404;
+        add_header Cache-Control "public, max-age=31536000, immutable";
+    }
+
+    # React Router: unknown paths load the app.
+    location / {
+        try_files $uri $uri/ /index.html;
+        add_header Cache-Control "no-cache";
+    }
+}

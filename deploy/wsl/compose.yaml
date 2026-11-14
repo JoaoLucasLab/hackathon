@@ -1,0 +1,80 @@
+# Backup hosting: the whole app on a private WSL server, published with Tailscale.
+# Primary hosting stays Render + Neon (plan.md, "Hosting"). See deploy/wsl/README.md.
+#
+#   docker compose -f deploy/wsl/compose.yaml --env-file deploy/wsl/.env up -d --build
+#
+# Every port is bound to 127.0.0.1 only. Nothing is reachable from outside the
+# server except through Tailscale (deploy/wsl/funnel.sh):
+#   web 8080 -> Funnel 443 (public)      frontend + /api proxied to the backend
+#   api 8000 -> Funnel 8443 (optional)   backend directly (/docs, cross-origin tests)
+#   db  5433 -> Serve tcp 5432 (tailnet only, never Funnel)
+
+name: course-planner
+
+services:
+  db:
+    image: postgres:18
+    container_name: course-planner-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?set POSTGRES_USER in deploy/wsl/.env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in deploy/wsl/.env}
+      POSTGRES_DB: ${POSTGRES_DB:?set POSTGRES_DB in deploy/wsl/.env}
+    ports:
+      - "127.0.0.1:${DB_HOST_PORT:-5433}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql
+      # First start on an empty volume only. Replaced by `alembic upgrade head`
+      # once DATA-01 adds migrations (see README, "Migrations").
+      - ../../backend/app/db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build:
+      context: ../..
+      dockerfile: backend/Dockerfile
+    image: course-planner-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      CLAUDE_MODEL_CHAT: ${CLAUDE_MODEL_CHAT:-claude-sonnet-5-5}
+      CLAUDE_MODEL_BULK: ${CLAUDE_MODEL_BULK:-claude-haiku-5-5}
+      DATA_KEY: ${DATA_KEY:-}
+      SESSION_SECRET: ${SESSION_SECRET:-}
+      FRONTEND_ORIGIN: ${PUBLIC_URL:?set PUBLIC_URL in deploy/wsl/.env}
+      # Same origin here (nginx proxies /api), so the session cookie can be Lax.
+      COOKIE_SAMESITE: lax
+      # Keep empty: zero outbound requests to BYU-Idaho (AGENTS.md).
+      LIVE_SOURCES: ""
+      FEATURE_AUDIT_UPLOAD: ${FEATURE_AUDIT_UPLOAD:-false}
+      FEATURE_MENTORS: ${FEATURE_MENTORS:-false}
+      FEATURE_RELAXATION: ${FEATURE_RELAXATION:-false}
+    ports:
+      - "127.0.0.1:${API_HOST_PORT:-8000}:8000"
+
+  web:
+    build:
+      context: ../..
+      dockerfile: frontend/Dockerfile
+      args:
+        VITE_API_BASE_URL: ""
+        VITE_FEATURE_AUDIT_UPLOAD: ${FEATURE_AUDIT_UPLOAD:-false}
+    image: course-planner-web
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      BACKEND_URL: http://backend:8000
+    ports:
+      - "127.0.0.1:${WEB_HOST_PORT:-8080}:80"
+
+volumes:
+  pgdata:
