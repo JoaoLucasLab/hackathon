@@ -48,3 +48,31 @@
     animation: none !important;
   }
 }
+
+/* Schedule slip (frontend.md: the one decorative idea). The outline filter sits on
+   the wrapper, because the mask on .slip would cut it off. */
+@layer components {
+  .slip-wrap {
+    filter: drop-shadow(0 0 0.7px #9f978a) drop-shadow(0 3px 6px rgb(60 50 30 / 0.07));
+  }
+  .slip {
+    --cut: 96px;
+    background: var(--surface);
+    border-radius: 14px;
+    mask:
+      radial-gradient(circle 11px at 0 var(--cut), transparent 97%, #000) left / 51% 100% no-repeat,
+      radial-gradient(circle 11px at 100% var(--cut), transparent 97%, #000) right / 51% 100%
+        no-repeat;
+  }
+  .slip-perf {
+    border-top: 1.5px dashed var(--perf);
+    margin: 0 18px;
+  }
+  .sw-first {
+    background-image: repeating-linear-gradient(135deg, #1a1a1a 0 1px, transparent 1px 4px);
+  }
+  .sw-second {
+    background-image: radial-gradient(#1a1a1a 1px, transparent 1.2px);
+    background-size: 4px 4px;
+  }
+}

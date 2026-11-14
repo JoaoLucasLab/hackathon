@@ -232,8 +232,10 @@ the home headline, tilted 4 to 6 degrees, `aria-hidden="true"`, hidden below
 1100 px. They show real course codes from the student's remaining
 requirements, or are left out. Never fake data.
 
-**Icons.** Lucide-style 2 px stroke icons, 14 to 20 px, `currentColor`. No
-emoji. Decorative icons get `aria-hidden="true"`.
+**Icons.** Lucide icons from `lucide-react` through `components/ui/Icon.tsx`
+(stroke 2.25, 14 to 20 px, `currentColor`), matching the Duo habit tracker. In
+icon + sentence lists, show the icon on an `IconTile`: a rounded tile tinted at
+12% of the icon's own color. No emoji. Decorative icons get `aria-hidden="true"`.
 
 ## Screens
 
@@ -372,6 +374,6 @@ draft opens on its own screen or a side sheet, with Copy and no Send.
 - Don't use ALL CAPS, emoji, or arrows typed into button text.
 - Don't add new decorative ideas beyond the slip.
 - Don't copy any other website's text, images or illustrations.
-- Don't add a UI library, icon package or font package without asking
-  (`AGENTS.md`: no new major dependency). Inline SVG icons are fine.
+- Don't add a UI library or font package without asking (`AGENTS.md`: no new
+  major dependency). Icons come from `lucide-react`, already installed.
 - Don't change behavior while restyling (see the first section).

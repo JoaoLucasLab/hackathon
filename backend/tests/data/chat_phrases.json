@@ -1,0 +1,42 @@
+[
+  {
+    "id": "no-mornings-credits-no-fridays",
+    "message": "No morning classes, 12 to 15 credits, no Fridays",
+    "expected": {"earliest_start": "11:30:00", "credit_min": 12, "credit_max": 15, "days_off": ["F"]}
+  },
+  {
+    "id": "done-by-3pm",
+    "message": "I want to be done by 3 PM every day",
+    "expected": {"latest_end": "15:00:00"}
+  },
+  {
+    "id": "tuesday-thursday-free",
+    "message": "Keep Tuesdays and Thursdays free, I work those days",
+    "expected": {"days_off": ["T", "R"]}
+  },
+  {
+    "id": "online-only",
+    "message": "Only online classes please, I'm not on campus this semester",
+    "expected": {"delivery_methods": ["online"]}
+  },
+  {
+    "id": "include-and-exclude-course",
+    "message": "I have to take cse212, and I don't want CSE 310",
+    "expected": {"include_courses": ["CSE 212"], "exclude_courses": ["CSE 310"]}
+  },
+  {
+    "id": "only-required",
+    "message": "Only classes I need to graduate, nothing extra",
+    "expected": {"only_required": true}
+  },
+  {
+    "id": "waitlist-ok",
+    "message": "It's fine to be on a waitlist if that's the only way",
+    "expected": {"allow_waitlist": true}
+  },
+  {
+    "id": "favorite-professors-light-load",
+    "message": "Only my favorite professors, and keep it light, 9 credits max",
+    "expected": {"only_favorite_professors": true, "credit_max": 9}
+  }
+]

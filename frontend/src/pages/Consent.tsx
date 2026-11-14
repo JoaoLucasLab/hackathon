@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useStartWithSampleAudit } from "../api/queries";
 import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
-import { Icon, type IconName } from "../components/ui/Icon";
+import { Icon, IconTile, type IconName } from "../components/ui/Icon";
 import { PageFrame } from "../components/ui/PageFrame";
 import { FEATURES } from "../config";
 
@@ -54,8 +54,8 @@ export function Consent() {
       <Card>
         <ul className="flex flex-col gap-4">
           {facts.map((fact) => (
-            <li key={fact.icon} className="flex items-start gap-3">
-              <Icon name={fact.icon} className="mt-0.5 shrink-0 text-muted" />
+            <li key={fact.icon} className="flex items-center gap-3">
+              <IconTile name={fact.icon} size="sm" className="text-ink" />
               <span className="max-w-[64ch]">{fact.text}</span>
             </li>
           ))}

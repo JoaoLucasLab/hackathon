@@ -1,0 +1,35 @@
+{
+  "id": "off-topic",
+  "messages": [
+    "Write my history essay about the Civil War"
+  ],
+  "calls": [
+    {
+      "request_messages": [
+        {
+          "role": "user",
+          "content": "Write my history essay about the Civil War"
+        }
+      ],
+      "text": [
+        "I can't write",
+        " ess",
+        "ays, but I'",
+        "m happy to help with your",
+        " Winter 2027 sched",
+        "ule. Do",
+        " you want to start",
+        " by loo",
+        "king at your rem",
+        "aining requirements?"
+      ],
+      "content": [
+        {
+          "text": "I can't write essays, but I'm happy to help with your Winter 2027 schedule. Do you want to start by looking at your remaining requirements?",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    }
+  ]
+}

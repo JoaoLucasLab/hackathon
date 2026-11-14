@@ -1,0 +1,5 @@
+# Generated test data: GitHub collapses these in PR diffs and leaves them out of
+# language stats. Re-create them instead of editing by hand:
+#   recordings: pytest -m live backend/tests/test_chat_record.py
+backend/tests/data/recordings/** linguist-generated=true
+frontend/src/test/data/** linguist-generated=true

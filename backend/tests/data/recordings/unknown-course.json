@@ -1,0 +1,94 @@
+{
+  "id": "unknown-course",
+  "messages": [
+    "Add CSE 999 to my schedule"
+  ],
+  "calls": [
+    {
+      "request_messages": [
+        {
+          "role": "user",
+          "content": "Add CSE 999 to my schedule"
+        }
+      ],
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_01AAbTaWDhGbVK1JJWtfzxsY",
+          "input": {
+            "course_codes": [
+              "CSE 999"
+            ],
+            "delivery_method": null
+          },
+          "name": "search_sections",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "request_messages": [
+        {
+          "role": "user",
+          "content": "Add CSE 999 to my schedule"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "id": "toolu_01AAbTaWDhGbVK1JJWtfzxsY",
+              "input": {
+                "course_codes": [
+                  "CSE 999"
+                ],
+                "delivery_method": null
+              },
+              "name": "search_sections",
+              "type": "tool_use",
+              "caller": {
+                "type": "direct"
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "toolu_01AAbTaWDhGbVK1JJWtfzxsY",
+              "content": "{\"courses\": [], \"not_found\": [\"CSE 999\"]}"
+            }
+          ]
+        }
+      ],
+      "text": [
+        "I couldn't find CS",
+        "E 999 in the",
+        " Winter 2027 catal",
+        "og, so I ha",
+        "ven't added it to your",
+        " schedule. Which course did",
+        " you mean? If",
+        " you give me a",
+        " different code",
+        " or a course",
+        " title",
+        ", I'",
+        "ll look",
+        " it up."
+      ],
+      "content": [
+        {
+          "text": "I couldn't find CSE 999 in the Winter 2027 catalog, so I haven't added it to your schedule. Which course did you mean? If you give me a different code or a course title, I'll look it up.",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    }
+  ]
+}

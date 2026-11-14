@@ -1,7 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { api, unwrap } from "./client";
-import type { AuditRequirement, DegreeAudit } from "./schemas";
+import type {
+  AuditRequirement,
+  BuildSchedulesResponse,
+  ConstraintSet,
+  DegreeAudit,
+} from "./schemas";
 
 export const queryKeys = {
   audit: ["audit"] as const,
@@ -39,5 +44,20 @@ export function useDeleteMyData() {
       unwrap(await api.DELETE("/api/me"));
     },
     onSuccess: () => queryClient.clear(),
+  });
+}
+
+/**
+ * Saves the edited rules (`PUT /api/constraints`) and rebuilds the schedules
+ * (`POST /api/schedules/build`). Used when a rule chip is removed; no Claude call.
+ */
+export function useRebuildSchedules() {
+  return useMutation<BuildSchedulesResponse, Error, ConstraintSet>({
+    mutationFn: async (constraints) => {
+      unwrap(await api.PUT("/api/constraints", { body: constraints }));
+      return unwrap(
+        await api.POST("/api/schedules/build", { body: { constraints, max_results: 3 } }),
+      );
+    },
   });
 }
