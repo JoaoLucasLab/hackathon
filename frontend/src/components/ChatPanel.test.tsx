@@ -274,4 +274,70 @@ describe("ChatPanel on the planner", () => {
     }
     for (const button of screen.getAllByRole("button")) expect(reached).toContain(button);
   });
+
+  describe("quick replies (AI-07)", () => {
+    const question: Event[] = [
+      { type: "text", text: "Which track are you on?" },
+      { type: "done", data: { quick_replies: ["Fall & Winter", "Winter & Spring", "Online student"] } },
+    ];
+
+    it("shows the fixed answers and sends the clicked one as the student's message", async () => {
+      let n = 0;
+      const calls = fakeBackend({
+        "POST /api/chat": () =>
+          sse(n++ === 0 ? question : [{ type: "text", text: "How many credits do you want?" }, { type: "done" }]),
+      });
+      const user = await ask("Help me plan my semester");
+
+      const replies = within(await screen.findByRole("list", { name: "Quick replies" }));
+      expect(replies.getAllByRole("button").map((b) => b.textContent)).toEqual([
+        "Fall & Winter",
+        "Winter & Spring",
+        "Online student",
+      ]);
+      await user.click(replies.getByRole("button", { name: "Winter & Spring" }));
+
+      await screen.findByText("How many credits do you want?");
+      expect(calls.filter((c) => c.path === "/api/chat").map((c) => c.body)).toEqual([
+        { message: "Help me plan my semester" },
+        { message: "Winter & Spring" },
+      ]);
+      // It is in the conversation like a typed message, and the old buttons are gone.
+      expect(screen.getByText("Winter & Spring")).toBeInTheDocument();
+      expect(screen.queryByRole("list", { name: "Quick replies" })).not.toBeInTheDocument();
+    });
+
+    it("can be used with the keyboard only", async () => {
+      let n = 0;
+      const calls = fakeBackend({
+        "POST /api/chat": () => sse(n++ === 0 ? question : [{ type: "text", text: "Got it." }, { type: "done" }]),
+      });
+      const user = await ask("Help me plan my semester");
+      const first = await screen.findByRole("button", { name: "Fall & Winter" });
+      first.focus();
+      await user.tab();
+      expect(screen.getByRole("button", { name: "Winter & Spring" })).toHaveFocus();
+      await user.keyboard("{Enter}");
+      await screen.findByText("Got it.");
+      expect(calls.filter((c) => c.path === "/api/chat")[1]?.body).toEqual({ message: "Winter & Spring" });
+    });
+
+    it("shows none when the reply has no fixed answers, and keeps a typed draft", async () => {
+      fakeBackend({ "POST /api/chat": () => sse(question) });
+      const user = await ask("Help me plan my semester");
+      await screen.findByRole("list", { name: "Quick replies" });
+      await user.type(screen.getByLabelText(/what you want in your schedule/i), "I am not sure");
+      expect(screen.getByLabelText(/what you want in your schedule/i)).toHaveValue("I am not sure");
+    });
+
+    it("ignores a malformed list", async () => {
+      fakeBackend({
+        "POST /api/chat": () =>
+          sse([{ type: "text", text: "Which days?" }, { type: "done", data: { quick_replies: "Fridays" } }]),
+      });
+      await ask("Help me plan my semester");
+      await screen.findByText("Which days?");
+      expect(screen.queryByRole("list", { name: "Quick replies" })).not.toBeInTheDocument();
+    });
+  });
 });
