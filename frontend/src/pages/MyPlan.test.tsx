@@ -53,20 +53,49 @@ describe("My plan", () => {
     expect(await screen.findByRole("heading", { name: "Winter 2027 plan" })).toBeInTheDocument();
   });
 
-  it("shows the confirmed schedule read-only: calendar, classes, professors, advising", async () => {
+  it("shows only the confirmed week, read-only, with advising", async () => {
     backend(() => json(PLAN));
     renderApp("/plan");
     expect(await screen.findByRole("heading", { name: "Winter 2027 plan" })).toBeInTheDocument();
+    expect(screen.getByRole("group", { name: "Week at a glance" })).toBeInTheDocument();
     expect(screen.getAllByTestId("calendar-event").length).toBeGreaterThan(0);
-    const classes = screen.getByRole("list", { name: "Classes" });
-    expect(within(classes).getAllByRole("listitem").length).toBeGreaterThanOrEqual(PLAN.classes.length);
-    expect(await screen.findAllByText("See on Rate My Professors")).not.toHaveLength(0);
+    const classes = screen.getByRole("list", { name: "Classes at a glance" });
+    expect(within(classes).getAllByRole("listitem")).toHaveLength(PLAN.classes.length);
+    // Each class names its section and professor.
+    expect(within(classes).getByText("CSE 212-02")).toBeInTheDocument();
+    expect(await within(classes).findByText("Taught by Ruth Okafor")).toBeInTheDocument();
+    // Just the calendar: no class detail card and no "why" below it.
+    expect(screen.queryByRole("list", { name: "Classes" })).not.toBeInTheDocument();
+    expect(screen.queryByText("Why this schedule")).not.toBeInTheDocument();
     expect(screen.getAllByText(/Confirm with BYU-Idaho Academic Advising\./).length).toBeGreaterThan(0);
     expect(screen.getByText(/This does not register you for classes/)).toBeInTheDocument();
     // Read-only: no way back to a list of options, no rule chips.
     expect(screen.queryByRole("button", { name: "All schedules" })).not.toBeInTheDocument();
     expect(screen.queryByRole("list", { name: "Schedule options" })).not.toBeInTheDocument();
     expect(screen.queryByRole("group", { name: /rules/i })).not.toBeInTheDocument();
+  });
+
+  it("Start a new plan clears the plan and the chat, then opens an empty chat", async () => {
+    let saved: Schedule | null = PLAN;
+    const calls = fakeBackend({
+      "GET /api/plan": () => (saved ? json(saved) : json({ detail: "No plan" }, 404)),
+      "DELETE /api/chat/history": () => new Response(null, { status: 204 }),
+      "DELETE /api/plan": () => {
+        saved = null;
+        return new Response(null, { status: 204 });
+      },
+      "GET /api/professors": () => json(professors),
+    });
+    const user = userEvent.setup();
+    renderApp("/plan");
+    await user.click(await screen.findByRole("button", { name: "Start a new plan" }));
+    expect(await screen.findByLabelText(/what you want in your schedule/i)).toBeInTheDocument();
+    expect(calls.filter((c) => c.method === "DELETE").map((c) => c.path)).toEqual([
+      "/api/chat/history",
+      "/api/plan",
+    ]);
+    await user.click(screen.getByRole("link", { name: "My plan" }));
+    expect(await screen.findByText("No plan confirmed yet. Plan it in the chat.")).toBeInTheDocument();
   });
 
   it("sends the old Schedules link to My plan", async () => {

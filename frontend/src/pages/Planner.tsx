@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { queryKeys } from "../api/queries";
+import { queryKeys, usePlan } from "../api/queries";
 import { api, ApiError, unwrap } from "../api/client";
 import { forgetPlanningSetup, hasPlanningSetup } from "../api/planningSetup";
 import { usePlanningState, type Results } from "./PlanningState";
@@ -10,6 +10,7 @@ import { useRebuildSchedules } from "../api/queries";
 import type { ChatEvent, ConstraintSet, DegreeAudit, Relaxation, Schedule } from "../api/schemas";
 import { FloatingClassTickets } from "../components/FloatingClassTickets";
 import { ChatPanel } from "../components/ChatPanel";
+import { ConfirmedPlan } from "../components/ConfirmedPlan";
 import { ConstraintChips } from "../components/ConstraintChips";
 import { ScheduleCard } from "../components/ScheduleCard";
 import { ScheduleDetail } from "../components/ScheduleDetail";
@@ -58,7 +59,7 @@ function seatsAsOf(schedules: Schedule[]): string | null {
 }
 
 export function Planner() {
-  const { results, setResults } = usePlanningState();
+  const { results, setResults, busy } = usePlanningState();
   const location = useLocation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -69,6 +70,10 @@ export function Planner() {
   const built = useRef(false);
   // AI-08: the schedule stays in the chat; the page never moves to another tab.
   const oneAtATime = conversationalPlanner();
+  const plan = usePlan(oneAtATime);
+  // AI-08: once a plan is confirmed (and its reply has finished), the Plan tab shows
+  // the plan and its week instead of the chat. "Start a new plan" brings the chat back.
+  const confirmed = oneAtATime && !isSchedules && !busy && plan.data ? plan.data : null;
 
   function onEvent(event: ChatEvent) {
     if (event.type === "text" || event.type === "tool_call") setAsked(true);
@@ -146,13 +151,14 @@ export function Planner() {
 
   return (
     <PageFrame
-      title={selected && isSchedules ? undefined : isSchedules ? (results?.schedules.length ? `${results.schedules.length === 3 ? "Three" : results.schedules.length} schedules fit` : "Your schedules") : "Plan a semester that fits your week"}
-      lead={isSchedules ? (selected ? undefined : "Winter 2027, built from your degree audit and preferences.") : oneAtATime ? "Tell it what you want in plain words. It asks what it needs, then shows one Winter 2027 schedule at a time, each class with the requirement it fills." : "Tell it what you want in plain words. Compare Winter 2027 schedules built from your degree audit, each class with the requirement it fills."}
-      home={!isSchedules}
-      footnote={<>{isSchedules && seats && <>{seats} </>}Confirm with BYU-Idaho Academic Advising.</>}
+      title={confirmed || (selected && isSchedules) ? undefined : isSchedules ? (results?.schedules.length ? `${results.schedules.length === 3 ? "Three" : results.schedules.length} schedules fit` : "Your schedules") : "Plan a semester that fits your week"}
+      lead={confirmed ? undefined : isSchedules ? (selected ? undefined : "Winter 2027, built from your degree audit and preferences.") : oneAtATime ? "Tell it what you want in plain words. It asks what it needs, then shows one Winter 2027 schedule at a time, each class with the requirement it fills." : "Tell it what you want in plain words. Compare Winter 2027 schedules built from your degree audit, each class with the requirement it fills."}
+      home={!isSchedules && !confirmed}
+      footnote={<>{isSchedules && seats && <>{seats} </>}{confirmed && <>This does not register you for classes. </>}Confirm with BYU-Idaho Academic Advising.</>}
     >
-      {!isSchedules && <FloatingClassTickets audit={queryClient.getQueryData<DegreeAudit>(queryKeys.audit)} />}
-      <div hidden={isSchedules} className="mx-auto w-full max-w-[680px] md:mt-2">
+      {confirmed && <ConfirmedPlan schedule={confirmed} />}
+      {!isSchedules && !confirmed && <FloatingClassTickets audit={queryClient.getQueryData<DegreeAudit>(queryKeys.audit)} />}
+      <div hidden={isSchedules || Boolean(confirmed)} className="mx-auto w-full max-w-[680px] md:mt-2">
         <ChatPanel onEvent={onEvent}
           beforeSend={async (signal) => {
             if (queryClient.getQueryData(queryKeys.audit)) return true;

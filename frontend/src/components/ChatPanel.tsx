@@ -9,6 +9,7 @@ import type { ChatEvent, Relaxation, SavedChatTurn, Schedule } from "../api/sche
 import { conversationalPlanner } from "../config";
 import { usePlanningState, type ChatTurn } from "../pages/PlanningState";
 import { ChatScheduleCard } from "./ChatScheduleCard";
+import { StartNewPlan } from "./StartNewPlan";
 import { plural } from "./scheduleFormat";
 import { Icon, ICON_STROKE } from "./ui/Icon";
 
@@ -340,6 +341,9 @@ export function ChatPanel({ onEvent, beforeSend }: ChatPanelProps) {
         </div>
       </form>
 
+      {oneAtATime && turns.length > 0 && !busy && (
+        <div className="flex justify-center"><StartNewPlan variant="text" /></div>
+      )}
       <p className="chat-audit-hint text-center text-[13px] text-muted">No audit yet? <Link to="/consent" className="text-ink underline underline-offset-2">Try the sample audit</Link></p>
       {turns.length === 0 && (
         <ul aria-label="Suggestions" className="chat-starters flex flex-wrap justify-center gap-x-7 gap-y-2 pt-8 md:pt-10">

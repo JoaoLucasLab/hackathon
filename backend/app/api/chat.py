@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Response
 from fastapi.responses import StreamingResponse
 
 from app.api import audit_store
@@ -74,6 +74,14 @@ def chat(body: ChatRequest, request: Request) -> StreamingResponse:
 def chat_history(request: Request) -> ChatHistory:
     """The conversation as the chat showed it, so a reload keeps it (AI-08)."""
     return ChatHistory(turns=get_session(request).transcript)
+
+
+@router.delete("/chat/history", status_code=204, response_class=Response)
+def clear_chat_history(request: Request) -> Response:
+    """Starts a new conversation: drops the transcript, what Claude saw and the rules.
+    The audit, favorites and the confirmed plan stay (they live outside the chat)."""
+    forget(request.cookies.get("sid", "local"))
+    return Response(status_code=204)
 
 
 @router.get("/constraints", response_model=ConstraintSet)
