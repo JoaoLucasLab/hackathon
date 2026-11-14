@@ -1,8 +1,10 @@
-import { LoaderCircle, Send } from "lucide-react";
-import { useId, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
+import { ArrowUp, LoaderCircle, Plus } from "lucide-react";
+import { useId, useRef, type FormEvent, type KeyboardEvent } from "react";
 
+import { Link } from "react-router-dom";
 import { streamChat } from "../api/chat";
 import type { ChatEvent } from "../api/schemas";
+import { usePlanningState, type ChatTurn } from "../pages/PlanningState";
 import { Icon, ICON_STROKE } from "./ui/Icon";
 
 /** What the student sees while a tool runs. Never the raw tool name or arguments. */
@@ -25,69 +27,79 @@ const STARTERS = [
 ];
 const STARTER_COLORS = ["bg-sq-sage", "bg-sq-clay", "bg-sq-sky", "bg-sq-butter"];
 
-interface Turn {
-  id: number;
-  role: "student" | "assistant";
-  text: string;
-  status?: string;
-  error?: string;
-}
-
 interface ChatPanelProps {
   /** Every event, so the page can show chips and schedule cards. */
   onEvent?: (event: ChatEvent) => void;
+  beforeSend?: (signal: AbortSignal) => boolean | Promise<boolean>;
 }
 
-export function ChatPanel({ onEvent }: ChatPanelProps) {
+export function ChatPanel({ onEvent, beforeSend }: ChatPanelProps) {
   const inputId = useId();
-  const [draft, setDraft] = useState("");
-  const [turns, setTurns] = useState<Turn[]>([]);
-  const [busy, setBusy] = useState(false);
-  const nextId = useRef(0);
+  const {
+    draft, setDraft, turns, setTurns, busy, setBusy,
+    sendError, setSendError, nextTurnId, activeRequest,
+  } = usePlanningState();
   const lastEvent = useRef<ChatEvent["type"] | null>(null);
-
-  const updateLast = (patch: (t: Turn) => Turn) =>
-    setTurns((all) => [...all.slice(0, -1), patch(all[all.length - 1] as Turn)]);
 
   async function send(message: string) {
     const text = message.trim();
-    if (!text || busy) return;
-    setDraft("");
+    if (!text || activeRequest.current) return;
+    const controller = new AbortController();
+    activeRequest.current = controller;
     setBusy(true);
-    setTurns((all) => [
-      ...all,
-      { id: nextId.current++, role: "student", text },
-      { id: nextId.current++, role: "assistant", text: "" },
-    ]);
-    lastEvent.current = null;
+    setSendError(null);
+    let assistantId: number | null = null;
+    const updateReply = (patch: (turn: ChatTurn) => ChatTurn) =>
+      setTurns((all) => all.map((turn) => turn.id === assistantId ? patch(turn) : turn));
+
     try {
+      if (beforeSend && !(await beforeSend(controller.signal))) return;
+      if (controller.signal.aborted) return;
+      setDraft((current) => current === message ? "" : current);
+      const studentId = nextTurnId.current++;
+      const replyId = nextTurnId.current++;
+      assistantId = replyId;
+      setTurns((all) => [
+        ...all,
+        { id: studentId, role: "student", text },
+        { id: replyId, role: "assistant", text: "" },
+      ]);
+      lastEvent.current = null;
       await streamChat(text, (event) => {
+        if (controller.signal.aborted) return;
         onEvent?.(event);
         const afterTool = lastEvent.current === "tool_result" || lastEvent.current === "tool_call";
         lastEvent.current = event.type;
         if (event.type === "text") {
-          // Text from a new step after a tool runs starts a new paragraph.
-          updateLast((t) => ({
-            ...t,
-            text: t.text + (afterTool && t.text ? "\n\n" : "") + (event.text ?? ""),
+          updateReply((turn) => ({
+            ...turn,
+            text: turn.text + (afterTool && turn.text ? "\n\n" : "") + (event.text ?? ""),
             status: undefined,
           }));
         } else if (event.type === "tool_call") {
-          updateLast((t) => ({ ...t, status: TOOL_STATUS[event.tool ?? ""] ?? "Working" }));
+          updateReply((turn) => ({ ...turn, status: TOOL_STATUS[event.tool ?? ""] ?? "Working" }));
         } else if (event.type === "error") {
-          updateLast((t) => ({ ...t, status: undefined, error: event.text ?? "Something went wrong." }));
+          updateReply((turn) => ({ ...turn, status: undefined, error: event.text ?? "Something went wrong." }));
         } else if (event.type === "done") {
-          updateLast((t) => ({ ...t, status: undefined }));
+          updateReply((turn) => ({ ...turn, status: undefined }));
         }
-      });
+      }, controller.signal);
     } catch {
-      updateLast((t) => ({
-        ...t,
-        status: undefined,
-        error: "We couldn't reach the assistant. Check your connection and send it again.",
-      }));
+      if (controller.signal.aborted) return;
+      if (assistantId === null) {
+        setSendError("We couldn't restore your planning session. Check your connection and send it again.");
+      } else {
+        updateReply((turn) => ({
+          ...turn,
+          status: undefined,
+          error: "We couldn't reach the assistant. Check your connection and send it again.",
+        }));
+      }
     } finally {
-      setBusy(false);
+      if (activeRequest.current === controller) {
+        activeRequest.current = null;
+        setBusy(false);
+      }
     }
   }
 
@@ -140,6 +152,7 @@ export function ChatPanel({ onEvent }: ChatPanelProps) {
         </ol>
       )}
 
+      {sendError && <p role="alert" className="text-sm">{sendError}</p>}
       <form
         onSubmit={onSubmit}
         className="rounded-card border border-line bg-surface shadow-[0_0_0_6px_var(--halo)] transition-colors duration-150 focus-within:border-ink"
@@ -156,7 +169,8 @@ export function ChatPanel({ onEvent }: ChatPanelProps) {
           placeholder="No classes before 10, Fridays off, 12 to 15 credits"
           className="block w-full resize-none rounded-t-card bg-transparent px-5 pt-4 text-[17px] outline-none placeholder:text-muted"
         />
-        <div className="flex justify-end px-3 pb-3">
+        <div className="flex items-center justify-between px-4 pb-3">
+          <Link to="/consent" className="inline-flex min-h-11 items-center gap-2 rounded-btn border border-line px-3 text-[13px] hover:bg-field"><Plus size={16} aria-hidden="true" />Add degree audit</Link>
           <button
             type="submit"
             aria-label={busy ? "Sending" : "Send"}
@@ -171,20 +185,21 @@ export function ChatPanel({ onEvent }: ChatPanelProps) {
                 className="motion-safe:animate-spin"
               />
             ) : (
-              <Send size={18} strokeWidth={ICON_STROKE} aria-hidden="true" />
+              <ArrowUp size={18} strokeWidth={ICON_STROKE} aria-hidden="true" />
             )}
           </button>
         </div>
       </form>
 
+      <p className="text-center text-[13px] text-muted">No audit yet? <Link to="/consent" className="text-ink underline underline-offset-2">Try the sample audit</Link></p>
       {turns.length === 0 && (
-        <ul aria-label="Suggestions" className="flex flex-wrap justify-center gap-x-5 gap-y-2">
+        <ul aria-label="Suggestions" className="flex flex-wrap justify-center gap-x-7 gap-y-2 pt-8 md:pt-10">
           {STARTERS.map((s, i) => (
             <li key={s.label}>
               <button
                 type="button"
                 onClick={() => setDraft(s.text)}
-                className="flex min-h-11 items-center gap-2 font-serif text-[17px] text-muted transition-colors duration-150 hover:text-ink"
+                className="flex min-h-11 items-center gap-2 font-serif text-[19px] text-ink transition-colors duration-150 hover:text-ink"
               >
                 <span aria-hidden="true" className={`size-4 rounded-[4px] ${STARTER_COLORS[i]}`} />
                 {s.label}

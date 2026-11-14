@@ -10,14 +10,14 @@ export function professorName(p: Professor): string {
  * A professor with a favorite star and a plain "See on Rate My Professors" link.
  * No ratings appear anywhere (AGENTS.md).
  */
-export function ProfessorChip({ professor }: { professor: Professor }) {
+export function ProfessorChip({ professor, card = false }: { professor: Professor; card?: boolean }) {
   const toggle = useToggleFavorite();
   const name = professorName(professor);
   const starred = professor.is_favorite ?? false;
 
   return (
     <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-      <span className="flex items-center gap-1">
+      <span className={card ? "absolute right-5 top-5" : "flex items-center gap-1"}>
         <button
           type="button"
           aria-label={starred ? `Unstar ${name}` : `Star ${name}`}
@@ -32,7 +32,7 @@ export function ProfessorChip({ professor }: { professor: Professor }) {
             className={starred ? "fill-star text-star" : "text-muted"}
           />
         </button>
-        <span className="text-sm font-medium">{name}</span>
+        <span className={card ? "sr-only" : "text-sm font-medium"}>{name}</span>
       </span>
       <a
         href={professor.rmp_url}

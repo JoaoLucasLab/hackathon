@@ -6,6 +6,7 @@ import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
 import { Icon, IconTile, type IconName } from "../components/ui/Icon";
 import { PageFrame } from "../components/ui/PageFrame";
+import { usePlanningState } from "./PlanningState";
 import { FEATURES } from "../config";
 
 const facts: { icon: IconName; text: string }[] = [
@@ -33,10 +34,11 @@ export function Consent() {
   const navigate = useNavigate();
   const location = useLocation();
   const start = useStartWithSampleAudit();
+  const { setResults, clearChat } = usePlanningState();
   const justDeleted = (location.state as { deleted?: boolean } | null)?.deleted === true;
 
   const useSample = () =>
-    start.mutate(undefined, { onSuccess: () => navigate("/requirements") });
+    start.mutate(undefined, { onSuccess: () => { clearChat(); setResults(null); navigate("/requirements"); } });
 
   return (
     <PageFrame

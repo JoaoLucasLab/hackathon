@@ -1,4 +1,4 @@
-import { screen, waitFor, within } from "@testing-library/react";
+import { act, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 
@@ -36,7 +36,8 @@ const happyStream: Event[] = [
 
 async function ask(message = MESSAGE) {
   const user = userEvent.setup();
-  renderApp("/planner");
+  const { queryClient } = renderApp("/planner");
+  queryClient.setQueryData(["audit"], { loaded: true });
   await user.type(screen.getByLabelText(/what you want in your schedule/i), message);
   await user.click(screen.getByRole("button", { name: "Send" }));
   return user;
@@ -52,11 +53,12 @@ describe("ChatPanel on the planner", () => {
     expect(reply.textContent).toBe("Let me check.\n\nHere are three schedules that fit your rules.");
     expect(calls.find((c) => c.path === "/api/chat")?.body).toEqual({ message: MESSAGE });
 
-    const cards = within(screen.getByRole("list", { name: "Schedule options" })).getAllByRole(
+    const cards = within(await screen.findByRole("list", { name: "Schedule options" })).getAllByRole(
       "article",
     );
     expect(cards).toHaveLength(3);
     const first = cards[0] as HTMLElement;
+    await userEvent.click(within(first).getByText("Preview classes"));
     expect(within(first).getByText("Option 1")).toBeInTheDocument();
     expect(within(first).getByText("CSE 212-02")).toBeInTheDocument(); // course + section
     expect(within(first).getAllByText(/\d+ credits?$/).length).toBeGreaterThan(0); // credits
@@ -64,6 +66,116 @@ describe("ChatPanel on the planner", () => {
 
     expect(screen.getByText(/Confirm with BYU-Idaho Academic Advising\./)).toBeInTheDocument();
     expect(screen.getByText(/Seats as of/)).toBeInTheDocument();
+  });
+
+  it("keeps schedules when switching through Professors, and clears them after deleting data", async () => {
+    fakeBackend({
+      "POST /api/chat": () => sse(happyStream),
+      "GET /api/professors": () => json([]),
+      "DELETE /api/me": () => new Response(null, { status: 204 }),
+    });
+    const user = await ask();
+    await screen.findByRole("list", { name: "Schedule options" });
+    await user.click(screen.getByRole("link", { name: "Professors" }));
+    await screen.findByText(/No professors match this topic yet/);
+    await user.click(screen.getByRole("link", { name: "Schedules" }));
+    expect(screen.getByRole("list", { name: "Schedule options" })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Delete my data" }));
+    await screen.findByRole("heading", { name: "Before you start" });
+    await user.click(screen.getByRole("link", { name: "Schedules" }));
+    expect(screen.getByText(/No schedules yet/)).toBeInTheDocument();
+  });
+
+  it("keeps the conversation and unsent draft through Professors and Schedules", async () => {
+    fakeBackend({
+      "POST /api/chat": () => sse([{ type: "text", text: "Which days would you prefer?" }, { type: "done" }]),
+      "GET /api/professors": () => json([]),
+    });
+    const user = await ask("Help me plan");
+    await screen.findByText("Which days would you prefer?");
+    await user.type(screen.getByLabelText(/what you want in your schedule/i), "Keep Thursday free");
+    await user.click(screen.getByRole("link", { name: "Professors" }));
+    await screen.findByText(/No professors match this topic yet/);
+    await user.click(screen.getByRole("link", { name: "Schedules" }));
+    await user.click(screen.getByRole("link", { name: "Plan" }));
+    expect(screen.getByText("Help me plan")).toBeInTheDocument();
+    expect(screen.getByText("Which days would you prefer?")).toBeInTheDocument();
+    expect(screen.getByLabelText(/what you want in your schedule/i)).toHaveValue("Keep Thursday free");
+    await user.click(screen.getByRole("button", { name: "Send" }));
+    expect(await screen.findByText("Keep Thursday free")).toBeInTheDocument();
+    expect(screen.getAllByText("Which days would you prefer?")).toHaveLength(2);
+  });
+
+  it("continues a streamed reply across tab changes and prevents duplicate sends", async () => {
+    let output!: ReadableStreamDefaultController<Uint8Array>;
+    const encoder = new TextEncoder();
+    const calls = fakeBackend({
+      "POST /api/chat": () => new Response(new ReadableStream<Uint8Array>({ start(controller) { output = controller; } })),
+      "GET /api/professors": () => json([]),
+    });
+    const user = await ask("Keep my mornings free");
+    await waitFor(() => expect(output).toBeDefined());
+    await act(async () => { output.enqueue(encoder.encode('data: {"type":"text","text":"Looking at "}\n\n')); });
+    await screen.findByText("Looking at");
+    await user.click(screen.getByRole("link", { name: "Professors" }));
+    await screen.findByText(/No professors match this topic yet/);
+    await user.click(screen.getByRole("link", { name: "Plan" }));
+    expect(screen.getByRole("button", { name: "Sending" })).toBeDisabled();
+    await user.type(screen.getByLabelText(/what you want in your schedule/i), "Next question{enter}");
+    expect(calls.filter((c) => c.path === "/api/chat")).toHaveLength(1);
+    await act(async () => {
+      output.enqueue(encoder.encode('data: {"type":"text","text":"your options."}\n\ndata: {"type":"done"}\n\n'));
+      output.close();
+    });
+    expect(await screen.findByText("Looking at your options.")).toBeInTheDocument();
+    expect(screen.getByText("Keep my mornings free")).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByRole("button", { name: "Send" })).toBeEnabled());
+  });
+
+  it("clears conversation, draft, and setup marker when data is deleted", async () => {
+    localStorage.setItem("planning-setup-complete", "true");
+    fakeBackend({
+      "POST /api/chat": () => sse([{ type: "text", text: "Your previous answer." }, { type: "done" }]),
+      "DELETE /api/me": () => new Response(null, { status: 204 }),
+    });
+    const user = await ask("My previous question");
+    await screen.findByText("Your previous answer.");
+    await user.type(screen.getByLabelText(/what you want in your schedule/i), "Unsent draft");
+    await user.click(screen.getByRole("button", { name: "Delete my data" }));
+    await screen.findByRole("heading", { name: "Before you start" });
+    expect(localStorage.getItem("planning-setup-complete")).toBeNull();
+    await user.click(screen.getByRole("link", { name: "Plan" }));
+    expect(screen.queryByText("Your previous answer.")).not.toBeInTheDocument();
+    expect(screen.queryByText("My previous question")).not.toBeInTheDocument();
+    expect(screen.getByLabelText(/what you want in your schedule/i)).toHaveValue("");
+  });
+
+  it("aborts an active reply on deletion and ignores late schedule results", async () => {
+    let output!: ReadableStreamDefaultController<Uint8Array>;
+    let requestSignal!: AbortSignal;
+    fakeBackend({
+      "POST /api/chat": (request) => {
+        requestSignal = request.signal;
+        return new Response(new ReadableStream<Uint8Array>({ start(controller) { output = controller; } }));
+      },
+      "DELETE /api/me": () => new Response(null, { status: 204 }),
+    });
+    const user = await ask("A schedule please");
+    await waitFor(() => expect(output).toBeDefined());
+    await user.click(screen.getByRole("button", { name: "Delete my data" }));
+    await screen.findByRole("heading", { name: "Before you start" });
+    expect(requestSignal.aborted).toBe(true);
+    await act(async () => {
+      const events = [{ type: "tool_result", tool: "build_schedules", data: buildResult }, { type: "done" }];
+      output.enqueue(new TextEncoder().encode(events.map((event) => `data: ${JSON.stringify(event)}\n\n`).join("")));
+      output.close();
+    });
+    expect(screen.getByRole("heading", { name: "Before you start" })).toBeInTheDocument();
+    await user.click(screen.getByRole("link", { name: "Schedules" }));
+    expect(screen.getByText(/No schedules yet/)).toBeInTheDocument();
+    await user.click(screen.getByRole("link", { name: "Plan" }));
+    expect(screen.queryByText("A schedule please")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Send" })).toBeDisabled();
   });
 
   it("shows the three rules as chips", async () => {

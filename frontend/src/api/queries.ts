@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { api, unwrap } from "./client";
+import { forgetPlanningSetup, rememberPlanningSetup } from "./planningSetup";
 import type {
   AuditRequirement,
   BuildSchedulesResponse,
@@ -43,6 +44,7 @@ export function useStartWithSampleAudit() {
       return unwrap(await api.POST("/api/audit/sample"));
     },
     onSuccess: (audit) => {
+      rememberPlanningSetup();
       queryClient.setQueryData(queryKeys.audit, audit);
       void queryClient.invalidateQueries({ queryKey: queryKeys.remaining });
     },
@@ -56,7 +58,10 @@ export function useDeleteMyData() {
     mutationFn: async () => {
       unwrap(await api.DELETE("/api/me"));
     },
-    onSuccess: () => queryClient.clear(),
+    onSuccess: () => {
+      forgetPlanningSetup();
+      queryClient.clear();
+    },
   });
 }
 

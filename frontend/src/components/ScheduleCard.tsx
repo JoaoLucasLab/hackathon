@@ -1,3 +1,4 @@
+import { ChevronRight } from "lucide-react";
 import type { Schedule } from "../api/schemas";
 import { formatTime } from "./ConstraintChips";
 import { BlockTag, DAYS, blockLabel, plural, timedMeetings, whenLine } from "./scheduleFormat";
@@ -64,10 +65,12 @@ export function ScheduleCard({ schedule, onSelect }: ScheduleCardProps) {
               {end ? `, done by ${formatTime(end)}` : ""}
             </p>
           </div>
-          <WeekDots schedule={schedule} />
+          {onSelect && <Button variant="text" onClick={() => onSelect(schedule)} aria-label={`See details for option ${schedule.rank}`}><ChevronRight size={20} aria-hidden="true" /></Button>}
         </div>
         <div className="slip-perf" />
-        <ul className="flex flex-col px-6 py-2">
+        <div className="flex items-center justify-between gap-4 px-6 py-4"><WeekDots schedule={schedule} /><span className="text-[13px] text-muted">{plural(schedule.classes.length, "class")}</span></div>
+        <details className="px-6 pb-3"><summary className="min-h-11 cursor-pointer py-3 text-sm text-muted">Preview classes</summary>
+        <ul className="flex flex-col py-2">
           {schedule.classes.map((c) => {
             const block = blockLabel(c.section);
             return (
@@ -101,17 +104,7 @@ export function ScheduleCard({ schedule, onSelect }: ScheduleCardProps) {
             );
           })}
         </ul>
-        {onSelect && (
-          <div className="flex justify-end border-t border-line-soft px-6 py-2">
-            <Button
-              variant="text"
-              onClick={() => onSelect(schedule)}
-              aria-label={`See details for option ${schedule.rank}`}
-            >
-              See details
-            </Button>
-          </div>
-        )}
+        </details>
       </div>
     </article>
   );

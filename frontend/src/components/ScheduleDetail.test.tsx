@@ -211,7 +211,8 @@ async function chatOnce(result: Record<string, unknown>, extra: Record<string, H
     ...extra,
   });
   const user = userEvent.setup();
-  renderApp("/planner");
+  const { queryClient } = renderApp("/planner");
+  queryClient.setQueryData(["audit"], auditFixture);
   await user.type(screen.getByLabelText(/what you want in your schedule/i), "No Fridays");
   await user.click(screen.getByRole("button", { name: "Send" }));
   return { calls, user };

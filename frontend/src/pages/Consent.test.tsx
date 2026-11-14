@@ -22,7 +22,7 @@ function backend() {
 describe("Consent screen", () => {
   it("says what is stored, that the audit goes to the Claude API, that the PDF is deleted, and how to delete all data", () => {
     backend();
-    renderApp("/");
+    renderApp("/consent");
 
     expect(screen.getByRole("heading", { level: 1, name: "Before you start" })).toBeInTheDocument();
     expect(screen.getByText(/we store your degree audit/i)).toBeInTheDocument();
@@ -33,7 +33,7 @@ describe("Consent screen", () => {
 
   it("states that the app never asks for a BYU-Idaho username or password, and has no such field", () => {
     backend();
-    const { container } = renderApp("/");
+    const { container } = renderApp("/consent");
 
     expect(
       screen.getByText(/never asks for your byu-idaho username or password/i),
@@ -46,7 +46,7 @@ describe("Consent screen", () => {
   it("keeps every continue button disabled until the box is checked", async () => {
     backend();
     const user = userEvent.setup();
-    renderApp("/");
+    renderApp("/consent");
 
     const box = screen.getByRole("checkbox", {
       name: "I understand what is stored and how to delete it",
@@ -65,7 +65,7 @@ describe("Consent screen", () => {
   it("'Use sample audit' records consent, loads the fixture audit and opens 'What you still need'", async () => {
     const calls = backend();
     const user = userEvent.setup();
-    renderApp("/");
+    renderApp("/consent");
 
     await user.click(screen.getByRole("checkbox"));
     await user.click(screen.getByRole("button", { name: "Use sample audit" }));
@@ -73,18 +73,18 @@ describe("Consent screen", () => {
     expect(
       await screen.findByRole("heading", { level: 1, name: "What you still need" }),
     ).toBeInTheDocument();
-    expect(calls.map((c) => `${c.method} ${c.path}`)).toEqual([
+    await waitFor(() => expect(calls.map((c) => `${c.method} ${c.path}`)).toEqual([
       "POST /api/session",
       "POST /api/audit/sample",
       "GET /api/requirements/remaining",
-    ]);
+    ]));
     expect(calls[0].body).toEqual({ consent: true });
   });
 
   it("shows a clear message when the session cannot start, and stays on the consent screen", async () => {
     fakeBackend({ "POST /api/session": () => json({ detail: "down" }, 503) });
     const user = userEvent.setup();
-    renderApp("/");
+    renderApp("/consent");
 
     await user.click(screen.getByRole("checkbox"));
     await user.click(screen.getByRole("button", { name: "Use sample audit" }));
@@ -96,7 +96,7 @@ describe("Consent screen", () => {
   it("reaches every control with Tab, in order, and every field has a label", async () => {
     backend();
     const user = userEvent.setup();
-    renderApp("/");
+    renderApp("/consent");
 
     const box = screen.getByLabelText("I understand what is stored and how to delete it");
     await user.click(box);
@@ -104,6 +104,10 @@ describe("Consent screen", () => {
 
     const expected = [
       screen.getByRole("link", { name: /course planner/i }),
+      screen.getByRole("link", { name: "Plan" }),
+      screen.getByRole("link", { name: "Schedules" }),
+      screen.getByRole("link", { name: "Professors" }),
+      screen.getByRole("button", { name: "Open navigation" }),
       box,
       screen.getByRole("button", { name: "Use sample audit" }),
       screen.getByRole("button", { name: "Delete my data" }),
