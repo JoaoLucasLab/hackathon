@@ -41,8 +41,16 @@ export function fakeBackend(routes: Record<string, Handler>): Call[] {
     vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
       const req = input instanceof Request ? input : new Request(input, init);
       const path = new URL(req.url).pathname;
-      const text = await req.clone().text();
-      calls.push({ method: req.method, path, body: text ? JSON.parse(text) : undefined });
+      const type = req.headers.get("content-type") ?? "";
+      // Multipart bodies (file uploads) are recorded by their content type only:
+      // jsdom files cannot be read back from a Request.
+      let body: unknown;
+      if (type.startsWith("multipart/form-data")) body = "multipart/form-data";
+      else {
+        const text = await req.clone().text();
+        body = text ? JSON.parse(text) : undefined;
+      }
+      calls.push({ method: req.method, path, body });
       const handler = routes[`${req.method} ${path}`];
       if (!handler) return new Response("not found", { status: 404 });
       return handler(req);

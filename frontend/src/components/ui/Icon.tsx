@@ -10,6 +10,7 @@ import {
   Send,
   Star,
   Trash2,
+  Upload,
   type LucideIcon,
 } from "lucide-react";
 
@@ -25,6 +26,7 @@ const icons = {
   external: ExternalLink,
   chevronDown: ChevronDown,
   chevronLeft: ChevronLeft,
+  upload: Upload,
 } satisfies Record<string, LucideIcon>;
 
 export type IconName = keyof typeof icons;

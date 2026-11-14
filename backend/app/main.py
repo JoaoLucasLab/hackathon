@@ -14,6 +14,11 @@ from pydantic.json_schema import models_json_schema
 from app import contracts
 from app.api import routers
 from app.contracts import ChatEvent
+from app.schools.base import School, register_school
+from app.schools.byui.audit_parser import ByuiAuditParser
+
+# AI-04: the audit parser is the only piece of schools/byui wired in so far.
+register_school(School(university_id="byui", name="BYU-Idaho", audit_parser=ByuiAuditParser()))
 
 app = FastAPI(title="Course planner API", version="0.1.0")
 
