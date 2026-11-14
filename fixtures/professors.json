@@ -1,0 +1,432 @@
+[
+  {
+    "id": "p-hale",
+    "first_name": "Marcus",
+    "last_name": "Hale",
+    "middle": null,
+    "department": "Computer Science",
+    "title": "Professor",
+    "bio_summary": "Teaches programming and machine learning; mentors student research projects.",
+    "topic_tags": [
+      "machine learning",
+      "data science",
+      "python",
+      "neural networks"
+    ],
+    "lists_undergrad_research": true,
+    "winter_courses": [
+      "CSE 110",
+      "CSE 111",
+      "CSE 212",
+      "CSE 310",
+      "CSE 450",
+      "CSE 499"
+    ],
+    "sources": [
+      {
+        "kind": "biography",
+        "value": "Teaches programming and machine learning; mentors student research projects.",
+        "source_url": "https://fixtures.invalid/directory/p-hale",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      },
+      {
+        "kind": "interests",
+        "value": "machine learning, data science, python, neural networks",
+        "source_url": "https://fixtures.invalid/directory/p-hale",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      },
+      {
+        "kind": "research",
+        "value": "Mentors undergraduate research.",
+        "source_url": "https://fixtures.invalid/directory/p-hale",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      }
+    ],
+    "rmp_url": "https://www.ratemyprofessors.com/search/professors/0?q=Marcus%20Hale",
+    "is_favorite": false
+  },
+  {
+    "id": "p-okafor",
+    "first_name": "Ruth",
+    "last_name": "Okafor",
+    "middle": "A.",
+    "department": "Computer Science",
+    "title": "Associate Professor",
+    "bio_summary": "Teaches web development with a focus on accessible design.",
+    "topic_tags": [
+      "web development",
+      "accessibility",
+      "javascript",
+      "user experience"
+    ],
+    "lists_undergrad_research": null,
+    "winter_courses": [
+      "CSE 310",
+      "CSE 340",
+      "CSE 341",
+      "WDD 130",
+      "WDD 131",
+      "WDD 231"
+    ],
+    "sources": [
+      {
+        "kind": "biography",
+        "value": "Teaches web development with a focus on accessible design.",
+        "source_url": "https://fixtures.invalid/directory/p-okafor",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      },
+      {
+        "kind": "interests",
+        "value": "web development, accessibility, javascript, user experience",
+        "source_url": "https://fixtures.invalid/directory/p-okafor",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      },
+      {
+        "kind": "research",
+        "value": "",
+        "source_url": "https://fixtures.invalid/directory/p-okafor",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      }
+    ],
+    "rmp_url": "https://www.ratemyprofessors.com/search/professors/0?q=Ruth%20Okafor",
+    "is_favorite": false
+  },
+  {
+    "id": "p-lindqvist",
+    "first_name": "Anna",
+    "last_name": "Lindqvist",
+    "middle": null,
+    "department": "Computer Science",
+    "title": "Professor",
+    "bio_summary": "Worked as a software test engineer before teaching.",
+    "topic_tags": [
+      "software testing",
+      "software engineering",
+      "agile",
+      "devops"
+    ],
+    "lists_undergrad_research": false,
+    "winter_courses": [
+      "CSE 210",
+      "CSE 270",
+      "CSE 300",
+      "CSE 370"
+    ],
+    "sources": [
+      {
+        "kind": "biography",
+        "value": "Worked as a software test engineer before teaching.",
+        "source_url": "https://fixtures.invalid/directory/p-lindqvist",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      },
+      {
+        "kind": "interests",
+        "value": "software testing, software engineering, agile, devops",
+        "source_url": "https://fixtures.invalid/directory/p-lindqvist",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      },
+      {
+        "kind": "research",
+        "value": "",
+        "source_url": "https://fixtures.invalid/directory/p-lindqvist",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      }
+    ],
+    "rmp_url": "https://www.ratemyprofessors.com/search/professors/0?q=Anna%20Lindqvist",
+    "is_favorite": false
+  },
+  {
+    "id": "p-barros",
+    "first_name": "Tiago",
+    "last_name": "Barros",
+    "middle": null,
+    "department": "Computer Science",
+    "title": "Assistant Professor",
+    "bio_summary": "Coaches the programming team and studies graph algorithms.",
+    "topic_tags": [
+      "algorithms",
+      "data structures",
+      "competitive programming",
+      "graph theory"
+    ],
+    "lists_undergrad_research": true,
+    "winter_courses": [
+      "CSE 110",
+      "CSE 111",
+      "CSE 212",
+      "CSE 381",
+      "MATH 215"
+    ],
+    "sources": [
+      {
+        "kind": "biography",
+        "value": "Coaches the programming team and studies graph algorithms.",
+        "source_url": "https://fixtures.invalid/directory/p-barros",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      },
+      {
+        "kind": "interests",
+        "value": "algorithms, data structures, competitive programming, graph theory",
+        "source_url": "https://fixtures.invalid/directory/p-barros",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      },
+      {
+        "kind": "research",
+        "value": "Mentors undergraduate research.",
+        "source_url": "https://fixtures.invalid/directory/p-barros",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      }
+    ],
+    "rmp_url": "https://www.ratemyprofessors.com/search/professors/0?q=Tiago%20Barros",
+    "is_favorite": false
+  },
+  {
+    "id": "p-nakamura",
+    "first_name": "Ken",
+    "last_name": "Nakamura",
+    "middle": null,
+    "department": "Mathematics",
+    "title": "Professor",
+    "bio_summary": "Teaches calculus and numerical methods.",
+    "topic_tags": [
+      "calculus",
+      "numerical analysis",
+      "mathematical modeling"
+    ],
+    "lists_undergrad_research": null,
+    "winter_courses": [
+      "MATH 112",
+      "MATH 113"
+    ],
+    "sources": [
+      {
+        "kind": "biography",
+        "value": "Teaches calculus and numerical methods.",
+        "source_url": "https://fixtures.invalid/directory/p-nakamura",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      },
+      {
+        "kind": "interests",
+        "value": "calculus, numerical analysis, mathematical modeling",
+        "source_url": "https://fixtures.invalid/directory/p-nakamura",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      },
+      {
+        "kind": "research",
+        "value": "",
+        "source_url": "https://fixtures.invalid/directory/p-nakamura",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      }
+    ],
+    "rmp_url": "https://www.ratemyprofessors.com/search/professors/0?q=Ken%20Nakamura",
+    "is_favorite": false
+  },
+  {
+    "id": "p-reyes",
+    "first_name": "Sofia",
+    "last_name": "Reyes",
+    "middle": "L.",
+    "department": "Mathematics",
+    "title": "Associate Professor",
+    "bio_summary": "Teaches statistics and supervises undergraduate data projects.",
+    "topic_tags": [
+      "statistics",
+      "data science",
+      "r programming",
+      "survey methods"
+    ],
+    "lists_undergrad_research": true,
+    "winter_courses": [
+      "MATH 221A",
+      "MATH 325"
+    ],
+    "sources": [
+      {
+        "kind": "biography",
+        "value": "Teaches statistics and supervises undergraduate data projects.",
+        "source_url": "https://fixtures.invalid/directory/p-reyes",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      },
+      {
+        "kind": "interests",
+        "value": "statistics, data science, r programming, survey methods",
+        "source_url": "https://fixtures.invalid/directory/p-reyes",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      },
+      {
+        "kind": "research",
+        "value": "Mentors undergraduate research.",
+        "source_url": "https://fixtures.invalid/directory/p-reyes",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      }
+    ],
+    "rmp_url": "https://www.ratemyprofessors.com/search/professors/0?q=Sofia%20Reyes",
+    "is_favorite": false
+  },
+  {
+    "id": "p-whitfield",
+    "first_name": "Daniel",
+    "last_name": "Whitfield",
+    "middle": null,
+    "department": "Computer Information Technology",
+    "title": "Professor",
+    "bio_summary": "Teaches database design and cloud data systems.",
+    "topic_tags": [
+      "databases",
+      "sql",
+      "data modeling",
+      "cloud computing"
+    ],
+    "lists_undergrad_research": null,
+    "winter_courses": [
+      "CIT 111",
+      "CIT 225"
+    ],
+    "sources": [
+      {
+        "kind": "biography",
+        "value": "Teaches database design and cloud data systems.",
+        "source_url": "https://fixtures.invalid/directory/p-whitfield",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      },
+      {
+        "kind": "interests",
+        "value": "databases, sql, data modeling, cloud computing",
+        "source_url": "https://fixtures.invalid/directory/p-whitfield",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      },
+      {
+        "kind": "research",
+        "value": "",
+        "source_url": "https://fixtures.invalid/directory/p-whitfield",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      }
+    ],
+    "rmp_url": "https://www.ratemyprofessors.com/search/professors/0?q=Daniel%20Whitfield",
+    "is_favorite": false
+  },
+  {
+    "id": "p-smith-cse",
+    "first_name": "John",
+    "last_name": "Smith",
+    "middle": "R.",
+    "department": "Computer Science",
+    "title": "Assistant Professor",
+    "bio_summary": "Teaches systems and security courses.",
+    "topic_tags": [
+      "computer security",
+      "networking",
+      "linux"
+    ],
+    "lists_undergrad_research": null,
+    "winter_courses": [
+      "CSE 210",
+      "CSE 212",
+      "CSE 310",
+      "CSE 325"
+    ],
+    "sources": [
+      {
+        "kind": "biography",
+        "value": "Teaches systems and security courses.",
+        "source_url": "https://fixtures.invalid/directory/p-smith-cse",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      },
+      {
+        "kind": "interests",
+        "value": "computer security, networking, linux",
+        "source_url": "https://fixtures.invalid/directory/p-smith-cse",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      },
+      {
+        "kind": "research",
+        "value": "",
+        "source_url": "https://fixtures.invalid/directory/p-smith-cse",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      }
+    ],
+    "rmp_url": "https://www.ratemyprofessors.com/search/professors/0?q=John%20Smith",
+    "is_favorite": false
+  },
+  {
+    "id": "p-smith-rel",
+    "first_name": "John",
+    "last_name": "Smith",
+    "middle": "T.",
+    "department": "Religious Education",
+    "title": "Instructor",
+    "bio_summary": "Teaches Book of Mormon and gospel foundations courses.",
+    "topic_tags": [
+      "book of mormon",
+      "scripture study",
+      "church history"
+    ],
+    "lists_undergrad_research": null,
+    "winter_courses": [
+      "REL 250",
+      "REL 275"
+    ],
+    "sources": [
+      {
+        "kind": "biography",
+        "value": "Teaches Book of Mormon and gospel foundations courses.",
+        "source_url": "https://fixtures.invalid/directory/p-smith-rel",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      },
+      {
+        "kind": "interests",
+        "value": "book of mormon, scripture study, church history",
+        "source_url": "https://fixtures.invalid/directory/p-smith-rel",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      },
+      {
+        "kind": "research",
+        "value": "",
+        "source_url": "https://fixtures.invalid/directory/p-smith-rel",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      }
+    ],
+    "rmp_url": "https://www.ratemyprofessors.com/search/professors/0?q=John%20Smith",
+    "is_favorite": false
+  },
+  {
+    "id": "p-adeyemi",
+    "first_name": "Grace",
+    "last_name": "Adeyemi",
+    "middle": null,
+    "department": "English",
+    "title": "Associate Professor",
+    "bio_summary": "Teaches writing foundations and technical writing.",
+    "topic_tags": [
+      "writing",
+      "rhetoric",
+      "technical writing"
+    ],
+    "lists_undergrad_research": null,
+    "winter_courses": [
+      "ENG 150"
+    ],
+    "sources": [
+      {
+        "kind": "biography",
+        "value": "Teaches writing foundations and technical writing.",
+        "source_url": "https://fixtures.invalid/directory/p-adeyemi",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      },
+      {
+        "kind": "interests",
+        "value": "writing, rhetoric, technical writing",
+        "source_url": "https://fixtures.invalid/directory/p-adeyemi",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      },
+      {
+        "kind": "research",
+        "value": "",
+        "source_url": "https://fixtures.invalid/directory/p-adeyemi",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      }
+    ],
+    "rmp_url": "https://www.ratemyprofessors.com/search/professors/0?q=Grace%20Adeyemi",
+    "is_favorite": false
+  }
+]
