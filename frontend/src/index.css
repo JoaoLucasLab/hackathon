@@ -76,3 +76,71 @@
     background-size: 4px 4px;
   }
 }
+
+/* Reveal the entry screen in a short sequence. Ticket movement happens inside
+   each rotated wrapper, leaving the final layout and angles untouched. */
+@keyframes plan-arrive {
+  from {
+    opacity: 0;
+    transform: translate(var(--arrive-x, 0px), var(--arrive-y, 10px))
+      rotate(var(--arrive-angle, 0deg));
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .plan-entry .page-title,
+  .plan-entry .page-lead,
+  .plan-entry .chat-composer,
+  .plan-entry .chat-audit-hint,
+  .plan-entry .chat-starters > li,
+  .plan-entry .ticket-enter,
+  .plan-entry > footer {
+    animation: plan-arrive 600ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  }
+
+  .plan-entry .page-lead {
+    animation-delay: 65ms;
+  }
+
+  .plan-entry .chat-composer {
+    animation-delay: 120ms;
+  }
+
+  .plan-entry .chat-audit-hint {
+    animation-delay: 180ms;
+  }
+
+  .plan-entry .chat-starters > li:nth-child(1) { animation-delay: 220ms; }
+  .plan-entry .chat-starters > li:nth-child(2) { animation-delay: 255ms; }
+  .plan-entry .chat-starters > li:nth-child(3) { animation-delay: 290ms; }
+  .plan-entry .chat-starters > li:nth-child(4) { animation-delay: 325ms; }
+
+  .plan-entry .ticket-enter {
+    --arrive-y: 14px;
+  }
+
+  .plan-entry .class-tickets > :nth-child(odd) .ticket-enter {
+    --arrive-x: -12px;
+    --arrive-angle: -1.5deg;
+  }
+
+  .plan-entry .class-tickets > :nth-child(even) .ticket-enter {
+    --arrive-x: 12px;
+    --arrive-angle: 1.5deg;
+  }
+
+  .plan-entry > footer {
+    animation-delay: 240ms;
+  }
+
+  /* Reveal controls immediately when someone starts using the keyboard. */
+  .plan-entry .chat-composer:focus-within,
+  .plan-entry .chat-audit-hint:focus-within,
+  .plan-entry .chat-starters:focus-within > li {
+    animation: none;
+  }
+}

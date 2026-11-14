@@ -242,9 +242,9 @@ export function ScheduleDetail({ schedule, onBack }: ScheduleDetailProps) {
       </Button>
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2.5">
-          <h2 id={titleId} className="font-serif text-[36px] font-normal leading-none">
+          <h1 id={titleId} className="font-serif text-[40px] font-normal leading-none md:text-[52px]">
             Option {schedule.rank}
-          </h2>
+          </h1>
           {schedule.rank === 1 && (
             <span className="rounded-full bg-ink px-2 py-0.5 text-xs text-surface">Best fit</span>
           )}

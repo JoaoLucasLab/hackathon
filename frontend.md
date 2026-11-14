@@ -135,7 +135,9 @@ dependency):
 ### Motion
 
 - Hover: background or border color change, 150 ms. Nothing moves or scales.
-- No entrance animations, no parallax, no auto-playing anything.
+- The Plan entry screen may use a brief, staggered fade and small upward reveal,
+  with a slight settling motion for the tickets, as requested. Keep it under one second overall and disable it for reduced
+  motion. Other screens have no entrance animations; no parallax or looping motion.
 - Respect `prefers-reduced-motion` by turning transitions off.
 - Streaming chat text and loading skeletons are the only "live" motion.
 

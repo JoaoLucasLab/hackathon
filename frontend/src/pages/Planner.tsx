@@ -1,7 +1,14 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
+import { queryKeys } from "../api/queries";
+import { api, ApiError, unwrap } from "../api/client";
+import { forgetPlanningSetup, hasPlanningSetup } from "../api/planningSetup";
+import { usePlanningState, type Results } from "./PlanningState";
 
 import { useRebuildSchedules } from "../api/queries";
-import type { ChatEvent, ConstraintSet, Relaxation, Schedule } from "../api/schemas";
+import type { ChatEvent, ConstraintSet, DegreeAudit, Relaxation, Schedule } from "../api/schemas";
+import { FloatingClassTickets } from "../components/FloatingClassTickets";
 import { ChatPanel } from "../components/ChatPanel";
 import { ConstraintChips } from "../components/ConstraintChips";
 import { ScheduleCard } from "../components/ScheduleCard";
@@ -19,12 +26,6 @@ const NO_RULES: ConstraintSet = {
   only_required: false,
   only_favorite_professors: false,
 };
-
-interface Results {
-  constraints: ConstraintSet;
-  schedules: Schedule[];
-  relaxation?: Relaxation | null;
-}
 
 /** The `build_schedules` tool result carries the rules it used and the schedules. */
 function resultsFrom(event: ChatEvent): Results | null {
@@ -56,15 +57,25 @@ function seatsAsOf(schedules: Schedule[]): string | null {
 }
 
 export function Planner() {
-  const [results, setResults] = useState<Results | null>(null);
+  const { results, setResults } = usePlanningState();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const isSchedules = location.pathname === "/schedules";
   const [asked, setAsked] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const rebuild = useRebuildSchedules();
+  const built = useRef(false);
 
   function onEvent(event: ChatEvent) {
     if (event.type === "text" || event.type === "tool_call") setAsked(true);
+    if (event.type === "done" && built.current) {
+      built.current = false;
+      navigate("/schedules");
+    }
     const found = resultsFrom(event);
     if (found) {
+      built.current = true;
       setResults(found);
       setSelectedId(null);
     }
@@ -131,34 +142,44 @@ export function Planner() {
 
   return (
     <PageFrame
-      title="Plan a semester that fits your week"
-      lead="Tell the assistant what you want. It builds schedules from your remaining requirements."
-      footnote={
-        <>
-          {seats && <>{seats} </>}
-          Confirm with BYU-Idaho Academic Advising.
-        </>
-      }
+      title={selected && isSchedules ? undefined : isSchedules ? (results?.schedules.length ? `${results.schedules.length === 3 ? "Three" : results.schedules.length} schedules fit` : "Your schedules") : "Plan a semester that fits your week"}
+      lead={isSchedules ? (selected ? undefined : "Winter 2027, built from your degree audit and preferences.") : "Tell it what you want in plain words. Compare Winter 2027 schedules built from your degree audit, each class with the requirement it fills."}
+      home={!isSchedules}
+      footnote={<>{isSchedules && seats && <>{seats} </>}Confirm with BYU-Idaho Academic Advising.</>}
     >
-      {/* Hidden, not unmounted, while one schedule is open, so the chat keeps its history. */}
-      {/* No display class here: Tailwind's `.flex` would beat the `hidden` attribute. */}
-      <div hidden={selected !== null}>
-        <ChatPanel onEvent={onEvent} />
+      {!isSchedules && <FloatingClassTickets audit={queryClient.getQueryData<DegreeAudit>(queryKeys.audit)} />}
+      <div hidden={isSchedules} className="mx-auto w-full max-w-[680px] md:mt-2">
+        <ChatPanel onEvent={onEvent}
+          beforeSend={async (signal) => {
+            if (queryClient.getQueryData(queryKeys.audit)) return true;
+            if (hasPlanningSetup()) {
+              try {
+                // Read the existing session; never create one or reload a sample audit here.
+                const requirements = unwrap(await api.GET("/api/requirements/remaining", { signal }));
+                if (signal.aborted) return false;
+                queryClient.setQueryData(queryKeys.remaining, requirements);
+                return true;
+              } catch (error) {
+                if (signal.aborted) return false;
+                if (!(error instanceof ApiError) || ![401, 403, 404].includes(error.status)) {
+                  throw error;
+                }
+                forgetPlanningSetup();
+              }
+            }
+            navigate("/consent");
+            return false;
+          }} />
+        {!results && asked && <p className="mt-4 text-sm text-muted">Schedules appear when the assistant builds them.</p>}
       </div>
-      {selected && <ScheduleDetail schedule={selected} onBack={() => setSelectedId(null)} />}
-      {results && !selected && (
-        <section aria-label="Schedules" className="flex flex-col gap-4">
-          <ConstraintChips
-            constraints={results.constraints}
-            onChange={onRulesChange}
-            disabled={rebuild.isPending}
-          />
+      {isSchedules && selected && <ScheduleDetail schedule={selected} onBack={() => setSelectedId(null)} />}
+      {isSchedules && !selected && (results ? (
+        <section aria-label="Schedules" className="flex flex-col gap-8">
+          <ConstraintChips constraints={results.constraints} onChange={onRulesChange} disabled={rebuild.isPending} />
           {schedulesBlock}
+          <Link to="/" className="self-start text-sm text-muted underline underline-offset-4">Refine your plan</Link>
         </section>
-      )}
-      {!results && asked && (
-        <p className="text-sm text-muted">Schedules appear here when the assistant builds them.</p>
-      )}
+      ) : <Empty message="No schedules yet. Tell us how you want your week to look to build your first options." actionLabel="Plan my schedule" onAction={() => navigate("/")} />)}
     </PageFrame>
   );
 }
