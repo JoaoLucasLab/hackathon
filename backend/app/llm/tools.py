@@ -37,7 +37,6 @@ from app.contracts import (
     DegreeAudit,
     DeliveryMethod,
     EmailDraftRequest,
-    FavoriteUpdate,
     MentorGoal,
     MentorSearchRequest,
 )
@@ -266,11 +265,11 @@ def build_schedules(ctx: ToolContext, args: BuildSchedulesArgs) -> Json:
 def get_professor_profile(ctx: ToolContext, args: ProfessorProfileArgs) -> Json:
     if args.professor_id:
         try:
-            profs = [professors_api.get_professor(args.professor_id)]
+            profs = [professors_api.professor_or_404(args.professor_id)]
         except HTTPException as exc:
             raise _not_found(exc) from exc
     elif args.name:
-        profs = professors_api.list_professors(q=args.name)[:5]
+        profs = professors_api.find_professors(q=args.name)[:5]
     else:
         raise ToolInputError("Give either professor_id or name.")
     return {
@@ -282,15 +281,12 @@ def get_professor_profile(ctx: ToolContext, args: ProfessorProfileArgs) -> Json:
 
 def toggle_favorite_professor(ctx: ToolContext, args: ToggleFavoriteArgs) -> Json:
     try:
-        fav = professors_api.set_favorite(
-            args.professor_id, FavoriteUpdate(favorite=args.favorite)
+        # Same set object as the session's favorites in the API (see api/chat.py).
+        fav = professors_api.save_favorite(
+            ctx.favorite_professor_ids, args.professor_id, args.favorite
         )
     except HTTPException as exc:
         raise _not_found(exc) from exc
-    if fav.favorite:
-        ctx.favorite_professor_ids.add(fav.professor_id)
-    else:
-        ctx.favorite_professor_ids.discard(fav.professor_id)
     return _dump(fav)
 
 

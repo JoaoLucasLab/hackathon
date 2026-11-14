@@ -1,10 +1,14 @@
 import { createElement, type SVGProps } from "react";
 import {
   Check,
+  ChevronDown,
+  ChevronLeft,
   CircleAlert,
+  ExternalLink,
   FileX,
   Lock,
   Send,
+  Star,
   Trash2,
   type LucideIcon,
 } from "lucide-react";
@@ -17,6 +21,10 @@ const icons = {
   trash: Trash2,
   alert: CircleAlert,
   check: Check,
+  star: Star,
+  external: ExternalLink,
+  chevronDown: ChevronDown,
+  chevronLeft: ChevronLeft,
 } satisfies Record<string, LucideIcon>;
 
 export type IconName = keyof typeof icons;

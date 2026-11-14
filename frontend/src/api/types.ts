@@ -244,6 +244,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/schedules/explain": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Explain Schedule */
+        post: operations["explain_schedule_api_schedules_explain_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/session": {
         parameters: {
             query?: never;
@@ -595,6 +612,13 @@ export interface components {
          * @enum {string}
          */
         ExclusionReason: "track" | "prerequisite" | "conflict" | "closed" | "excluded by you";
+        /**
+         * ExplainScheduleRequest
+         * @description The schedule to explain, exactly as `POST /api/schedules/build` returned it.
+         */
+        ExplainScheduleRequest: {
+            schedule: components["schemas"]["Schedule"];
+        };
         /** FavoriteProfessor */
         FavoriteProfessor: {
             /** Favorite */
@@ -883,6 +907,32 @@ export interface components {
             /** Warnings */
             warnings?: components["schemas"]["ScheduleWarning"][];
             why: components["schemas"]["ScheduleWhy"];
+        };
+        /**
+         * ScheduleExplanation
+         * @description Claude's wording of a schedule's structured `why` (AI-03). Facts only from it.
+         */
+        ScheduleExplanation: {
+            /**
+             * Advising Note
+             * @default Confirm with BYU-Idaho Academic Advising.
+             * @constant
+             */
+            advising_note: "Confirm with BYU-Idaho Academic Advising.";
+            /**
+             * Available
+             * @description False when no grounded text could be written; show the structured why.
+             */
+            available: boolean;
+            /** Schedule Id */
+            schedule_id: string;
+            /** Tradeoffs */
+            tradeoffs?: string[];
+            /**
+             * Why
+             * @example Every class counts toward your degree.
+             */
+            why?: string | null;
         };
         /** ScheduleWarning */
         ScheduleWarning: {
@@ -1572,6 +1622,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["BuildSchedulesResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    explain_schedule_api_schedules_explain_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExplainScheduleRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScheduleExplanation"];
                 };
             };
             /** @description Validation Error */
