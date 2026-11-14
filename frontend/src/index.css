@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Tokens from frontend.md. Tailwind maps its color names to these. */
+:root {
+  --paper: #f6f5f1;
+  --surface: #ffffff;
+  --ink: #1a1a1a;
+  --muted: #6e6a62;
+  --line: #e6e2d9;
+  --line-soft: #efece5;
+  --field: #f1efe9;
+  --halo: #edeae3;
+  --perf: #d8d2c6;
+  --warn: #8a5300;
+  --star: #b57e10;
+  --sq-sage: #9dbf8f;
+  --sq-clay: #e0a98a;
+  --sq-sky: #9db6d8;
+  --sq-sea: #8cc5c0;
+  --sq-butter: #d9c27a;
+  --sq-lilac: #c7b3d9;
+  --sq-stone: #c9c3b6;
+}
+
+@layer base {
+  body {
+    @apply bg-paper font-sans text-base leading-[1.45] text-ink antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 3px;
+  }
+
+  h1,
+  h2 {
+    text-wrap: balance;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
