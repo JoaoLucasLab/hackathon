@@ -364,7 +364,7 @@ AI & Product builds the chat-to-schedule path first, on the sample audit, and ad
 | AI-03 | Schedule results: weekly calendar and the "why" | 4.5 to 6.5 | M | AI-02, ENG-03 |
 | AI-04 | Degree audit: upload, parse, confirm | 6.5 to 8.5 | L | AI-01, ENG-01; DATA-04 for catalog checks |
 | AI-05 | Professors and mentor finder | 8.5 to 10 | M | ENG-01 stubs; ENG-06, DATA-05 for real data |
-| AI-06 | Demo hardening and rehearsal | 10 to 12 | M | All other blocks |
+| AI-06 | Demo hardening and rehearsal (**removed**) | - | - | - |
 
 ### AI-01 · App shell, consent, typed API client
 
@@ -456,19 +456,7 @@ Tests: `test_mentor_text_grounded.py`, `test_email_draft.py`, `MentorFinder.test
 
 ### AI-06 · Demo hardening and rehearsal
 
-No new features. This block proves the demo path works on the deployed app, three times in a row, and prepares the fallback. Folders: `e2e/demo.spec.ts`, `docs/demo-runbook.md`.
-
-Acceptance criteria:
-
-- [ ] One Playwright test runs the whole demo script on the snapshot against the deployed URL: consent, audit, three chat messages, schedules, star a professor, mentor search, email draft. It passes 3 times in a row.
-- [ ] With the API delayed by 3 seconds, every screen on the demo path shows its loading state. With the API returning 500, each shows its error state.
-- [ ] An automated accessibility check finds no critical issue on the five main screens, and the demo path can be completed with the keyboard only.
-- [ ] `docs/demo-runbook.md` says who clicks, the exact messages to type, and the fallback at each step.
-- [ ] A backup video of one full successful run is recorded by Hour 11.
-- [ ] A script pings `/health` every 5 minutes during judging so the free backend does not sleep.
-- [ ] Flags for unfinished features are off in production, and main is tagged `demo-v1`.
-
-Tests: `e2e/demo.spec.ts`.
+**Status: removed (Nov 14, 2026). Do not build it.** The team rehearses the demo by hand instead. Its Playwright run, loading/error and accessibility checks, demo runbook, backup video, health-ping script and `demo-v1` tag are no longer acceptance criteria for any block.
 
 ## New requirements: conversational planner (Nov 14, 2026)
 
@@ -501,7 +489,6 @@ With `FEATURE_CONVERSATIONAL_PLANNER` on, these older criteria no longer apply. 
 - AI-02: "after `build_schedules` runs, 3 cards appear". Replaced by AI-08 (one schedule in the chat).
 - AI-02: "When the student states schedule preferences, call `build_schedules` right away" (rule in `system.md`). Replaced by AI-07.
 - AI-03: the comparison screen with 3 to 5 schedules. Its calendar, "why", backups and professor chips are reused inside the chat card (AI-08).
-- AI-06: the demo script ("three chat messages, schedules") is rewritten for the new flow (AI-08).
 
 ### ENG-07 · Solver: one schedule at a time, never repeat a rejected one
 
@@ -589,13 +576,13 @@ Tests: `test_confirm_schedule.py`, `test_feedback_to_constraints.py`, `test_chan
 
 ## Merge order by hour
 
-Seven blocks form the critical path: DATA-01, ENG-01, ENG-02, ENG-03, AI-02, AI-03 and AI-06. If one of them is late, the demo is late; the other eleven can slip or be cut.
+Six blocks form the critical path: DATA-01, ENG-01, ENG-02, ENG-03, AI-02 and AI-03. If one of them is late, the demo is late; the others can slip or be cut. (AI-06, once on this path, was removed.)
 
 ```
 Hour          0       1       2       3       4       5       6       7       8       9       10      11      12
 Data          [-DATA-01*-][-DATA-02--][-----DATA-03------][-DATA-04--][-DATA-05--][-DATA-06--]
 Engine        [-ENG-01*--][ENG-02*][---ENG-03*----][----ENG-04----][----ENG-05----][ENG-06]
-AI & Product  [--AI-01---][--------AI-02*--------][----AI-03*----][----AI-04-----][--AI-05---][----AI-06*----]
+AI & Product  [--AI-01---][--------AI-02*--------][----AI-03*----][----AI-04-----][--AI-05---]
 Checkpoints               ^                           ^                           ^           ^
 ```
 
@@ -622,9 +609,9 @@ Checkpoints               ^                           ^                         
 | 15 | ENG-06 Mentor ranking | Hour 9.5 | DATA-06, AI-05 | No |
 | 16 | DATA-06 Privacy, security, snapshot | Hour 10 | ENG-06, AI-05 | No |
 | 17 | AI-05 Professors and mentor finder | Hour 10 | DATA-06, ENG-06 | No |
-| 18 | AI-06 Demo hardening and rehearsal | Hour 11.5 | Everyone helps | Yes |
+| 18 | AI-06 Demo hardening and rehearsal (**removed**) | - | - | No |
 
-From Hour 9.5 the Engine owner has no new block. They fix solver bugs found in rehearsal and pair on AI-06.
+From Hour 9.5 the Engine owner has no new block. They fix solver bugs found in rehearsal and help rehearse the demo.
 
 ### Dependency graph (Mermaid)
 
@@ -652,7 +639,6 @@ graph LR
   A3[AI-03 Calendar and why]:::ai
   A4[AI-04 Degree audit]:::ai
   A5[AI-05 Professors, mentor finder]:::ai
-  A6[AI-06 Demo hardening]:::ai
 
   D1 --> E1
   D1 --> A1
@@ -679,11 +665,6 @@ graph LR
   E6 -.-> A5
   D5 -.-> A5
   A3 --> A5
-  A3 --> A6
-  A4 --> A6
-  A5 --> A6
-  E5 --> A6
-  D6 --> A6
 ```
 
 ## Checkpoints, cut list and stretch goals
@@ -748,7 +729,7 @@ If the server or its network fails, the same app runs on two free accounts: Rend
 | Part | Service | Free-tier limit that matters | What the plan does about it |
 | --- | --- | --- | --- |
 | Frontend | Render static site | Free to deploy | Auto-deploy from main (DATA-01) |
-| Backend (FastAPI + OR-Tools) | Render free web service | Sleeps after 15 minutes without traffic and takes about 1 minute to wake; 750 instance hours per month ([Render](https://render.com/articles/platforms-with-a-real-free-tier-for-developers-in-2026)) | Health ping every 5 minutes during judging (AI-06) |
+| Backend (FastAPI + OR-Tools) | Render free web service | Sleeps after 15 minutes without traffic and takes about 1 minute to wake; 750 instance hours per month ([Render](https://render.com/articles/platforms-with-a-real-free-tier-for-developers-in-2026)) | Health ping every 5 minutes during judging |
 | Postgres | Neon Free plan | 1 GB storage per project, 100 compute hours per month, suspends after 5 minutes idle ([Neon](https://neon.com/faqs/free-plan-limits-and-quotas)) | Snapshot is far below 1 GB; the same health ping keeps it awake |
 
 Render's own free Postgres is not used because it expires 30 days after creation. I could not confirm the memory of Render's free instance, so the practice deploy in the prep list must run a small OR-Tools solve on it. Open the Render URL a few minutes before presenting, so the backup is awake if it is needed.
@@ -769,7 +750,7 @@ The three risks most likely to hurt the demo are a late critical-path block, an 
 | Solver returns nothing or runs long | 3-second cap, relaxation hint, property tests. | ENG-03, ENG-05 |
 | Claude API cost or rate limits | Cache by input hash, per-session rate limits, recorded responses in CI, a spend limit on the API key. | AI-02, DATA-06 |
 | Message Batches are too slow for a 12-hour event: a batch can take up to 24 hours, though most finish within 1 hour ([Claude docs](https://platform.claude.com/docs/en/build-with-claude/batch-processing)) | Run the bulk Haiku jobs as direct calls with caching. The volumes are small (20 to 40 prerequisite texts, about 30 professors). Move to Batches after the hackathon. | ENG-04, DATA-05 |
-| The server, its network or the last deploy fails | The demo runs on the WSL server (`deploy/wsl/`); backup host: Render and Neon, loaded from the same snapshot, with auto-deploy on every merge and a health ping so it is awake. Backup video. | DATA-01, DATA-06, AI-06 |
+| The server, its network or the last deploy fails | The demo runs on the WSL server (`deploy/wsl/`); backup host: Render and Neon, loaded from the same snapshot, with auto-deploy on every merge and a health ping so it is awake. | DATA-01, DATA-06 |
 | AI & Product is still the heaviest lane | The Engine owner pairs on it from Hour 9.5. Cut-list items 5 to 7 all lighten it. | Cut list |
 
 ## Working rules

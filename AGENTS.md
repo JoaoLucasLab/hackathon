@@ -25,7 +25,7 @@ The work is 18 blocks in `plan.md`, 6 per concern:
 | --- | --- | --- |
 | Data & Integrations | DATA-01 to DATA-06 | Repo, CI, database, deploy, importers, professors, privacy, snapshot (DATA-02, HTTP client and request log, was skipped) |
 | Planning Engine | ENG-01 to ENG-06 | Contracts, fixtures, parsers, conflict checker, scheduler, prerequisites, school rules, mentor ranking |
-| AI & Product Experience | AI-01 to AI-06 | Claude prompts and tools, chat, audit parsing, the React app, demo hardening |
+| AI & Product Experience | AI-01 to AI-06 | Claude prompts and tools, chat, audit parsing, the React app (AI-06, demo hardening, was removed) |
 
 When you are asked to work on something:
 
@@ -182,7 +182,7 @@ the block noted; do not invent a different name.
 | `ruff check .` and `mypy backend` | Lint and type check | DATA-01 |
 | `npm run gen:types` | Regenerates `frontend/src/api/types.ts` from `/openapi.json` | ENG-01 |
 | `npx tsc --noEmit` and `npx vitest run` | Frontend type check and tests | AI-01 |
-| `npx playwright test` | End-to-end demo test | AI-06 |
+| `npx playwright test` | End-to-end demo test | AI-08 |
 | `docker compose -f deploy/wsl/compose.yaml --env-file deploy/wsl/.env up -d --build` | Runs the full app (db, backend, web) in Docker, as on the WSL server (primary host) | Hosting |
 | `deploy/wsl/push.sh user@server` / `deploy/wsl/funnel.sh up` | Uploads and starts the stack on the WSL server / publishes it with Tailscale | Hosting |
 
