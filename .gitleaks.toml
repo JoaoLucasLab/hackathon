@@ -1,0 +1,9 @@
+# Secret scan (gitleaks, run by .github/workflows/ci.yml). Default rules, plus one
+# allowlisted false positive.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Saved public Course Search pages: the login-method config id the page embeds is not a secret"
+regexTarget = "match"
+regexes = ['''authenticationMethodId''']
