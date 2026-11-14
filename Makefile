@@ -12,3 +12,14 @@ export DATABASE_URL
 # Applies every migration the database does not have yet (backend/app/db/migrations/).
 migrate:
 	alembic upgrade head
+
+.PHONY: snapshot restore-snapshot
+
+# Writes snapshots/demo.sql.gz: catalog, sections and professors, no student data (DATA-06).
+snapshot:
+	scripts/snapshot.sh write
+
+# Loads snapshots/demo.sql.gz into DATABASE_URL, replacing its catalog, sections and
+# professors (student tables are not touched). Creates the tables first on an empty database.
+restore-snapshot: migrate
+	scripts/snapshot.sh restore

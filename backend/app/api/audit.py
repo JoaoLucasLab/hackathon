@@ -18,12 +18,12 @@ import os
 from datetime import date
 from functools import cache
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from starlette.concurrency import run_in_threadpool
 from starlette.datastructures import UploadFile
 from starlette.formparsers import MultiPartParser
 
-from app.api import audit_store, catalog_data, fixture_data
+from app.api import audit_store, catalog_data, fixture_data, limits
 from app.api import chat as chat_api
 from app.api.audit_validation import with_flags
 from app.contracts import AuditRequirement, DegreeAudit
@@ -66,10 +66,12 @@ def _checked(audit: DegreeAudit) -> DegreeAudit:
     return with_flags(audit, known_course_codes(), date.today(), AUDIT_MAX_AGE_DAYS)
 
 
-def _store(request: Request, audit: DegreeAudit) -> None:
+def _store(request: Request, audit: DegreeAudit) -> DegreeAudit:
+    """Saves the audit; returns it as stored (any student ID number removed)."""
     sid = audit_store.session_id(request)
-    audit_store.put(sid, audit)
-    chat_api.use_audit(sid, audit)
+    stored = audit_store.put(sid, audit)
+    chat_api.use_audit(sid, stored)
+    return stored
 
 
 async def _read_pdf(request: Request) -> bytes:
@@ -115,7 +117,9 @@ async def _read_pdf(request: Request) -> bytes:
         413: {"description": "The file is larger than 10 MB."},
         415: {"description": "The file is not a PDF."},
         422: {"description": "We couldn't read this audit."},
+        429: {"description": "More than 5 uploads in an hour."},
     },
+    dependencies=[Depends(limits.UPLOAD)],
 )
 async def upload_audit(request: Request) -> DegreeAudit:
     if not FEATURE_AUDIT_UPLOAD:
@@ -138,16 +142,12 @@ def update_audit(body: DegreeAudit, request: Request) -> DegreeAudit:
     """Saves the audit the student confirmed. Flags are recomputed, not trusted."""
     if body.track is None:
         raise HTTPException(422, "Choose your track before saving.")
-    audit = _checked(body)
-    _store(request, audit)
-    return audit
+    return _store(request, _checked(body))
 
 
 @router.post("/audit/sample", response_model=DegreeAudit)
 def sample_audit(request: Request) -> DegreeAudit:
-    audit = fixture_data.audit()
-    _store(request, audit)
-    return audit
+    return _store(request, fixture_data.audit())
 
 
 @router.get("/requirements/remaining", response_model=list[AuditRequirement])

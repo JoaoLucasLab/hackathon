@@ -25,6 +25,9 @@ DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
 SESSION_SECRET = os.environ.get("SESSION_SECRET", "").strip()
 # `none` on Render (frontend and API on different sites), `lax` on WSL (one origin).
 COOKIE_SAMESITE = os.environ.get("COOKIE_SAMESITE", "lax").strip().lower() or "lax"
+# Encrypts audit JSON and chat messages at rest (app/db/crypto.py). Any secret string
+# (`openssl rand -base64 32`). Empty: a random key per process (local dev and tests only).
+DATA_KEY = os.environ.get("DATA_KEY", "").strip()
 # Exact frontend origin allowed by CORS (with cookies). Empty: no cross-origin calls.
 FRONTEND_ORIGIN = os.environ.get("FRONTEND_ORIGIN", "").strip().rstrip("/")
 # The default credit range, score weights and other school rules live in

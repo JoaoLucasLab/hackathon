@@ -6,6 +6,8 @@ requires-python = ">=3.12"
 dependencies = [
   "alembic>=1.16,<2",
   "anthropic>=2.8,<3",
+  # Audit JSON and chat messages encrypted at rest with DATA_KEY (app/db/crypto.py).
+  "cryptography>=43",
   # Read-only access to the catalog in Postgres (app/api/catalog_data.py).
   "psycopg[binary]>=3.2,<4",
   "ortools>=9.10,<10",

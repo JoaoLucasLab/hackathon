@@ -12,6 +12,7 @@ import pytest
 os.environ.pop("DATABASE_URL", None)
 
 import app.main  # noqa: E402, F401
+from app.api import limits  # noqa: E402
 from app.llm import client as llm_client  # noqa: E402
 from app.llm import mentor_text  # noqa: E402
 
@@ -28,3 +29,11 @@ def _no_live_mentor_text(request: pytest.FixtureRequest, monkeypatch: pytest.Mon
 
     monkeypatch.setattr(mentor_text, "_api", _blocked)
     mentor_text._cache.clear()
+
+
+@pytest.fixture(autouse=True)
+def _fresh_rate_limits() -> None:
+    """Rate limits count per client and live in memory: every test starts at zero, so
+    tests that share the test client's address do not use up each other's quota."""
+    limits.CHAT.reset()
+    limits.UPLOAD.reset()
