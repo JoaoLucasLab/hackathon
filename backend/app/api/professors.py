@@ -1,4 +1,5 @@
-"""Professors. STUB (ENG-01) reads fixtures until DATA-05; favorites are AI-03.
+"""Professors from `catalog_data` (the Course Search instructors in Postgres, or the
+fixtures); bios and topic tags wait for DATA-05. Favorites are AI-03.
 
 Favorites live in memory, keyed by the `sid` cookie (the same key as the chat
 session), until DATA-01 adds the database. The chat's ToolContext holds the very
@@ -10,7 +11,7 @@ from datetime import UTC, datetime
 
 from fastapi import APIRouter, HTTPException, Request
 
-from app.api import fixture_data
+from app.api import catalog_data
 from app.contracts import FavoriteProfessor, FavoriteUpdate, Professor
 
 router = APIRouter(prefix="/api", tags=["professors"])
@@ -28,7 +29,7 @@ def favorites_for(sid: str) -> set[str]:
 
 
 def find_professors(q: str | None = None) -> list[Professor]:
-    profs = fixture_data.professors()
+    profs = catalog_data.professors()
     if not q:
         return profs
     needle = q.lower()
@@ -42,7 +43,7 @@ def find_professors(q: str | None = None) -> list[Professor]:
 
 
 def professor_or_404(professor_id: str) -> Professor:
-    prof = fixture_data.professor_by_id().get(professor_id)
+    prof = catalog_data.professor_by_id().get(professor_id)
     if prof is None:
         raise HTTPException(status_code=404, detail="Professor not found")
     return prof
@@ -59,19 +60,19 @@ def save_favorite(favorites: set[str], professor_id: str, favorite: bool) -> Fav
     )
 
 
-def _marked(prof: Professor, favorites: set[str]) -> Professor:
+def marked(prof: Professor, favorites: set[str]) -> Professor:
     return prof.model_copy(update={"is_favorite": prof.id in favorites})
 
 
 @router.get("/professors", response_model=list[Professor])
 def list_professors(request: Request, q: str | None = None) -> list[Professor]:
     favorites = favorites_for(session_id(request))
-    return [_marked(p, favorites) for p in find_professors(q)]
+    return [marked(p, favorites) for p in find_professors(q)]
 
 
 @router.get("/professors/{professor_id}", response_model=Professor)
 def get_professor(professor_id: str, request: Request) -> Professor:
-    return _marked(professor_or_404(professor_id), favorites_for(session_id(request)))
+    return marked(professor_or_404(professor_id), favorites_for(session_id(request)))
 
 
 @router.put("/professors/{professor_id}/favorite", response_model=FavoriteProfessor)

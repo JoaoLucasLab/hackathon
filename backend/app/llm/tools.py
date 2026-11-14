@@ -24,7 +24,7 @@ from anthropic.types import ToolParam
 from fastapi import HTTPException
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, ValidationError
 
-from app.api import fixture_data
+from app.api import catalog_data
 from app.api import mentors as mentors_api
 from app.api import professors as professors_api
 from app.api import schedules as schedules_api
@@ -188,8 +188,8 @@ def get_remaining_requirements(ctx: ToolContext, _: NoArgs) -> Json:
 
 
 def search_sections(ctx: ToolContext, args: SearchSectionsArgs) -> Json:
-    courses = {c.code: c for c in fixture_data.courses()}
-    sections = fixture_data.sections()
+    courses = {c.code: c for c in catalog_data.courses()}
+    sections = catalog_data.sections()
     found: list[Json] = []
     not_found: list[str] = []
     for code in args.course_codes:
@@ -301,7 +301,8 @@ def find_mentors(ctx: ToolContext, args: FindMentorsArgs) -> Json:
 
 def draft_outreach_email(ctx: ToolContext, args: DraftEmailArgs) -> Json:
     try:
-        draft = mentors_api.email_draft(
+        draft = mentors_api.draft_for(
+            ctx.audit,
             args.professor_id,
             EmailDraftRequest(goal=args.goal, mention_grade=args.mention_grade),
         )

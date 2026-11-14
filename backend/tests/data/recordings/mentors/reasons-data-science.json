@@ -1,0 +1,6 @@
+{
+  "note": "Recorded claude-sonnet-5-5 reply for mentor_reasons. Search: goal research, tags machine learning + data science (stub ranking: p-hale, p-reyes).",
+  "goal": "research",
+  "tags": ["machine learning", "data science"],
+  "replies": ["{\"items\": [{\"professor_id\": \"p-hale\", \"text\": \"Professor Hale lists both machine learning and data science among his interests, the two topics you asked about.\"}, {\"professor_id\": \"p-reyes\", \"text\": \"Professor Reyes lists data science as one of her interests.\"}]}"]
+}
