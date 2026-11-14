@@ -1,7 +1,9 @@
 import type { Day, Schedule, ScheduledClass } from "../api/schemas";
 import { calendarEvents, untimedSections } from "./WeekCalendar";
 import { formatTime } from "./ConstraintChips";
-import { BlockTag, DAYS, blockLabel, formatAsOf, timedMeetings } from "./scheduleFormat";
+import { professorName } from "./ProfessorChip";
+import type { ProfessorIndex } from "./ScheduleDetail";
+import { BlockTag, DAYS, blockLabel, formatAsOf, sectionCode, timedMeetings } from "./scheduleFormat";
 
 /** One calendar row is 15 minutes, drawn this many pixels tall. */
 const SLOT_PX = 13;
@@ -88,6 +90,18 @@ interface WeekGlanceProps {
   schedule: Schedule;
   /** Requirement names by id, for the small label next to each course. */
   reqNames: Map<string, string>;
+  /** Professors by id, to name each section's professor. Left out: no professor line. */
+  professors?: ProfessorIndex;
+}
+
+/** "Taught by Ana Lopez", from the section's instructor ids and the professor list. */
+function professorLine(item: ScheduledClass, professors: ProfessorIndex): string {
+  if (professors === null) return "";
+  const names = (item.section.instructor_ids ?? [])
+    .map((id) => professors.get(id))
+    .filter((p) => p !== undefined)
+    .map(professorName);
+  return names.length > 0 ? `Taught by ${names.join(", ")}` : "Professor not listed yet";
 }
 
 /**
@@ -95,7 +109,7 @@ interface WeekGlanceProps {
  * are marked "Free") beside a list of the classes with their times and seats. Every
  * block carries its course code, so color is never the only signal.
  */
-export function WeekGlance({ schedule, reqNames }: WeekGlanceProps) {
+export function WeekGlance({ schedule, reqNames, professors }: WeekGlanceProps) {
   const colors = courseColors(schedule);
   const events = calendarEvents(schedule);
   const days = events.some((e) => e.day === "S") ? [...WEEKDAYS, "S" as Day] : WEEKDAYS;
@@ -203,10 +217,13 @@ export function WeekGlance({ schedule, reqNames }: WeekGlanceProps) {
                 <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                   {/* One line: the code, then the requirement it fills (cut short if long). */}
                   <p className="truncate text-sm" title={fills.join(", ") || undefined}>
-                    <span className="font-semibold">{c.section.course_code}</span>
+                    <span className="font-semibold">{sectionCode(c.section)}</span>
                     {fills.length > 0 && <span className="text-[12px] text-muted"> {fills.join(", ")}</span>}
                   </p>
                   <p className="text-[12px] tabular-nums text-muted">{meetingLine(c)}</p>
+                  {professors !== undefined && professorLine(c, professors) && (
+                    <p className="text-[12px] text-ink">{professorLine(c, professors)}</p>
+                  )}
                   {block && (
                     <span className="self-start">
                       <BlockTag label={block} />
