@@ -227,6 +227,10 @@ def section_rows(s: dict, run: str) -> list[str]:
                     "raw": lit(m["raw"]),
                     "days": lit(m["days"] or ""),
                     "time_raw": lit(m["time_raw"]),
+                    # Read by ENG-02's parser in data_cleaner.py; NULL when no set time.
+                    "start_time": lit(m.get("start_time")),
+                    "end_time": lit(m.get("end_time")),
+                    "tba": lit(bool(m.get("tba"))),
                     "start_date": lit(m["start_date"]),
                     "end_date": lit(m["end_date"]),
                     "room": lit(m["room"]),

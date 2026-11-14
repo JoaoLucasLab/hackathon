@@ -19,6 +19,9 @@
           "raw": "TR 12:45-01:45PM",
           "days": "TR",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 231"
@@ -76,6 +79,9 @@
           "raw": "TR 02:00-03:00PM",
           "days": "TR",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 231"
@@ -133,6 +139,9 @@
           "raw": "TR 03:15-04:15PM",
           "days": "TR",
           "time_raw": "03:15-04:15PM",
+          "start_time": "15:15",
+          "end_time": "16:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 221"
@@ -190,6 +199,9 @@
           "raw": "MTWR 09:00-10:00AM",
           "days": "MTWR",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-02-19",
           "room": "STC 398"
@@ -247,6 +259,9 @@
           "raw": "MW 10:15-11:15AM",
           "days": "MW",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 231"
@@ -304,6 +319,9 @@
           "raw": "MW 11:30AM-12:30PM",
           "days": "MW",
           "time_raw": "11:30AM-12:30PM",
+          "start_time": "11:30",
+          "end_time": "12:30",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 231"
@@ -361,6 +379,9 @@
           "raw": "TR 09:00-10:00AM",
           "days": "TR",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 231"
@@ -418,6 +439,9 @@
           "raw": "MW 09:00-10:00AM",
           "days": "MW",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 347"
@@ -475,6 +499,9 @@
           "raw": "MW 12:45-01:45PM",
           "days": "MW",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 353"
@@ -532,6 +559,9 @@
           "raw": "MW 02:00-03:00PM",
           "days": "MW",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 353"
@@ -589,6 +619,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -646,6 +679,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-02-19",
           "room": "Online Class"
@@ -703,6 +739,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-02-22",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -760,6 +799,9 @@
           "raw": "MTWR 09:00-10:00AM",
           "days": "MTWR",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-02-22",
           "end_date": "2027-04-08",
           "room": "STC 398"
@@ -893,6 +935,9 @@
           "raw": "MW 02:00-03:00PM",
           "days": "MW",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 221"
@@ -1026,6 +1071,9 @@
           "raw": "TR 10:15-11:15AM",
           "days": "TR",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 231"
@@ -1159,6 +1207,9 @@
           "raw": "TR 09:00-10:00AM",
           "days": "TR",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 221"
@@ -1292,6 +1343,9 @@
           "raw": "MW 03:15-04:15PM",
           "days": "MW",
           "time_raw": "03:15-04:15PM",
+          "start_time": "15:15",
+          "end_time": "16:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 347"
@@ -1425,6 +1479,9 @@
           "raw": "TR 12:45-01:45PM",
           "days": "TR",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 221"
@@ -1558,6 +1615,9 @@
           "raw": "MW 10:15-11:15AM",
           "days": "MW",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 347"
@@ -1691,6 +1751,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -1824,6 +1887,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -1957,6 +2023,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-02-19",
           "room": "Online Class"
@@ -2090,6 +2159,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-02-22",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -2223,6 +2295,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-02-19",
           "room": "Online Class"
@@ -2291,6 +2366,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-02-22",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -2357,6 +2435,9 @@
           "raw": "TR 12:45-01:45PM",
           "days": "TR",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 347"
@@ -2460,6 +2541,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -2563,6 +2647,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -2691,6 +2778,9 @@
           "raw": "MW 11:30AM-12:30PM",
           "days": "MW",
           "time_raw": "11:30AM-12:30PM",
+          "start_time": "11:30",
+          "end_time": "12:30",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 394"
@@ -2746,6 +2836,9 @@
           "raw": "TR 09:00-10:00AM",
           "days": "TR",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 375"
@@ -2801,6 +2894,9 @@
           "raw": "TR 10:15-11:15AM",
           "days": "TR",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 375"
@@ -2856,6 +2952,9 @@
           "raw": "TR 02:00-03:00PM",
           "days": "TR",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 221"
@@ -2911,6 +3010,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -2966,6 +3068,9 @@
           "raw": "TR 02:00-03:00PM",
           "days": "TR",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 353"
@@ -3128,6 +3233,9 @@
           "raw": "TR 12:45-01:45PM",
           "days": "TR",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 353"
@@ -3290,6 +3398,9 @@
           "raw": "TR 09:00-10:00AM",
           "days": "TR",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 367"
@@ -3452,6 +3563,9 @@
           "raw": "MW 10:15-11:15AM",
           "days": "MW",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 375"
@@ -3614,6 +3728,9 @@
           "raw": "TR 10:15-11:15AM",
           "days": "TR",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 353"
@@ -3684,6 +3801,9 @@
           "raw": "TR 12:45-01:45PM",
           "days": "TR",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 367"
@@ -3754,6 +3874,9 @@
           "raw": "TR 02:00-03:00PM",
           "days": "TR",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 367"
@@ -3824,6 +3947,9 @@
           "raw": "MW 02:00-03:00PM",
           "days": "MW",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 361"
@@ -3894,6 +4020,9 @@
           "raw": "MW 03:15-04:15PM",
           "days": "MW",
           "time_raw": "03:15-04:15PM",
+          "start_time": "15:15",
+          "end_time": "16:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 361"
@@ -3964,6 +4093,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -4034,6 +4166,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-02-19",
           "room": "Online Class"
@@ -4104,6 +4239,9 @@
           "raw": "TR 02:00-03:00PM",
           "days": "TR",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 375"
@@ -4209,6 +4347,9 @@
           "raw": "MW 10:15-11:15AM",
           "days": "MW",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 341"
@@ -4314,6 +4455,9 @@
           "raw": "MW 11:30AM-12:30PM",
           "days": "MW",
           "time_raw": "11:30AM-12:30PM",
+          "start_time": "11:30",
+          "end_time": "12:30",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 341"
@@ -4419,6 +4563,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -4524,6 +4671,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-02-19",
           "room": "Online Class"
@@ -4612,6 +4762,9 @@
           "raw": "TR 02:30-04:00PM",
           "days": "TR",
           "time_raw": "02:30-04:00PM",
+          "start_time": "14:30",
+          "end_time": "16:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 361"
@@ -4775,6 +4928,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -4841,6 +4997,9 @@
           "raw": "MW 11:30AM-12:30PM",
           "days": "MW",
           "time_raw": "11:30AM-12:30PM",
+          "start_time": "11:30",
+          "end_time": "12:30",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 353"
@@ -4909,6 +5068,9 @@
           "raw": "MWF 02:00-03:00PM",
           "days": "MWF",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 347"
@@ -5012,6 +5174,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -5115,6 +5280,9 @@
           "raw": "MWF 10:15-11:15AM",
           "days": "MWF",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 221"
@@ -5219,6 +5387,9 @@
           "raw": "MWF 12:45-01:45PM",
           "days": "MWF",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 367"
@@ -5323,6 +5494,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -5427,6 +5601,9 @@
           "raw": "MW 10:15-11:15AM",
           "days": "MW",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-02-19",
           "room": "STC 353"
@@ -5483,6 +5660,9 @@
           "raw": "MW 11:30AM-12:30PM",
           "days": "MW",
           "time_raw": "11:30AM-12:30PM",
+          "start_time": "11:30",
+          "end_time": "12:30",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 347"
@@ -5539,6 +5719,9 @@
           "raw": "MWF 09:00-10:00AM",
           "days": "MWF",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 367"
@@ -5607,6 +5790,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-02-19",
           "room": "Online Class"
@@ -5675,6 +5861,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -5744,6 +5933,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -5813,6 +6005,9 @@
           "raw": "MWF 09:00-10:00AM",
           "days": "MWF",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 394"
@@ -5916,6 +6111,9 @@
           "raw": "MWF 10:15-11:15AM",
           "days": "MWF",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 398"
@@ -6019,6 +6217,9 @@
           "raw": "MWF 12:45-01:45PM",
           "days": "MWF",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 341"
@@ -6122,6 +6323,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -6225,6 +6429,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -6347,6 +6554,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -6413,6 +6623,9 @@
           "raw": "MWF 02:00-03:00PM",
           "days": "MWF",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 367"
@@ -6518,6 +6731,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -6623,6 +6839,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -6739,6 +6958,9 @@
           "raw": "TR 02:00-03:00PM",
           "days": "TR",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 243 Research Lab"
@@ -6838,6 +7060,9 @@
           "raw": "TR 10:15-11:15AM",
           "days": "TR",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 367"
@@ -6937,6 +7162,9 @@
           "raw": "MW 11:30AM-12:30PM",
           "days": "MW",
           "time_raw": "11:30AM-12:30PM",
+          "start_time": "11:30",
+          "end_time": "12:30",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 375"
@@ -6991,6 +7219,9 @@
           "raw": "TR 12:45-01:45PM",
           "days": "TR",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 375"
@@ -7045,6 +7276,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -7099,6 +7333,9 @@
           "raw": "TR 03:15-04:15PM",
           "days": "TR",
           "time_raw": "03:15-04:15PM",
+          "start_time": "15:15",
+          "end_time": "16:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 375"
@@ -7155,6 +7392,9 @@
           "raw": "MWF 09:00-10:00AM",
           "days": "MWF",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 221"
@@ -7243,6 +7483,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -7331,6 +7574,9 @@
           "raw": "MWF 12:45-01:45PM",
           "days": "MWF",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 385"
@@ -7339,6 +7585,9 @@
           "raw": "MWF 12:45-01:45PM",
           "days": "MWF",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Remote-Virtual Class"
@@ -7432,6 +7681,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Arranged"
@@ -7498,6 +7750,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Arranged"
@@ -7580,6 +7835,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Arranged"
@@ -7666,6 +7924,9 @@
           "raw": "TR 12:45-01:45PM",
           "days": "TR",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 353"
@@ -7750,6 +8011,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Arranged"
@@ -7838,6 +8102,9 @@
           "raw": "TR 02:00-03:00PM",
           "days": "TR",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 353"
@@ -7922,6 +8189,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -8026,6 +8296,9 @@
           "raw": "MWF 12:45-01:45PM",
           "days": "MWF",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 375"
@@ -8204,6 +8477,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -8382,6 +8658,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -8450,6 +8729,9 @@
           "raw": "MWF 02:00-03:00PM",
           "days": "MWF",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 243 Research Lab"
@@ -8514,6 +8796,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -8582,6 +8867,9 @@
           "raw": "TR 12:45-02:15PM",
           "days": "TR",
           "time_raw": "12:45-02:15PM",
+          "start_time": "12:45",
+          "end_time": "14:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 341"
@@ -8590,6 +8878,9 @@
           "raw": "TR 12:45-02:15PM",
           "days": "TR",
           "time_raw": "12:45-02:15PM",
+          "start_time": "12:45",
+          "end_time": "14:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Remote-Virtual Class"
@@ -8663,6 +8954,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Arranged"
@@ -8722,6 +9016,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Arranged"
@@ -8791,6 +9088,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Arranged"
@@ -8852,6 +9152,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Arranged"
@@ -8944,6 +9247,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -9032,6 +9338,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -9120,6 +9429,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -9206,6 +9518,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -9294,6 +9609,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -9382,6 +9700,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -9440,6 +9761,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -9498,6 +9822,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -9556,6 +9883,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -9614,6 +9944,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -9682,6 +10015,9 @@
           "raw": "MWF 11:30AM-12:30PM",
           "days": "MWF",
           "time_raw": "11:30AM-12:30PM",
+          "start_time": "11:30",
+          "end_time": "12:30",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "McKay Library 172"
@@ -9738,6 +10074,9 @@
           "raw": "MWF 07:45-08:45AM",
           "days": "MWF",
           "time_raw": "07:45-08:45AM",
+          "start_time": "07:45",
+          "end_time": "08:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "McKay Library 168"
@@ -9797,6 +10136,9 @@
           "raw": "MWF 10:15-11:15AM",
           "days": "MWF",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "McKay Library 164"
@@ -9854,6 +10196,9 @@
           "raw": "TR 09:45-11:15AM",
           "days": "TR",
           "time_raw": "09:45-11:15AM",
+          "start_time": "09:45",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "McKay Library 168"
@@ -9913,6 +10258,9 @@
           "raw": "MWF 11:30AM-12:30PM",
           "days": "MWF",
           "time_raw": "11:30AM-12:30PM",
+          "start_time": "11:30",
+          "end_time": "12:30",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "McKay Library 168"
@@ -9972,6 +10320,9 @@
           "raw": "MWF 11:30AM-12:30PM",
           "days": "MWF",
           "time_raw": "11:30AM-12:30PM",
+          "start_time": "11:30",
+          "end_time": "12:30",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "McKay Library 164"
@@ -10029,6 +10380,9 @@
           "raw": "MWF 12:45-01:45PM",
           "days": "MWF",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "McKay Library 166"
@@ -10088,6 +10442,9 @@
           "raw": "MWF 12:45-01:45PM",
           "days": "MWF",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "McKay Library 168"
@@ -10147,6 +10504,9 @@
           "raw": "TR 12:45-02:15PM",
           "days": "TR",
           "time_raw": "12:45-02:15PM",
+          "start_time": "12:45",
+          "end_time": "14:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "McKay Library 166"
@@ -10206,6 +10566,9 @@
           "raw": "TR 12:45-02:15PM",
           "days": "TR",
           "time_raw": "12:45-02:15PM",
+          "start_time": "12:45",
+          "end_time": "14:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "McKay Library 168"
@@ -10265,6 +10628,9 @@
           "raw": "MWF 12:45-01:45PM",
           "days": "MWF",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Smith 131"
@@ -10324,6 +10690,9 @@
           "raw": "MWF 02:00-03:00PM",
           "days": "MWF",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "McKay Library 164"
@@ -10381,6 +10750,9 @@
           "raw": "MWF 02:00-03:00PM",
           "days": "MWF",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "McKay Library 166"
@@ -10440,6 +10812,9 @@
           "raw": "MWF 02:00-03:00PM",
           "days": "MWF",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "McKay Library 168"
@@ -10499,6 +10874,9 @@
           "raw": "TR 02:30-04:00PM",
           "days": "TR",
           "time_raw": "02:30-04:00PM",
+          "start_time": "14:30",
+          "end_time": "16:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "McKay Library 166"
@@ -10558,6 +10936,9 @@
           "raw": "TR 02:30-04:00PM",
           "days": "TR",
           "time_raw": "02:30-04:00PM",
+          "start_time": "14:30",
+          "end_time": "16:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "McKay Library 168"
@@ -10617,6 +10998,9 @@
           "raw": "MWF 03:15-04:15PM",
           "days": "MWF",
           "time_raw": "03:15-04:15PM",
+          "start_time": "15:15",
+          "end_time": "16:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "McKay Library 166"
@@ -10676,6 +11060,9 @@
           "raw": "MWF 03:15-04:15PM",
           "days": "MWF",
           "time_raw": "03:15-04:15PM",
+          "start_time": "15:15",
+          "end_time": "16:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "McKay Library 164"
@@ -10733,6 +11120,9 @@
           "raw": "TR 08:00-09:30AM",
           "days": "TR",
           "time_raw": "08:00-09:30AM",
+          "start_time": "08:00",
+          "end_time": "09:30",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "McKay Library 164"
@@ -10792,6 +11182,9 @@
           "raw": "MWF 12:45-01:45PM",
           "days": "MWF",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Smith 364"
@@ -10851,6 +11244,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -10922,6 +11318,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -10993,6 +11392,9 @@
           "raw": "MTRF 07:45-08:45AM",
           "days": "MTRF",
           "time_raw": "07:45-08:45AM",
+          "start_time": "07:45",
+          "end_time": "08:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "McKay Library 172"
@@ -11150,6 +11552,9 @@
           "raw": "MR 07:45-08:45AM",
           "days": "MR",
           "time_raw": "07:45-08:45AM",
+          "start_time": "07:45",
+          "end_time": "08:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "McKay Library 162"
@@ -11158,6 +11563,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Blended (part-online)"
@@ -11320,6 +11728,9 @@
           "raw": "MTRF 09:00-10:00AM",
           "days": "MTRF",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Clarke 329"
@@ -11477,6 +11888,9 @@
           "raw": "MTRF 09:00-10:00AM",
           "days": "MTRF",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "McKay Library 172"
@@ -11634,6 +12048,9 @@
           "raw": "MTRF 10:15-11:15AM",
           "days": "MTRF",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "McKay Library 172"
@@ -11791,6 +12208,9 @@
           "raw": "MTRF 10:15-11:15AM",
           "days": "MTRF",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Clarke 329"
@@ -11948,6 +12368,9 @@
           "raw": "MTRF 12:45-01:45PM",
           "days": "MTRF",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "McKay Library 172"
@@ -12105,6 +12528,9 @@
           "raw": "MTRF 12:45-01:45PM",
           "days": "MTRF",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Clarke 329"
@@ -12262,6 +12688,9 @@
           "raw": "MTRF 02:00-03:00PM",
           "days": "MTRF",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Clarke 329"
@@ -12419,6 +12848,9 @@
           "raw": "MTRF 02:00-03:00PM",
           "days": "MTRF",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "McKay Library 172"
@@ -12576,6 +13008,9 @@
           "raw": "MTRF 03:15-04:15PM",
           "days": "MTRF",
           "time_raw": "03:15-04:15PM",
+          "start_time": "15:15",
+          "end_time": "16:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "McKay Library 172"
@@ -12733,6 +13168,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -12890,6 +13328,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -13047,6 +13488,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -13204,6 +13648,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -13361,6 +13808,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -13518,6 +13968,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -13673,6 +14126,9 @@
           "raw": "MW 09:00-10:00AM",
           "days": "MW",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 147 Lecture Hall"
@@ -13681,6 +14137,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Blended (part-online)"
@@ -13902,6 +14361,9 @@
           "raw": "TR 05:45-06:45PM",
           "days": "TR",
           "time_raw": "05:45-06:45PM",
+          "start_time": "17:45",
+          "end_time": "18:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 225"
@@ -13910,6 +14372,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Blended (part-online)"
@@ -14131,6 +14596,9 @@
           "raw": "MW 04:30-05:30PM",
           "days": "MW",
           "time_raw": "04:30-05:30PM",
+          "start_time": "16:30",
+          "end_time": "17:30",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Remote-Virtual Class"
@@ -14347,6 +14815,9 @@
           "raw": "TR 04:30-05:30PM",
           "days": "TR",
           "time_raw": "04:30-05:30PM",
+          "start_time": "16:30",
+          "end_time": "17:30",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Remote-Virtual Class"
@@ -14563,6 +15034,9 @@
           "raw": "TR 10:15-11:15AM",
           "days": "TR",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 211"
@@ -14571,6 +15045,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Blended (part-online)"
@@ -14792,6 +15269,9 @@
           "raw": "TR 12:45-01:45PM",
           "days": "TR",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 245 Computer Lab"
@@ -14800,6 +15280,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Blended (part-online)"
@@ -15021,6 +15504,9 @@
           "raw": "TR 12:45-01:45PM",
           "days": "TR",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Austin 127"
@@ -15029,6 +15515,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Blended (part-online)"
@@ -15250,6 +15739,9 @@
           "raw": "TR 12:45-01:45PM",
           "days": "TR",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Austin 128"
@@ -15258,6 +15750,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Blended (part-online)"
@@ -15479,6 +15974,9 @@
           "raw": "MW 02:00-03:00PM",
           "days": "MW",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Romney 145"
@@ -15487,6 +15985,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Blended (part-online)"
@@ -15708,6 +16209,9 @@
           "raw": "TR 02:00-03:00PM",
           "days": "TR",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 245 Computer Lab"
@@ -15716,6 +16220,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Blended (part-online)"
@@ -15937,6 +16444,9 @@
           "raw": "TR 02:00-03:00PM",
           "days": "TR",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 231"
@@ -15945,6 +16455,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Blended (part-online)"
@@ -16166,6 +16679,9 @@
           "raw": "TR 02:00-03:00PM",
           "days": "TR",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Austin 212"
@@ -16174,6 +16690,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Blended (part-online)"
@@ -16395,6 +16914,9 @@
           "raw": "TR 02:00-03:00PM",
           "days": "TR",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Austin 213 Classroom"
@@ -16403,6 +16925,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Blended (part-online)"
@@ -16624,6 +17149,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -16840,6 +17368,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -17056,6 +17587,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -17272,6 +17806,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -17488,6 +18025,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -17704,6 +18244,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -17920,6 +18463,9 @@
           "raw": "MTRF 07:45-08:45AM",
           "days": "MTRF",
           "time_raw": "07:45-08:45AM",
+          "start_time": "07:45",
+          "end_time": "08:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Clarke 331"
@@ -17982,6 +18528,9 @@
           "raw": "MTRF 09:00-10:00AM",
           "days": "MTRF",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Clarke 331"
@@ -18044,6 +18593,9 @@
           "raw": "MTRF 10:15-11:15AM",
           "days": "MTRF",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Clarke 331"
@@ -18106,6 +18658,9 @@
           "raw": "MTRF 12:45-01:45PM",
           "days": "MTRF",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Clarke 331"
@@ -18168,6 +18723,9 @@
           "raw": "MTRF 02:00-03:00PM",
           "days": "MTRF",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Clarke 331"
@@ -18230,6 +18788,9 @@
           "raw": "MTWRF 07:45-08:45AM",
           "days": "MTWRF",
           "time_raw": "07:45-08:45AM",
+          "start_time": "07:45",
+          "end_time": "08:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 245 Computer Lab"
@@ -18354,6 +18915,9 @@
           "raw": "MTWRF 07:45-08:45AM",
           "days": "MTWRF",
           "time_raw": "07:45-08:45AM",
+          "start_time": "07:45",
+          "end_time": "08:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Austin 212"
@@ -18478,6 +19042,9 @@
           "raw": "MTWRF 09:00-10:00AM",
           "days": "MTWRF",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 227"
@@ -18602,6 +19169,9 @@
           "raw": "MTWRF 10:15-11:15AM",
           "days": "MTWRF",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 245 Computer Lab"
@@ -18726,6 +19296,9 @@
           "raw": "MTWRF 10:15-11:15AM",
           "days": "MTWRF",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 227"
@@ -18850,6 +19423,9 @@
           "raw": "MTWRF 12:45-01:45PM",
           "days": "MTWRF",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 215"
@@ -18974,6 +19550,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -19098,6 +19677,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -19222,6 +19804,9 @@
           "raw": "MWF 07:45-08:45AM",
           "days": "MWF",
           "time_raw": "07:45-08:45AM",
+          "start_time": "07:45",
+          "end_time": "08:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 211"
@@ -19346,6 +19931,9 @@
           "raw": "MWF 09:00-10:00AM",
           "days": "MWF",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 211"
@@ -19470,6 +20058,9 @@
           "raw": "MWF 10:15-11:15AM",
           "days": "MWF",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 211"
@@ -19594,6 +20185,9 @@
           "raw": "MWF 11:30AM-12:30PM",
           "days": "MWF",
           "time_raw": "11:30AM-12:30PM",
+          "start_time": "11:30",
+          "end_time": "12:30",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 211"
@@ -19718,6 +20312,9 @@
           "raw": "MWF 12:45-01:45PM",
           "days": "MWF",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Austin 214"
@@ -19842,6 +20439,9 @@
           "raw": "MWF 02:00-03:00PM",
           "days": "MWF",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Austin 214"
@@ -19966,6 +20566,9 @@
           "raw": "MTWF 02:00-03:00PM",
           "days": "MTWF",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-02-19",
           "room": "Ricks 247"
@@ -20106,6 +20709,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -20246,6 +20852,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -20384,6 +20993,9 @@
           "raw": "MTWRF 04:30-05:30PM",
           "days": "MTWRF",
           "time_raw": "04:30-05:30PM",
+          "start_time": "16:30",
+          "end_time": "17:30",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 227"
@@ -20548,6 +21160,9 @@
           "raw": "MTWRF 07:45-08:45AM",
           "days": "MTWRF",
           "time_raw": "07:45-08:45AM",
+          "start_time": "07:45",
+          "end_time": "08:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 229"
@@ -20712,6 +21327,9 @@
           "raw": "MTWRF 07:45-08:45AM",
           "days": "MTWRF",
           "time_raw": "07:45-08:45AM",
+          "start_time": "07:45",
+          "end_time": "08:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 231"
@@ -20876,6 +21494,9 @@
           "raw": "MTWRF 09:00-10:00AM",
           "days": "MTWRF",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 229"
@@ -21040,6 +21661,9 @@
           "raw": "MTWRF 09:00-10:00AM",
           "days": "MTWRF",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 231"
@@ -21204,6 +21828,9 @@
           "raw": "MTWRF 10:15-11:15AM",
           "days": "MTWRF",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 229"
@@ -21368,6 +21995,9 @@
           "raw": "MTWRF 12:45-01:45PM",
           "days": "MTWRF",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 229"
@@ -21532,6 +22162,9 @@
           "raw": "MTWRF 12:45-01:45PM",
           "days": "MTWRF",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Hinckley 271"
@@ -21696,6 +22329,9 @@
           "raw": "MTWRF 02:00-03:00PM",
           "days": "MTWRF",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 229"
@@ -21860,6 +22496,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -22024,6 +22663,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -22188,6 +22830,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -22350,6 +22995,9 @@
           "raw": "MTRF 07:45-08:45AM",
           "days": "MTRF",
           "time_raw": "07:45-08:45AM",
+          "start_time": "07:45",
+          "end_time": "08:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 225"
@@ -22418,6 +23066,9 @@
           "raw": "MTRF 10:15-11:15AM",
           "days": "MTRF",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 231"
@@ -22486,6 +23137,9 @@
           "raw": "MTRF 12:45-01:45PM",
           "days": "MTRF",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 247"
@@ -22554,6 +23208,9 @@
           "raw": "MTRF 02:00-03:00PM",
           "days": "MTRF",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 225"
@@ -22622,6 +23279,9 @@
           "raw": "MTRF 09:00-10:00AM",
           "days": "MTRF",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 180"
@@ -23597,6 +24257,9 @@
           "raw": "W 12:45-01:45PM",
           "days": "W",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 247"
@@ -23683,6 +24346,9 @@
           "raw": "W 09:00-10:00AM",
           "days": "W",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 180"
@@ -23737,6 +24403,9 @@
           "raw": "MWF 03:15-04:15PM",
           "days": "MWF",
           "time_raw": "03:15-04:15PM",
+          "start_time": "15:15",
+          "end_time": "16:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 261"
@@ -23914,6 +24583,9 @@
           "raw": "MWF 10:15-11:15AM",
           "days": "MWF",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 261"
@@ -24091,6 +24763,9 @@
           "raw": "MWF 11:30AM-12:30PM",
           "days": "MWF",
           "time_raw": "11:30AM-12:30PM",
+          "start_time": "11:30",
+          "end_time": "12:30",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 261"
@@ -24268,6 +24943,9 @@
           "raw": "MWF 12:45-01:45PM",
           "days": "MWF",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 261"
@@ -24445,6 +25123,9 @@
           "raw": "TR 09:00-10:00AM",
           "days": "TR",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 261"
@@ -24623,6 +25304,9 @@
           "raw": "TR 10:15-11:15AM",
           "days": "TR",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 261"
@@ -24801,6 +25485,9 @@
           "raw": "TR 12:45-01:45PM",
           "days": "TR",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 261"
@@ -24979,6 +25666,9 @@
           "raw": "MTRF 09:00-10:00AM",
           "days": "MTRF",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 225"
@@ -25048,6 +25738,9 @@
           "raw": "MTRF 10:15-11:15AM",
           "days": "MTRF",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 215"
@@ -25117,6 +25810,9 @@
           "raw": "MTRF 12:45-01:45PM",
           "days": "MTRF",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 231"
@@ -25186,6 +25882,9 @@
           "raw": "W 10:15-11:15AM",
           "days": "W",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 231"
@@ -25252,6 +25951,9 @@
           "raw": "MTWRF 09:00-10:00AM",
           "days": "MTWRF",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 245 Computer Lab"
@@ -25319,6 +26021,9 @@
           "raw": "MTWRF 10:15-11:15AM",
           "days": "MTWRF",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 225"
@@ -25386,6 +26091,9 @@
           "raw": "MTWRF 02:00-03:00PM",
           "days": "MTWRF",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 211"
@@ -25453,6 +26161,9 @@
           "raw": "TR 04:30-06:00PM",
           "days": "TR",
           "time_raw": "04:30-06:00PM",
+          "start_time": "16:30",
+          "end_time": "18:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Remote-Virtual Class"
@@ -25662,6 +26373,9 @@
           "raw": "MWF 09:00-10:00AM",
           "days": "MWF",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Austin 212"
@@ -25871,6 +26585,9 @@
           "raw": "MWF 09:00-10:00AM",
           "days": "MWF",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Hinckley 221"
@@ -26080,6 +26797,9 @@
           "raw": "MWF 10:15-11:15AM",
           "days": "MWF",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Austin 212"
@@ -26289,6 +27009,9 @@
           "raw": "MWF 11:30AM-12:30PM",
           "days": "MWF",
           "time_raw": "11:30AM-12:30PM",
+          "start_time": "11:30",
+          "end_time": "12:30",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Austin 212"
@@ -26498,6 +27221,9 @@
           "raw": "MWF 02:00-03:00PM",
           "days": "MWF",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Austin 212"
@@ -26707,6 +27433,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -26916,6 +27645,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -27125,6 +27857,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -27334,6 +28069,9 @@
           "raw": "TR 08:00-09:30AM",
           "days": "TR",
           "time_raw": "08:00-09:30AM",
+          "start_time": "08:00",
+          "end_time": "09:30",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Austin 213 Classroom"
@@ -27543,6 +28281,9 @@
           "raw": "TR 09:45-11:15AM",
           "days": "TR",
           "time_raw": "09:45-11:15AM",
+          "start_time": "09:45",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Austin 213 Classroom"
@@ -27752,6 +28493,9 @@
           "raw": "TR 04:30-06:00PM",
           "days": "TR",
           "time_raw": "04:30-06:00PM",
+          "start_time": "16:30",
+          "end_time": "18:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Remote-Virtual Class"
@@ -27961,6 +28705,9 @@
           "raw": "MWF 12:45-01:45PM",
           "days": "MWF",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 227"
@@ -28170,6 +28917,9 @@
           "raw": "MWF 09:00-10:00AM",
           "days": "MWF",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Romney 172"
@@ -28379,6 +29129,9 @@
           "raw": "MWF 10:15-11:15AM",
           "days": "MWF",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Romney 260"
@@ -28588,6 +29341,9 @@
           "raw": "MWF 11:30AM-12:30PM",
           "days": "MWF",
           "time_raw": "11:30AM-12:30PM",
+          "start_time": "11:30",
+          "end_time": "12:30",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 245 Computer Lab"
@@ -28797,6 +29553,9 @@
           "raw": "MWF 02:00-03:00PM",
           "days": "MWF",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 245 Computer Lab"
@@ -29006,6 +29765,9 @@
           "raw": "MWF 03:15-04:15PM",
           "days": "MWF",
           "time_raw": "03:15-04:15PM",
+          "start_time": "15:15",
+          "end_time": "16:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 211"
@@ -29215,6 +29977,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -29424,6 +30189,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -29633,6 +30401,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -29842,6 +30613,9 @@
           "raw": "TR 04:30-06:00PM",
           "days": "TR",
           "time_raw": "04:30-06:00PM",
+          "start_time": "16:30",
+          "end_time": "18:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Remote-Virtual Class"
@@ -30051,6 +30825,9 @@
           "raw": "MWF 12:45-01:45PM",
           "days": "MWF",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 245 Computer Lab"
@@ -30260,6 +31037,9 @@
           "raw": "MWF 11:30AM-12:30PM",
           "days": "MWF",
           "time_raw": "11:30AM-12:30PM",
+          "start_time": "11:30",
+          "end_time": "12:30",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 227"
@@ -30469,6 +31249,9 @@
           "raw": "MWF 03:15-04:15PM",
           "days": "MWF",
           "time_raw": "03:15-04:15PM",
+          "start_time": "15:15",
+          "end_time": "16:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 247"
@@ -30678,6 +31461,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -30887,6 +31673,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Online Class"
@@ -31096,6 +31885,9 @@
           "raw": "MWF 09:00-10:00AM",
           "days": "MWF",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Benson 220"
@@ -31338,6 +32130,9 @@
           "raw": "MWF 11:30AM-12:30PM",
           "days": "MWF",
           "time_raw": "11:30AM-12:30PM",
+          "start_time": "11:30",
+          "end_time": "12:30",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 229"
@@ -31580,6 +32375,9 @@
           "raw": "MWF 10:15-11:15AM",
           "days": "MWF",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Benson 220"
@@ -31822,6 +32620,9 @@
           "raw": "MWF 02:00-03:00PM",
           "days": "MWF",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 227"
@@ -32064,6 +32865,9 @@
           "raw": "MWF 02:00-03:00PM",
           "days": "MWF",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 261"
@@ -32130,6 +32934,9 @@
           "raw": "MWF 09:00-10:00AM",
           "days": "MWF",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 261"
@@ -32196,6 +33003,9 @@
           "raw": "MWF 12:45-01:45PM",
           "days": "MWF",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 180"
@@ -32325,6 +33135,9 @@
           "raw": "MWF 10:15-11:15AM",
           "days": "MWF",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 180"
@@ -32412,6 +33225,9 @@
           "raw": "MTWRF 07:45-08:45AM",
           "days": "MTWRF",
           "time_raw": "07:45-08:45AM",
+          "start_time": "07:45",
+          "end_time": "08:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 215"
@@ -32499,6 +33315,9 @@
           "raw": "MTWRF 09:00-10:00AM",
           "days": "MTWRF",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 215"
@@ -32586,6 +33405,9 @@
           "raw": "MTWRF 12:45-01:45PM",
           "days": "MTWRF",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 211"
@@ -32673,6 +33495,9 @@
           "raw": "MTWRF 02:00-03:00PM",
           "days": "MTWRF",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 215"
@@ -32760,6 +33585,9 @@
           "raw": "MWF 09:00-10:00AM",
           "days": "MWF",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Snow 102 Classroom"
@@ -32920,6 +33748,9 @@
           "raw": "MWF 12:45-01:45PM",
           "days": "MWF",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Austin 212"
@@ -33080,6 +33911,9 @@
           "raw": "MWF 03:15-04:15PM",
           "days": "MWF",
           "time_raw": "03:15-04:15PM",
+          "start_time": "15:15",
+          "end_time": "16:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 229"
@@ -33240,6 +34074,9 @@
           "raw": "MWF 02:00-03:00PM",
           "days": "MWF",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Hinckley 221"
@@ -33307,6 +34144,9 @@
           "raw": "MWF 09:00-10:00AM",
           "days": "MWF",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 247"
@@ -33374,6 +34214,9 @@
           "raw": "MWF 10:15-11:15AM",
           "days": "MWF",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 247"
@@ -33441,6 +34284,9 @@
           "raw": "MWF 11:30AM-12:30PM",
           "days": "MWF",
           "time_raw": "11:30AM-12:30PM",
+          "start_time": "11:30",
+          "end_time": "12:30",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 247"
@@ -33508,6 +34354,9 @@
           "raw": "MWF 11:30AM-12:30PM",
           "days": "MWF",
           "time_raw": "11:30AM-12:30PM",
+          "start_time": "11:30",
+          "end_time": "12:30",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 215"
@@ -33595,6 +34444,9 @@
           "raw": "MWF 03:15-04:15PM",
           "days": "MWF",
           "time_raw": "03:15-04:15PM",
+          "start_time": "15:15",
+          "end_time": "16:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 225"
@@ -33682,6 +34534,9 @@
           "raw": "MWF 11:30AM-12:30PM",
           "days": "MWF",
           "time_raw": "11:30AM-12:30PM",
+          "start_time": "11:30",
+          "end_time": "12:30",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Benson 133"
@@ -33749,6 +34604,9 @@
           "raw": "MWF 02:00-03:00PM",
           "days": "MWF",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "STC 152 Classroom"
@@ -34001,6 +34859,9 @@
           "raw": "MWF 09:00-10:00AM",
           "days": "MWF",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 273"
@@ -34068,6 +34929,9 @@
           "raw": "MWF 03:15-04:15PM",
           "days": "MWF",
           "time_raw": "03:15-04:15PM",
+          "start_time": "15:15",
+          "end_time": "16:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 245 Computer Lab"
@@ -34135,6 +34999,9 @@
           "raw": "MWF 02:00-03:00PM",
           "days": "MWF",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 180"
@@ -34222,6 +35089,9 @@
           "raw": "MWF 10:15-11:15AM",
           "days": "MWF",
           "time_raw": "10:15-11:15AM",
+          "start_time": "10:15",
+          "end_time": "11:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Benson 133"
@@ -34479,6 +35349,9 @@
           "raw": "MWF 03:15-04:15PM",
           "days": "MWF",
           "time_raw": "03:15-04:15PM",
+          "start_time": "15:15",
+          "end_time": "16:15",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 215"
@@ -34546,6 +35419,9 @@
           "raw": "MWF 11:30AM-12:30PM",
           "days": "MWF",
           "time_raw": "11:30AM-12:30PM",
+          "start_time": "11:30",
+          "end_time": "12:30",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 180"
@@ -34613,6 +35489,9 @@
           "raw": "TR 08:00-09:30AM",
           "days": "TR",
           "time_raw": "08:00-09:30AM",
+          "start_time": "08:00",
+          "end_time": "09:30",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 211"
@@ -34680,6 +35559,9 @@
           "raw": "MWF 12:45-01:45PM",
           "days": "MWF",
           "time_raw": "12:45-01:45PM",
+          "start_time": "12:45",
+          "end_time": "13:45",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Ricks 225"
@@ -34947,6 +35829,9 @@
           "raw": "MTWR 09:00-10:00AM",
           "days": "MTWR",
           "time_raw": "09:00-10:00AM",
+          "start_time": "09:00",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-02-22",
           "end_date": "2027-04-08",
           "room": "STC 310L"
@@ -35013,6 +35898,9 @@
           "raw": "MTWRF 08:30-10:00AM",
           "days": "MTWRF",
           "time_raw": "08:30-10:00AM",
+          "start_time": "08:30",
+          "end_time": "10:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-02-19",
           "room": "Arranged"
@@ -35082,6 +35970,9 @@
           "raw": "MWF 02:00-03:00PM",
           "days": "MWF",
           "time_raw": "02:00-03:00PM",
+          "start_time": "14:00",
+          "end_time": "15:00",
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Benson 133"
@@ -35168,6 +36059,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Arranged"
@@ -35237,6 +36131,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Arranged"
@@ -35303,6 +36200,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Arranged"
@@ -35369,6 +36269,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Arranged"
@@ -35435,6 +36338,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Arranged"
@@ -35501,6 +36407,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Arranged"
@@ -35567,6 +36476,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Arranged"
@@ -35633,6 +36545,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Arranged"
@@ -35699,6 +36614,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Arranged"
@@ -35765,6 +36683,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Arranged"
@@ -35831,6 +36752,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Arranged"
@@ -35897,6 +36821,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Arranged"
@@ -35963,6 +36890,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Arranged"
@@ -36029,6 +36959,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Arranged"
@@ -36095,6 +37028,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Arranged"
@@ -36161,6 +37097,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Arranged"
@@ -36227,6 +37166,9 @@
           "raw": "00:00-00:00AM",
           "days": "",
           "time_raw": null,
+          "start_time": null,
+          "end_time": null,
+          "tba": false,
           "start_date": "2027-01-06",
           "end_date": "2027-04-08",
           "room": "Arranged"

@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
-"""Turn the scraped requisite rows into the PrereqExpression tree from ENG-01.
+"""Add prerequisite trees and real class times to the scraped data.
 
 Reads the JSON written by scrape_course_search.py and writes a copy that is
-identical to it, field for field, except that every section gains two fields:
+identical to it, field for field, except for these added fields:
 
-- `prereq`: the section's course prerequisites as a tree in the shape of
-  `backend/app/contracts/catalog.py` (all / any / course / condition / unparsed),
-  built from the section's `requisites` rows.
-- `section_requirements`: the "Section Requirement" rows (permission, credit
-  hours, online-only...). They are rules about the section, not course
-  prerequisites, so they are kept out of the tree.
+- `prereq` (per section): the section's course prerequisites as a tree in the
+  shape of `backend/app/contracts/catalog.py` (all / any / course / condition /
+  unparsed), built from the section's `requisites` rows.
+- `section_requirements` (per section): the "Section Requirement" rows
+  (permission, credit hours, online-only...). They are rules about the section,
+  not course prerequisites, so they are kept out of the tree.
+- `start_time`, `end_time`, `tba` (per meeting): read by ENG-02's parser
+  (`backend/app/schools/byui/parsing.py`), so `12:45-01:45PM` becomes 12:45 and
+  13:45. Meetings with no set time (online, "Arranged") get null times.
 
-No network calls. Standard library only.
+No network calls. Needs the backend's packages: `pip install -e ".[dev]"`.
 
 How the rows become a tree:
 - Rows with the same group number are joined by AND -> {"type": "all"}.
@@ -41,9 +44,14 @@ import argparse
 import json
 import re
 import sys
+from datetime import date
 from pathlib import Path
 
 OUT_DIR = Path(__file__).resolve().parent / "out"
+
+# ENG-02's parser lives in the backend package; this script has no time parser of its own.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "backend"))
+from app.schools.byui.parsing import ParseError, parse_meeting  # noqa: E402
 
 # Same pattern as CourseCode in backend/app/contracts/catalog.py.
 COURSE_CODE = re.compile(r"^[A-Z]{2,5} \d{3}[A-Z]?$")
@@ -176,6 +184,39 @@ def section_requirements(rows: list[dict]) -> list[str]:
     return [r["text"] for r in rows if r["type"] == SECTION_TYPE]
 
 
+def with_times(meeting: dict) -> tuple[dict, str | None]:
+    """The meeting with `start_time`, `end_time` ("HH:MM" or null) and `tba` added
+    right after `time_raw`, plus an error message if ENG-02's parser rejected it."""
+
+    def us_date(iso: str) -> str:
+        return date.fromisoformat(iso).strftime("%m/%d/%Y")
+
+    # Rebuild the line as Course Search prints it: TR 12:45-01:45PM (01/06/2027 - ...) STC 231
+    line = (
+        f"{meeting['raw']} ({us_date(meeting['start_date'])} - {us_date(meeting['end_date'])}) "
+        f"{meeting['room'] or ''}"
+    )
+    times: dict = {"start_time": None, "end_time": None, "tba": False}
+    error = None
+    try:
+        parsed = parse_meeting(line)
+    except ParseError as e:
+        parsed, error = None, str(e)
+    if parsed is not None:  # None: no set time (online, arranged)
+        times = {
+            "start_time": parsed.start_time.strftime("%H:%M") if parsed.start_time else None,
+            "end_time": parsed.end_time.strftime("%H:%M") if parsed.end_time else None,
+            "tba": parsed.tba,
+        }
+    out: dict = {}
+    for key, value in meeting.items():
+        out[key] = value
+        if key == "time_raw":
+            out.update(times)
+    out.update({k: v for k, v in times.items() if k not in out})
+    return out, error
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
@@ -203,7 +244,10 @@ def main() -> int:
         "unreadable": 0,
         "with_unparsed": 0,
         "with_section_reqs": 0,
+        "timed_meetings": 0,
+        "no_set_time": 0,
     }
+    time_errors: list[str] = []
     sections = []
     for s in data["sections"]:
         rows = s.get("requisites")
@@ -225,6 +269,17 @@ def main() -> int:
                 cleaned["section_requirements"] = reqs
         cleaned.setdefault("prereq", prereq)
         cleaned.setdefault("section_requirements", reqs)
+        meetings = []
+        for m in s["meetings"]:
+            meeting, error = with_times(m)
+            meetings.append(meeting)
+            if error:
+                time_errors.append(f"{s['course']}-{s['section']}: {error}")
+            elif meeting["start_time"]:
+                counts["timed_meetings"] += 1
+            else:
+                counts["no_set_time"] += 1
+        cleaned["meetings"] = meetings
         sections.append(cleaned)
     data["sections"] = sections
 
@@ -235,8 +290,14 @@ def main() -> int:
         f"{len(sections)} sections: {counts['tree']} with prerequisites, "
         f"{counts['none_listed']} with none listed, "
         f"{counts['unreadable']} unreadable, {counts['with_unparsed']} with an unparsed part, "
-        f"{counts['with_section_reqs']} with section requirements. Wrote {out}"
+        f"{counts['with_section_reqs']} with section requirements."
     )
+    print(
+        f"Meetings: {counts['timed_meetings']} with times, {counts['no_set_time']} with no set "
+        f"time (online, arranged), {len(time_errors)} the time parser could not read. Wrote {out}"
+    )
+    for error in time_errors:  # kept with null times, never guessed
+        print(f"  time not read: {error}", file=sys.stderr)
     return 0
 
 

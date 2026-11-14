@@ -25,7 +25,8 @@ jobs:
       - run: pip install -e ".[dev]"
       - run: ruff check .
       - run: mypy backend
-      - run: pytest backend/tests/test_contracts.py backend/tests/test_fixtures_valid.py backend/tests/test_layering.py
+      # Every backend test; tests marked `live` are skipped by pytest's addopts in pyproject.toml.
+      - run: pytest backend/tests
       - name: Generated TypeScript types are up to date
         working-directory: frontend
         run: |

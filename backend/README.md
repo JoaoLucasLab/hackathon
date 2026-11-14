@@ -6,7 +6,8 @@ the Winter 2027 class schedule. Run every command from the repository root.
 ## What you need
 
 - Docker Desktop, running
-- Python 3.12 or newer (the scripts use only the standard library; nothing to install)
+- Python 3.12 or newer, with the backend's packages installed once:
+  `pip install -e ".[dev]"` (`data_cleaner.py` uses the backend's time parser)
 
 ## 1. Start the database
 
@@ -65,7 +66,7 @@ or build it yourself:
 
 ```bash
 python3 scripts/scrape_course_search.py   # downloads the class schedule, about 25 minutes
-python3 scripts/data_cleaner.py           # adds the prerequisite trees, a few seconds
+python3 scripts/data_cleaner.py           # adds prerequisite trees and class times, a few seconds
 ```
 
 The scraper reads the public BYU-Idaho Course Search (no login), waits 2
