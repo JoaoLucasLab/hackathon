@@ -1,5 +1,6 @@
 """Professors from `catalog_data` (the Course Search instructors in Postgres, or the
-fixtures); bios and topic tags wait for DATA-05. Favorites are AI-03.
+fixtures), with the public directory profile scripts/populate_db.py attached (DATA-05:
+bio, sources, research flag, topic tags). Favorites are AI-03.
 
 Favorites live in memory, keyed by the `sid` cookie (the same key as the chat
 session), until DATA-01 adds the database. The chat's ToolContext holds the very

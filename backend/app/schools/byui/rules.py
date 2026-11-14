@@ -27,6 +27,7 @@ from app.contracts import (
     Term,
 )
 from app.schools.base import SchoolRules
+from app.schools.byui.rmp_link import rmp_link
 
 CONFIG_PATH = Path(__file__).with_name("config.yaml")
 
@@ -138,3 +139,8 @@ class ByuiRules(SchoolRules):
 
     def mentor_max_results(self) -> int:
         return int(self.config["mentors"]["max_results"])
+
+    # --- professors (DATA-05) -----------------------------------------------------
+
+    def rmp_link(self, first_name: str, last_name: str) -> str:
+        return rmp_link(first_name, last_name, str(self.config.get("rmp_school_id") or ""))

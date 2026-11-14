@@ -1,0 +1,10 @@
+{
+  "_comment": "DATA-05: fixes a schedule-to-directory match by hand. full_name and department as the class schedule prints them; directory_url is the profile URL from scripts/out/faculty.json, or null to never attach a profile. Read by scripts/populate_db.py.",
+  "overrides": [
+    {
+      "full_name": "Tietjen, Robert",
+      "department": "Computer Science & Engineering",
+      "directory_url": "https://www.byui.edu/directories/rob-tietjen"
+    }
+  ]
+}

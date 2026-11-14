@@ -22,7 +22,6 @@ from collections.abc import Iterable, Mapping
 from datetime import datetime
 from functools import cache
 from typing import Any
-from urllib.parse import quote
 
 from pydantic import TypeAdapter, ValidationError
 
@@ -34,11 +33,13 @@ from app.contracts import (
     DeliveryMethod,
     Meeting,
     Professor,
+    ProfessorSource,
     SeatInfo,
     SeatStatus,
     Section,
 )
 from app.contracts.catalog import PrereqExpression, PrereqUnparsed
+from app.schools.base import default_school
 
 log = logging.getLogger(__name__)
 
@@ -83,9 +84,37 @@ def professor_id(full_name: str, department: str) -> str:
 
 
 def rmp_url(first_name: str, last_name: str) -> str:
-    """Plain search link opened in the student's browser. Nothing is fetched from it."""
-    name = quote(f"{first_name} {last_name}".strip())
-    return f"https://www.ratemyprofessors.com/search/professors/0?q={name}"
+    """Plain search link opened in the student's browser, built by the school's rules
+    (DATA-05). Nothing is fetched from it."""
+    try:
+        rules = default_school().rules
+    except LookupError:
+        rules = None
+    return rules.rmp_link(first_name, last_name) if rules else ""
+
+
+BIO_SUMMARY_MAX = 280
+_SENTENCE_END = re.compile(r"[.!?](?=\s)")
+
+
+def _abbreviation(before: str) -> bool:
+    """'... an M.S' or '... Dr' before the dot: not the end of a sentence."""
+    word = before.rsplit(" ", 1)[-1]
+    return "." in word or len(word) <= 2 or word in {"Dr", "Mr", "Mrs", "Ms", "Jr", "Sr", "St"}
+
+
+def bio_summary(sources: Iterable[ProfessorSource]) -> str | None:
+    """The opening sentences of the official biography, cut at a sentence end.
+    Quoted from the profile, not written by a model (DATA-05)."""
+    bio = next((s.value for s in sources if s.kind == "biography" and s.value), "")
+    if not bio:
+        return None
+    flat = re.sub(r"\s+", " ", bio).strip()
+    if len(flat) <= BIO_SUMMARY_MAX:
+        return flat
+    cut = flat[:BIO_SUMMARY_MAX]
+    ends = [m.end() for m in _SENTENCE_END.finditer(cut) if not _abbreviation(cut[: m.start()])]
+    return cut[: ends[-1]] if ends else cut.rsplit(" ", 1)[0] + "…"
 
 
 def to_prereq(tree: Any, text: str | None, code: str) -> PrereqExpression | None:
@@ -178,16 +207,44 @@ def to_section(row: Row, meetings: Iterable[Row], instructor_ids: list[str]) -> 
     )
 
 
-def to_professor(row: Row, winter_courses: Iterable[str]) -> Professor:
+# Display order of profile sections (the contract's ProfessorSourceKind order).
+_SOURCE_ORDER = ("education", "interests", "work_experience", "research", "biography")
+
+
+def to_source(row: Row) -> ProfessorSource:
+    return ProfessorSource(
+        kind=row["kind"],
+        value=row["value"] or "",
+        source_url=row["source_url"],
+        fetched_at=row["fetched_at"],
+    )
+
+
+def to_professor(
+    row: Row,
+    winter_courses: Iterable[str],
+    source_rows: Iterable[Row] = (),
+    topic_tags: Iterable[str] = (),
+) -> Professor:
+    """Schedule name and courses, plus the public directory profile when
+    scripts/populate_db.py matched one and its topic tags from
+    scripts/tag_professors.py (DATA-05); no profile: no sources, no tags."""
     first = row["first_name"] or ""
     last = row["last_name"] or row["full_name"]
+    sources = sorted((to_source(s) for s in source_rows), key=lambda s: _SOURCE_ORDER.index(s.kind))
     return Professor(
         id=professor_id(row["full_name"], row["department"]),
         first_name=first,
         last_name=last,
         middle=row["middle_name"],
         department=row["department"],
+        title=row.get("job_title"),
+        bio_summary=bio_summary(sources),
+        topic_tags=list(topic_tags),
+        # True only when the profile says so; None is unknown, never False.
+        lists_undergrad_research=row.get("lists_undergrad_research"),
         winter_courses=sorted(set(winter_courses)),
+        sources=sources,
         rmp_url=rmp_url(first, last),
     )
 
@@ -226,10 +283,27 @@ ORDER BY m.section_id, m.position
 """
 
 _PROFESSORS_SQL = """
-SELECT p.id AS row_id, p.full_name, p.first_name, p.last_name, p.middle_name, p.department
+SELECT p.id AS row_id, p.full_name, p.first_name, p.last_name, p.middle_name, p.department,
+       p.job_title, p.lists_undergrad_research, p.directory_url
 FROM professors p JOIN universities u ON u.id = p.university_id
 WHERE u.short_code = %(uni)s
 ORDER BY p.last_name, p.first_name, p.department
+"""
+
+# Directory profile sections (DATA-05), one row per kind.
+_PROFESSOR_SOURCES_SQL = """
+SELECT ps.professor_id, ps.kind, ps.value, ps.source_url, ps.fetched_at
+FROM professor_sources ps JOIN universities u ON u.id = ps.university_id
+WHERE u.short_code = %(uni)s
+"""
+
+# Topic tags (DATA-05): the newest llm_cache row per profile URL. They live in the
+# cache, not on professors, so a full reload of the professors keeps them.
+_TOPIC_TAGS_SQL = """
+SELECT DISTINCT ON (subject) subject AS directory_url, value AS tags
+FROM llm_cache
+WHERE namespace = 'topic_tags' AND subject IS NOT NULL
+ORDER BY subject, created_at DESC
 """
 
 _INSTRUCTORS_SQL = """
@@ -253,6 +327,8 @@ class Catalog:
         meetings: list[Row],
         professors: list[Row],
         instructors: list[Row],
+        professor_sources: list[Row] | None = None,
+        topic_tags: list[Row] | None = None,
     ) -> None:
         prof_ids = {p["row_id"]: professor_id(p["full_name"], p["department"]) for p in professors}
         meetings_by_section: dict[Any, list[Row]] = defaultdict(list)
@@ -269,7 +345,19 @@ class Catalog:
             to_section(s, meetings_by_section[s["row_id"]], instructors_by_section[s["row_id"]])
             for s in sections
         ]
-        self.professors = [to_professor(p, courses_by_prof[p["row_id"]]) for p in professors]
+        sources_by_prof: dict[Any, list[Row]] = defaultdict(list)
+        for ps in professor_sources or []:
+            sources_by_prof[ps["professor_id"]].append(ps)
+        tags_by_url = {t["directory_url"]: t["tags"] for t in topic_tags or []}
+        self.professors = [
+            to_professor(
+                p,
+                courses_by_prof[p["row_id"]],
+                sources_by_prof[p["row_id"]],
+                tags_by_url.get(p.get("directory_url"), []),
+            )
+            for p in professors
+        ]
 
 
 def _read_database(url: str) -> Catalog:
@@ -289,6 +377,8 @@ def _read_database(url: str) -> Catalog:
             meetings=rows(_MEETINGS_SQL),
             professors=rows(_PROFESSORS_SQL),
             instructors=rows(_INSTRUCTORS_SQL),
+            professor_sources=rows(_PROFESSOR_SOURCES_SQL),
+            topic_tags=rows(_TOPIC_TAGS_SQL),
         )
     if not catalog.sections:
         raise RuntimeError(
@@ -327,7 +417,18 @@ def sections() -> list[Section]:
 
 
 def professors() -> list[Professor]:
-    return _database().professors if database_url() else fixture_data.professors()
+    if not database_url():
+        return fixture_data.professors()
+    catalog = _database()
+    # app.main reads the catalog before it registers the school (the rules need the
+    # courses), so the first load builds professors with no RMP link. Fill it in once
+    # the school is there.
+    if catalog.professors and not catalog.professors[0].rmp_url:
+        catalog.professors = [
+            p.model_copy(update={"rmp_url": rmp_url(p.first_name, p.last_name)})
+            for p in catalog.professors
+        ]
+    return catalog.professors
 
 
 def section_by_id() -> dict[str, Section]:

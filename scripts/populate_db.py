@@ -16,17 +16,28 @@ course rows. The run prints how many were added, updated, unchanged and
 removed. Each course stores its catalog year (derived from the term: Winter
 2027 is in the 2026-2027 catalog; --catalog-year overrides it).
 
+Professor profiles (DATA-05): when scripts/out/faculty.json exists (written by
+scrape_faculty.py), each schedule instructor is matched to a public directory
+profile by backend/app/schools/byui/professor_matching.py. A match with confidence
+0.8 or more adds the profile (bio, email, office, photo, research flag) to the
+professor row and one professor_sources row per section (education, interests,
+work experience, research, biography). Weaker or ambiguous matches are not attached
+and are listed in the run summary; fixtures/professor_overrides.json fixes them by
+hand. Teaching faculty who are in the directory but not in the schedule get a row
+of their own. Professors are part of the full refresh.
+
 Everything runs in one transaction: if anything fails, nothing changes and the
 old data stays.
 
-Standard library only: the script builds the SQL and pipes it into psql inside
-the Docker container (`docker exec -i ... psql`), so nothing extra needs to be
-installed.
+Standard library only (the professor matcher in backend/app is too): the script
+builds the SQL and pipes it into psql inside the Docker container
+(`docker exec -i ... psql`), so nothing extra needs to be installed.
 
 Usage:
     python3 scripts/populate_db.py
     python3 scripts/populate_db.py --database app_db --container my-postgres-myplan
     python3 scripts/populate_db.py --sql-out /tmp/populate.sql   # only write the SQL, do not run it
+    python3 scripts/populate_db.py --faculty ''                   # skip the directory profiles
 """
 
 from __future__ import annotations
@@ -37,8 +48,14 @@ import re
 import subprocess
 import sys
 from pathlib import Path
+from typing import Any
 
-OUT_DIR = Path(__file__).resolve().parent / "out"
+REPO = Path(__file__).resolve().parents[1]
+OUT_DIR = REPO / "scripts" / "out"
+OVERRIDES = REPO / "fixtures" / "professor_overrides.json"
+
+sys.path.insert(0, str(REPO / "backend"))
+from app.schools.byui import professor_matching as pm  # noqa: E402
 
 UNIVERSITY = ("byui", "Brigham Young University-Idaho")
 SEASONS = {"WI": "Winter", "SP": "Spring", "FA": "Fall"}
@@ -67,6 +84,7 @@ TABLES = [
     "meetings",
     "professors",
     "section_instructors",
+    "professor_sources",
 ]
 # Upserted, not emptied: unchanged courses are not touched (DATA-04).
 KEPT = {"universities", "courses"}
@@ -319,7 +337,113 @@ def section_rows(s: dict, run: str) -> list[str]:
     return sql
 
 
-def build_sql(data: dict, year: str | None = None) -> str:
+def schedule_names(data: dict) -> list[pm.ScheduleName]:
+    """Every (instructor, department) pair of the schedule, once, in file order."""
+    seen: dict[tuple[str, str], pm.ScheduleName] = {}
+    for s in data["sections"]:
+        for name in s["instructors"]:
+            seen.setdefault((name, s["department"]), pm.ScheduleName.parse(name, s["department"]))
+    return list(seen.values())
+
+
+def match_faculty(
+    data: dict, faculty: list[dict[str, Any]], overrides: list[dict[str, Any]] | None = None
+) -> list[pm.Match]:
+    # Every profile, whatever its title: someone in the schedule teaches (the directory
+    # calls some instructors "Senior Software Engineer").
+    return pm.match_all(schedule_names(data), faculty, overrides)
+
+
+def directory_only(faculty: list[dict[str, Any]], matches: list[pm.Match]) -> list[dict[str, Any]]:
+    """Teaching faculty no schedule instructor was matched to (office staff left out)."""
+    used = {m.profile["url"] for m in matches if m.profile}
+    return [p for p in faculty if pm.is_teaching(p) and p["url"] not in used]
+
+
+def profile_columns(p: dict[str, Any], confidence: float | None) -> dict[str, str]:
+    return {
+        "directory_url": lit(p["url"]),
+        "match_confidence": lit(confidence),
+        "job_title": lit(p.get("job_title")),
+        "email": lit(p.get("email")),
+        "office": lit(p.get("office")),
+        "image_url": lit(p.get("image_url")),
+        "bio": lit(p.get("description")),
+        "lists_undergrad_research": lit(pm.lists_undergrad_research(p)),
+        "profile_fetched_at": lit(p["fetched_at"]),
+    }
+
+
+def source_rows(prof: str, p: dict[str, Any]) -> list[str]:
+    """All five kinds, '' for a section the page does not have (DATA-05)."""
+    return [
+        insert(
+            "professor_sources",
+            {
+                "university_id": UNI,
+                "professor_id": prof,
+                "kind": lit(kind),
+                "value": lit(value),
+                "source_url": lit(p["url"]),
+                "fetched_at": lit(p["fetched_at"]),
+            },
+        )
+        for kind, value in pm.profile_sources(p).items()
+    ]
+
+
+def faculty_rows(faculty: list[dict[str, Any]], matches: list[pm.Match]) -> list[str]:
+    """Runs after the schedule rows: the professors from the schedule already exist."""
+    sql = []
+    for m in matches:
+        if m.profile is None:
+            continue
+        where = (
+            f"university_id = {UNI} AND full_name = {lit(m.schedule.full_name)} "
+            f"AND department = {lit(m.schedule.department)}"
+        )
+        cols = profile_columns(m.profile, m.confidence)
+        sql.append(
+            f"UPDATE professors SET {', '.join(f'{k} = {v}' for k, v in cols.items())} "
+            f"WHERE {where};"
+        )
+        sql += source_rows(f"(SELECT id FROM professors WHERE {where})", m.profile)
+    for p in directory_only(faculty, matches):
+        last, first, middle = pm.directory_name(p["name"])
+        full_name = f"{last}, {' '.join(x for x in (first, middle) if x)}".rstrip(", ")
+        department = (p.get("tags") or [None])[0] or (
+            p["departments"][0].replace("-", " ").title() if p.get("departments") else "Unknown"
+        )
+        sql.append(
+            insert(
+                "professors",
+                {
+                    "university_id": UNI,
+                    "full_name": lit(full_name),
+                    "last_name": lit(last),
+                    "first_name": lit(first),
+                    "middle_name": lit(middle),
+                    "department": lit(department),
+                    # No schedule name to match: the profile is the row's own source.
+                    **profile_columns(p, None),
+                },
+                suffix="ON CONFLICT (university_id, full_name, department) DO NOTHING",
+            )
+        )
+        sql += source_rows(
+            f"(SELECT id FROM professors WHERE university_id = {UNI} "
+            f"AND full_name = {lit(full_name)} AND department = {lit(department)})",
+            p,
+        )
+    return sql
+
+
+def build_sql(
+    data: dict,
+    year: str | None = None,
+    faculty: list[dict[str, Any]] | None = None,
+    overrides: list[dict[str, Any]] | None = None,
+) -> str:
     sections = data["sections"]
     run = (
         f"(SELECT id FROM scrape_runs WHERE university_id = {UNI} "
@@ -365,6 +489,8 @@ def build_sql(data: dict, year: str | None = None) -> str:
     )
     for s in sections:
         sql += section_rows(s, run)
+    if faculty:
+        sql += faculty_rows(faculty, match_faculty(data, faculty, overrides))
     sql.append("COMMIT;")
     return "\n".join(sql) + "\n"
 
@@ -436,6 +562,12 @@ def main() -> int:
     ap.add_argument("--user", default="app_user")
     ap.add_argument("--database", default="app_db")
     ap.add_argument("--sql-out", help="write the SQL to this file instead of running it")
+    ap.add_argument(
+        "--faculty",
+        default=str(OUT_DIR / "faculty.json"),
+        help="directory profiles from scrape_faculty.py ('' to skip)",
+    )
+    ap.add_argument("--overrides", default=str(OVERRIDES))
     args = ap.parse_args()
 
     data = json.loads(Path(args.src).read_text(encoding="utf-8"))
@@ -448,7 +580,15 @@ def main() -> int:
             file=sys.stderr,
         )
         return 1
-    sql = build_sql(data, args.catalog_year)
+    faculty: list[dict[str, Any]] = []
+    overrides: list[dict[str, Any]] = []
+    if args.faculty and Path(args.faculty).exists():
+        faculty = json.loads(Path(args.faculty).read_text(encoding="utf-8"))
+        if Path(args.overrides).exists():
+            overrides = json.loads(Path(args.overrides).read_text(encoding="utf-8"))["overrides"]
+    elif args.faculty:
+        print(f"No {args.faculty}: loading professors without directory profiles.")
+    sql = build_sql(data, args.catalog_year, faculty, overrides)
 
     if args.sql_out:
         Path(args.sql_out).write_text(sql, encoding="utf-8")
@@ -470,7 +610,28 @@ def main() -> int:
         f"Courses (catalog {year}): {added} added, {updated} updated, "
         f"{total - added - updated} unchanged, {removed} removed"
     )
+    if faculty:
+        print_match_summary(match_faculty(data, faculty, overrides), faculty)
     return 0
+
+
+def print_match_summary(matches: list[pm.Match], faculty: list[dict[str, Any]]) -> None:
+    """DATA-05: weak matches are not attached, and each pair is listed here."""
+    attached = [m for m in matches if m.profile]
+    missing = [m for m in matches if not m.profile and m.reason == "not in the directory"]
+    review = [m for m in matches if not m.profile and m not in missing]
+    print(
+        f"Professor profiles: {len(attached)} of {len(matches)} schedule instructors matched, "
+        f"{len(missing)} not in the directory, {len(review)} to review; "
+        f"{len(directory_only(faculty, matches))} directory-only faculty added"
+    )
+    for m in review:
+        print(
+            f"  REVIEW {m.schedule.full_name} ({m.schedule.department}): "
+            f"{m.confidence:.2f} {m.reason}"
+        )
+    if review:
+        print(f"  Fix a pair by hand in {OVERRIDES.relative_to(REPO)}.")
 
 
 if __name__ == "__main__":

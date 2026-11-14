@@ -141,6 +141,11 @@ class SchoolRules(ABC):
     def audit_is_stale(self, audit_date: date, today: date) -> bool:
         return (today - audit_date).days > self.audit_max_age_days()
 
+    def rmp_link(self, first_name: str, last_name: str) -> str:
+        """Plain Rate My Professors search link for this school, opened in the
+        student's browser (DATA-05). Empty when the school has none."""
+        return ""
+
 
 @dataclass
 class School:

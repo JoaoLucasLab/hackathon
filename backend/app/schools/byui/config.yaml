@@ -3,6 +3,11 @@
 
 university_id: byui
 
+# Rate My Professors school id, looked up once by hand (Nov 14, 2026): the school's
+# page there is /school/1754. Used only to build a plain search link the student
+# opens in their browser; the backend never requests that site (DATA-05).
+rmp_school_id: "1754"
+
 # Credit range used when the student gives none.
 credit_default_min: 12
 credit_default_max: 15
