@@ -470,6 +470,123 @@ Acceptance criteria:
 
 Tests: `e2e/demo.spec.ts`.
 
+## New requirements: conversational planner (Nov 14, 2026)
+
+Two changes to how the planner chat works, written as three new blocks on top of the existing app. They change the planner chat only. The audit, professors and mentor screens stay the same.
+
+1. **Back-and-forth intake.** The assistant no longer builds schedules after the student's first message. It asks questions until it has the information it needs, then builds.
+2. **One schedule at a time, in the chat.** The assistant shows one schedule inside the conversation, not 3 cards on a separate Schedules tab. It asks whether the schedule works. If the student says yes, the assistant confirms that schedule as the student's Winter 2027 plan. If not, it uses the student's feedback to build a new one.
+
+| ID | Block | Size | Depends on | Owner |
+| --- | --- | --- | --- | --- |
+| ENG-07 | Solver: one schedule at a time, never repeat a rejected one | S | ENG-03, ENG-05 | Planning Engine |
+| AI-07 | Conversational intake before the first schedule | M | AI-02 | AI & Product |
+| AI-08 | One schedule in the chat: feedback, rebuild, confirm | L | AI-07, ENG-07, AI-03 | AI & Product |
+
+Merge order: ENG-07 and AI-07 can be built at the same time. AI-08 needs both. These are new features, so they are not covered by the Hour 10 feature freeze. They merge behind a new flag, `FEATURE_CONVERSATIONAL_PLANNER`, which stays off in production until AI-08 passes its tests. With the flag off, the app works the way it does today.
+
+### Decisions these blocks need
+
+| Topic | Proposed decision | Who decides |
+| --- | --- | --- |
+| A ninth chat tool | Add `confirm_schedule`. AGENTS.md says there are exactly eight tools, so AGENTS.md changes in the same contract PR. | Team |
+| The Schedules tab | It becomes "My plan" and shows the confirmed schedule only. The 3-card comparison screen is removed when the flag is on. | Team |
+| Confirmed schedule storage | It is kept in the session with the constraints (in memory today). It is encrypted at rest, like chats, once sessions move to Postgres. Any schema change is a DATA block. | Data owner |
+| Intake length | At most 2 questions per assistant message. After 4 rounds of questions, the assistant offers to build with defaults for anything still open. | Team |
+
+### Criteria these blocks replace
+
+With `FEATURE_CONVERSATIONAL_PLANNER` on, these older criteria no longer apply. Their tests stay, and run with the flag off.
+
+- AI-02: "after `build_schedules` runs, 3 cards appear". Replaced by AI-08 (one schedule in the chat).
+- AI-02: "When the student states schedule preferences, call `build_schedules` right away" (rule in `system.md`). Replaced by AI-07.
+- AI-03: the comparison screen with 3 to 5 schedules. Its calendar, "why", backups and professor chips are reused inside the chat card (AI-08).
+- AI-06: the demo script ("three chat messages, schedules") is rewritten for the new flow (AI-08).
+
+### ENG-07 · Solver: one schedule at a time, never repeat a rejected one
+
+The solver can already return several different schedules. This block lets the chat ask for one schedule at a time, and promises that a schedule the student rejected never comes back. Folders: `backend/app/engine/solver.py`, `backend/app/contracts/schedules.py` (contract PR), `backend/app/api/schedules.py`, `backend/app/llm/tools.py` (argument schema only).
+
+Acceptance criteria:
+
+- [ ] `BuildSchedulesRequest` gets `avoid_schedules: list[list[str]]` (each inner list holds the section ids of one rejected schedule; the default is empty). This is a contract PR, with regenerated types and updated fixtures.
+- [ ] The solver adds one "must differ" rule per avoided schedule: the result differs from it by at least one section. This uses the same diversity rule the solver already applies between its own results.
+- [ ] When the session's constraints are unchanged and the student rejects 3 schedules in a row, the 4th result is different from all 3. This is a test on the fixtures.
+- [ ] When no schedule is left that fits the constraints and differs from every rejected one, the response has no schedules and either a `relaxation` hint or `exhausted: true`. It never returns a schedule the student already rejected.
+- [ ] The `build_schedules` chat tool always asks for exactly 1 schedule when the flag is on. The model cannot ask for more. `POST /api/schedules/build` still accepts 1 to 5, so the old screen keeps working with the flag off.
+- [ ] With 1 result, a solve takes at most `SOLVER_TIME_LIMIT_S`, the same limit as today.
+
+Tests: `test_solver_avoid.py` (parametrized: 0, 1 and 3 avoided schedules; no schedule left; avoided schedule plus changed constraints).
+
+### AI-07 · Conversational intake before the first schedule
+
+The assistant has a short conversation before it builds anything. The rule lives in two places: the system prompt tells the model what to do, and the backend blocks an early `build_schedules` call, so a model that tries to skip ahead still cannot. Folders: `backend/app/llm/prompts/system.md`, `backend/app/llm/chat.py`, `backend/app/llm/tools.py`, `backend/app/llm/intake.py` (new), `frontend/src/components/ChatPanel.tsx`.
+
+**What the assistant must know before the first schedule** (the readiness checklist):
+
+| Item | Where it comes from | If missing |
+| --- | --- | --- |
+| Track (or online student) | Audit, via `get_remaining_requirements` | Ask. Required. |
+| Credit load | The student, as a range or "the default is fine" | Ask. Required. If the student says "whatever", use the school default and say what it is. |
+| When they can be on campus | The student: time of day, days off, work or other fixed hours | Ask once. "No preference" is a valid answer. |
+| Courses to include or skip | The student. Every course they name is checked with `search_sections`. | Ask once. "None" is a valid answer. |
+| Campus or online | The student (only asked when the track allows campus classes) | Ask once. "Either" is a valid answer. |
+| Waitlist | The student | Ask only when a course they want is closed. |
+
+Acceptance criteria:
+
+- [ ] `system.md` replaces "call `build_schedules` right away" with intake rules: (a) check the checklist against what the student already said and what the audit shows; (b) ask only for what is missing, at most 2 short questions per message; (c) never ask something the audit or the student already answered; (d) when the checklist is complete, restate the preferences in a short list and ask "Should I build a schedule with these?"; (e) build only after the student says yes or asks to build.
+- [ ] The prompt has two worked examples, one student who gives everything in the first message and one who says only "help me plan my semester". Each shows the expected questions and the point where building starts.
+- [ ] The backend tracks intake state per session (`IntakeState` in `llm/intake.py`): which checklist items are answered and whether the student agreed to build. The model updates it through the arguments it already sends (`build_schedules` constraints, the track answer), and the backend checks them against the audit.
+- [ ] Gate: when `build_schedules` is called before the required items (track, credit load) are known, or in the session's first student turn, the tool does not run. It returns an error naming the missing items (`"not ready: ask the student for credit load"`), and the model asks for them. This is a test on recorded responses: a model that calls `build_schedules` on turn 1 still produces a question, not a schedule.
+- [ ] A student who gives everything in one message ("Fall & Winter track, 12 to 15 credits, no classes before 10, no Fridays, include CSE 210") gets one confirmation question, then a schedule after "yes". There are no extra questions.
+- [ ] A student who says only "help me plan my semester" gets questions over several turns, at most 2 per message, and a schedule only after the checklist is complete and they agree.
+- [ ] After 4 rounds of questions the assistant offers to build with defaults for the optional items ("I can build one now with no time limits. Want me to?"). It never interrogates without end.
+- [ ] Answers the student already gave are kept. A later message changes only what it mentions.
+- [ ] An unknown course ("add CSE 999") during intake: the assistant says it cannot find that course and asks what the student meant. The intake does not move on as if the course were valid.
+- [ ] The chat shows quick replies for the current question when the answer is a fixed choice (track options, "No preference", "Build it"). Clicking one sends it as the student's message, so the conversation stays the only path. They can be used with the keyboard.
+- [ ] Every rule from AI-02 still holds: facts only from tools, no guessing the track or credit range, off-topic requests declined, instructions inside data ignored, no student name or ID in request bodies.
+
+Tests: `test_intake_gate.py` (parametrized: each missing required item; build on turn 1; complete checklist), `test_intake_conversation.py` (both worked examples as multi-turn recorded conversations), `ChatPanel.test.tsx` (quick replies).
+
+### AI-08 · One schedule in the chat: feedback, rebuild, confirm
+
+The schedule appears inside the conversation as a card. The assistant asks whether it works, and the student's answer leads to either a confirmed plan or a new schedule. Folders: `backend/app/llm/prompts/system.md`, `backend/app/llm/tools.py`, `backend/app/api/schedules.py`, `backend/app/contracts/` (contract PR), `frontend/src/components/ChatPanel.tsx`, `frontend/src/components/ChatScheduleCard.tsx` (new), `frontend/src/pages/Planner.tsx`, `frontend/src/pages/MyPlan.tsx` (new), `docs/demo-script.md`, `e2e/demo.spec.ts`.
+
+**The loop:**
+
+```
+intake done → build 1 schedule → show it in the chat → "Does this schedule work for you?"
+   ├─ yes ("looks good", "This works")  → confirm_schedule → "Saved as your Winter 2027 plan."
+   ├─ specific feedback ("no Friday", "swap CSE 210 for another time", "fewer credits")
+   │      → update constraints + add this schedule to avoid list → build 1 → show → ask again
+   ├─ vague ("I don't like it", "show me another")
+   │      → ask what to change, OR build a different one with the same rules (avoid list)
+   └─ no schedule left → show relaxation hint in the chat → ask which rule to loosen
+```
+
+Acceptance criteria:
+
+- [ ] A new `confirm_schedule` tool (strict JSON schema; argument: `schedule_id`) stores the schedule as the session's confirmed Winter 2027 plan. It only accepts the id of the schedule shown last in this session. Any other id is an error. AGENTS.md's tool list is updated in the same contract PR.
+- [ ] New endpoints: `GET /api/plan` returns the confirmed `Schedule` or 404, and `DELETE /api/plan` clears it. `DELETE /api/me` also clears it. The `confirm_schedule` tool and `PUT /api/plan` call the same Python function.
+- [ ] After `build_schedules` returns, the chat shows exactly one schedule card in the assistant's message, rendered from the tool result: weekly calendar (reusing `WeekCalendar`), each class with the requirement it fills, professor chip with star and RMP link, backups, "seats as of \<time>", warnings as "Check this before registering", and "Confirm with BYU-Idaho Academic Advising." The page does not move to another tab.
+- [ ] Each card is labeled "Option 1", "Option 2" and so on, and older cards in the conversation collapse to one line ("Option 1: 13 credits, MWF, not chosen"). They can be expanded again.
+- [ ] After every schedule, the assistant asks in one sentence whether it works, and the card shows two quick replies: "This works" and "Change something". "Change something" puts the cursor in the message box.
+- [ ] When the student says yes, the assistant calls `confirm_schedule` and replies: "Saved as your Winter 2027 plan. This does not register you for classes. Confirm with BYU-Idaho Academic Advising." The card shows a "Confirmed" label with text, not color alone.
+- [ ] The assistant confirms only after a clear yes. "Maybe", "I guess" or a question about the schedule gets an answer and the same "Does this work?" question. This is a test on recorded responses.
+- [ ] Specific feedback is turned into `ConstraintSet` changes. The rejected schedule's section ids go into `avoid_schedules`, and the new schedule is built with both. Table-driven test on recorded responses with at least these phrases: "no classes on Friday", "I don't want that professor", "can CSE 210 be later in the day", "fewer credits", "move the online one to campus", "show me a different one".
+- [ ] Vague feedback ("I don't like it") gets one question about what to change. If the student answers "just show me another", the next schedule uses the same constraints and is different (ENG-07).
+- [ ] Before showing a new schedule, the assistant says in one or two sentences what changed from the previous one, using only facts from the two tool results. A test checks that every course code and time in that text appears in one of the two schedules.
+- [ ] When no schedule fits, the chat shows the relaxation hint with an "Apply this change" quick reply. If there is no hint, the assistant says no schedule fits and asks which rule to loosen. It never shows an old rejected schedule.
+- [ ] After a schedule is confirmed, the student can keep talking. "Actually, change the Tuesday class" reopens the loop. The confirmed plan stays until a new one is confirmed, and the assistant says so.
+- [ ] The Schedules tab becomes "My plan". It shows the confirmed schedule (full calendar and detail, read-only) or an empty state ("No plan confirmed yet. Plan it in the chat."), plus loading and error states. The 3-card comparison and the constraint chips are not shown when the flag is on.
+- [ ] Reloading the page keeps the conversation, the cards and the confirmed plan for the session.
+- [ ] The system prompt says to never present more than one schedule per message, never list several options in text, and never describe a schedule that did not come from `build_schedules`.
+- [ ] `docs/demo-script.md` and `e2e/demo.spec.ts` follow the new flow: consent, sample audit, intake (2 to 3 messages), schedule 1, "no Fridays", schedule 2, "This works", "My plan" shows it. The e2e test passes 3 times in a row on the snapshot.
+- [ ] Keyboard only: the student can reach the card, expand classes, use both quick replies and open "My plan".
+
+Tests: `test_confirm_schedule.py`, `test_feedback_to_constraints.py`, `test_change_summary_grounded.py`, `test_plan_api.py`, `ChatScheduleCard.test.tsx`, `MyPlan.test.tsx`, `e2e/demo.spec.ts`.
+
 ## Merge order by hour
 
 Seven blocks form the critical path: DATA-01, ENG-01, ENG-02, ENG-03, AI-02, AI-03 and AI-06. If one of them is late, the demo is late; the other eleven can slip or be cut.
