@@ -15,3 +15,7 @@ export type Meeting = Schemas["Meeting"];
 export type Schedule = Schemas["Schedule"];
 export type ScheduledClass = Schemas["ScheduledClass"];
 export type Section = Schemas["Section"];
+export type Professor = Schemas["Professor"];
+export type FavoriteProfessor = Schemas["FavoriteProfessor"];
+export type ScheduleExplanation = Schemas["ScheduleExplanation"];
+export type Relaxation = Schemas["Relaxation"];

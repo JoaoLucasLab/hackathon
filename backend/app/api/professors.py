@@ -1,17 +1,33 @@
-"""STUB (ENG-01). Real code: DATA-05 (professors) and AI-03 (favorites)."""
+"""Professors. STUB (ENG-01) reads fixtures until DATA-05; favorites are AI-03.
+
+Favorites live in memory, keyed by the `sid` cookie (the same key as the chat
+session), until DATA-01 adds the database. The chat's ToolContext holds the very
+same set object, so starring in the UI and through `toggle_favorite_professor`
+always agree.
+"""
 
 from datetime import UTC, datetime
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 
 from app.api import fixture_data
 from app.contracts import FavoriteProfessor, FavoriteUpdate, Professor
 
 router = APIRouter(prefix="/api", tags=["professors"])
 
+_favorites: dict[str, set[str]] = {}
 
-@router.get("/professors", response_model=list[Professor])
-def list_professors(q: str | None = None) -> list[Professor]:
+
+def session_id(request: Request) -> str:
+    return request.cookies.get("sid", "local")
+
+
+def favorites_for(sid: str) -> set[str]:
+    """The live favorite set for a session (shared, not a copy)."""
+    return _favorites.setdefault(sid, set())
+
+
+def find_professors(q: str | None = None) -> list[Professor]:
     profs = fixture_data.professors()
     if not q:
         return profs
@@ -25,19 +41,39 @@ def list_professors(q: str | None = None) -> list[Professor]:
     ]
 
 
-@router.get("/professors/{professor_id}", response_model=Professor)
-def get_professor(professor_id: str) -> Professor:
+def professor_or_404(professor_id: str) -> Professor:
     prof = fixture_data.professor_by_id().get(professor_id)
     if prof is None:
         raise HTTPException(status_code=404, detail="Professor not found")
     return prof
 
 
-@router.put("/professors/{professor_id}/favorite", response_model=FavoriteProfessor)
-def set_favorite(professor_id: str, body: FavoriteUpdate) -> FavoriteProfessor:
-    if professor_id not in fixture_data.professor_by_id():
-        raise HTTPException(status_code=404, detail="Professor not found")
-    # STUB: not persisted; AI-03 stores it per session.
+def save_favorite(favorites: set[str], professor_id: str, favorite: bool) -> FavoriteProfessor:
+    professor_or_404(professor_id)
+    if favorite:
+        favorites.add(professor_id)
+    else:
+        favorites.discard(professor_id)
     return FavoriteProfessor(
-        professor_id=professor_id, favorite=body.favorite, updated_at=datetime.now(UTC)
+        professor_id=professor_id, favorite=favorite, updated_at=datetime.now(UTC)
     )
+
+
+def _marked(prof: Professor, favorites: set[str]) -> Professor:
+    return prof.model_copy(update={"is_favorite": prof.id in favorites})
+
+
+@router.get("/professors", response_model=list[Professor])
+def list_professors(request: Request, q: str | None = None) -> list[Professor]:
+    favorites = favorites_for(session_id(request))
+    return [_marked(p, favorites) for p in find_professors(q)]
+
+
+@router.get("/professors/{professor_id}", response_model=Professor)
+def get_professor(professor_id: str, request: Request) -> Professor:
+    return _marked(professor_or_404(professor_id), favorites_for(session_id(request)))
+
+
+@router.put("/professors/{professor_id}/favorite", response_model=FavoriteProfessor)
+def set_favorite(professor_id: str, body: FavoriteUpdate, request: Request) -> FavoriteProfessor:
+    return save_favorite(favorites_for(session_id(request)), professor_id, body.favorite)

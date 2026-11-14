@@ -108,3 +108,21 @@ class BuildSchedulesResponse(Contract):
     schedules: list[Schedule]
     excluded: list[Excluded] = Field(default_factory=list)
     relaxation: Relaxation | None = None
+
+
+class ExplainScheduleRequest(Contract):
+    """The schedule to explain, exactly as `POST /api/schedules/build` returned it."""
+
+    schedule: Schedule
+
+
+class ScheduleExplanation(Contract):
+    """Claude's wording of a schedule's structured `why` (AI-03). Facts only from it."""
+
+    schedule_id: str
+    available: bool = Field(
+        description="False when no grounded text could be written; show the structured why."
+    )
+    why: str | None = Field(default=None, examples=["Every class counts toward your degree."])
+    tradeoffs: list[str] = Field(default_factory=list, max_length=3)
+    advising_note: Literal["Confirm with BYU-Idaho Academic Advising."] = ADVISING_NOTE

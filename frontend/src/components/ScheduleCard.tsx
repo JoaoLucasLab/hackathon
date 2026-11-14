@@ -1,64 +1,18 @@
-import type { Day, Meeting, Schedule, ScheduledClass } from "../api/schemas";
+import type { Schedule } from "../api/schemas";
 import { formatTime } from "./ConstraintChips";
+import { BlockTag, DAYS, blockLabel, plural, timedMeetings, whenLine } from "./scheduleFormat";
+import { Button } from "./ui/Button";
 import { TagSquare } from "./ui/TagSquare";
 
-const DAYS: { day: Day; short: string; name: string }[] = [
-  { day: "M", short: "M", name: "Monday" },
-  { day: "T", short: "T", name: "Tuesday" },
-  { day: "W", short: "W", name: "Wednesday" },
-  { day: "R", short: "R", name: "Thursday" },
-  { day: "F", short: "F", name: "Friday" },
-  { day: "S", short: "S", name: "Saturday" },
-];
-
-const DAY_ABBR: Record<Day, string> = { M: "Mon", T: "Tue", W: "Wed", R: "Thu", F: "Fri", S: "Sat" };
-
-function plural(n: number, word: string): string {
-  return `${n} ${n === 1 ? word : `${word}s`}`;
-}
-
-function timedMeetings(c: ScheduledClass): Meeting[] {
-  return (c.section.meetings ?? []).filter((m) => !m.tba && m.start_time && m.end_time);
-}
-
-/** "Mon, Wed 10:15 AM to 11:45 AM, STC 231" (frontend.md class row). */
-function whenLine(c: ScheduledClass): string {
-  const meetings = timedMeetings(c);
-  if (meetings.length === 0) {
-    return c.section.delivery_method === "online" ? "Online, no set time" : "Time to be announced";
-  }
-  return meetings
-    .map((m) => {
-      const days = (m.days ?? []).map((d) => DAY_ABBR[d]).join(", ");
-      const time = `${formatTime(m.start_time ?? "")} to ${formatTime(m.end_time ?? "")}`;
-      return [`${days} ${time}`, m.room].filter(Boolean).join(", ");
-    })
-    .join("; ");
-}
-
-function blockLabel(c: ScheduledClass): string | null {
-  if (c.section.block === "first") return "First Block";
-  if (c.section.block === "second") return "Second Block";
-  return null;
-}
-
-function BlockTag({ label }: { label: string }) {
-  const swatch = label === "First Block" ? "sw-first" : "sw-second";
-  return (
-    <span className="inline-flex items-center gap-1.5 rounded-tag bg-field px-2 py-0.5 text-[13px]">
-      <span aria-hidden="true" className={`h-2.5 w-3 rounded-[2px] ${swatch}`} />
-      {label}
-    </span>
-  );
-}
-
 function latestEnd(s: Schedule): string | null {
-  const ends = s.classes.flatMap((c) => timedMeetings(c).map((m) => m.end_time ?? ""));
-  return ends.length ? ends.sort().at(-1) ?? null : null;
+  const ends = s.classes.flatMap((c) => timedMeetings(c.section).map((m) => m.end_time ?? ""));
+  return ends.length ? (ends.sort().at(-1) ?? null) : null;
 }
 
 function WeekDots({ schedule }: { schedule: Schedule }) {
-  const used = new Set(schedule.classes.flatMap((c) => timedMeetings(c).flatMap((m) => m.days ?? [])));
+  const used = new Set(
+    schedule.classes.flatMap((c) => timedMeetings(c.section).flatMap((m) => m.days ?? [])),
+  );
   return (
     <ul aria-label="Class days" className="flex gap-2.5">
       {DAYS.map(({ day, short, name }) => {
@@ -82,8 +36,14 @@ function WeekDots({ schedule }: { schedule: Schedule }) {
   );
 }
 
+interface ScheduleCardProps {
+  schedule: Schedule;
+  /** Opens the full schedule: calendar, reasons, professors, backups. */
+  onSelect?: (schedule: Schedule) => void;
+}
+
 /** One schedule option as a slip: summary above the perforation, classes below. */
-export function ScheduleCard({ schedule }: { schedule: Schedule }) {
+export function ScheduleCard({ schedule, onSelect }: ScheduleCardProps) {
   const end = latestEnd(schedule);
   const titleId = `schedule-${schedule.id}`;
   return (
@@ -109,7 +69,7 @@ export function ScheduleCard({ schedule }: { schedule: Schedule }) {
         <div className="slip-perf" />
         <ul className="flex flex-col px-6 py-2">
           {schedule.classes.map((c) => {
-            const block = blockLabel(c);
+            const block = blockLabel(c.section);
             return (
               <li
                 key={c.section.id}
@@ -126,7 +86,7 @@ export function ScheduleCard({ schedule }: { schedule: Schedule }) {
                       </span>
                       <span className="text-muted"> {c.section.title}</span>
                     </p>
-                    <p className="text-sm tabular-nums text-muted">{whenLine(c)}</p>
+                    <p className="text-sm tabular-nums text-muted">{whenLine(c.section)}</p>
                     {block && (
                       <span className="mt-1">
                         <BlockTag label={block} />
@@ -141,6 +101,17 @@ export function ScheduleCard({ schedule }: { schedule: Schedule }) {
             );
           })}
         </ul>
+        {onSelect && (
+          <div className="flex justify-end border-t border-line-soft px-6 py-2">
+            <Button
+              variant="text"
+              onClick={() => onSelect(schedule)}
+              aria-label={`See details for option ${schedule.rank}`}
+            >
+              See details
+            </Button>
+          </div>
+        )}
       </div>
     </article>
   );

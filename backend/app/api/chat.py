@@ -12,6 +12,7 @@ from fastapi import APIRouter, Request
 from fastapi.responses import StreamingResponse
 
 from app.api import fixture_data
+from app.api import professors as professors_api
 from app.contracts import ChatEvent, ChatRequest, ConstraintSet
 
 # Module imports (not names) avoid a circular import: see app/llm/chat.py.
@@ -27,7 +28,13 @@ def get_session(request: Request) -> llm_chat.ChatSession:
     sid = request.cookies.get("sid", "local")
     if sid not in _sessions:
         # STUB until AI-04: every session starts from the sample audit.
-        _sessions[sid] = llm_chat.ChatSession(ctx=llm_tools.ToolContext(audit=fixture_data.audit()))
+        # The favorite set is shared with the professors API, so stars agree.
+        _sessions[sid] = llm_chat.ChatSession(
+            ctx=llm_tools.ToolContext(
+                audit=fixture_data.audit(),
+                favorite_professor_ids=professors_api.favorites_for(sid),
+            )
+        )
     return _sessions[sid]
 
 

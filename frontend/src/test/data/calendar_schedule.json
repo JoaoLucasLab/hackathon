@@ -1,0 +1,313 @@
+{
+  "id": "cal-1",
+  "rank": 1,
+  "score": 99.0,
+  "total_credits": 12,
+  "optimal": true,
+  "classes": [
+    {
+      "section": {
+        "id": "2027;WI|CSE 212-02",
+        "course_code": "CSE 212",
+        "section": "02",
+        "title": "Programming with Data Structures",
+        "credits": 2,
+        "term_code": "2027;WI",
+        "block": "full",
+        "delivery_method": "campus",
+        "class_type": "Lecture",
+        "department": "Computer Science",
+        "instructor_ids": [
+          "p-hale"
+        ],
+        "meetings": [
+          {
+            "days": [
+              "T",
+              "R"
+            ],
+            "start_time": "12:45:00",
+            "end_time": "13:45:00",
+            "start_date": "2027-01-06",
+            "end_date": "2027-04-08",
+            "room": "STC 235",
+            "tba": false
+          }
+        ],
+        "seats": {
+          "status": "open",
+          "open": 7,
+          "total": 30,
+          "as_of": "2026-11-13T15:00:00Z"
+        },
+        "source_url": "https://fixtures.invalid/course-search/2027-WI/CSE212-02",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      },
+      "requirement_ids": [
+        "core-data-structures"
+      ],
+      "waitlisted": false,
+      "backups": [
+        {
+          "id": "2027;WI|CSE 212-01",
+          "course_code": "CSE 212",
+          "section": "01",
+          "title": "Programming with Data Structures",
+          "credits": 2,
+          "term_code": "2027;WI",
+          "block": "full",
+          "delivery_method": "campus",
+          "class_type": "Lecture",
+          "department": "Computer Science",
+          "instructor_ids": [
+            "p-barros"
+          ],
+          "meetings": [
+            {
+              "days": [
+                "T",
+                "R"
+              ],
+              "start_time": "09:00:00",
+              "end_time": "10:00:00",
+              "start_date": "2027-01-06",
+              "end_date": "2027-04-08",
+              "room": "STC 235",
+              "tba": false
+            }
+          ],
+          "seats": {
+            "status": "open",
+            "open": 4,
+            "total": 30,
+            "as_of": "2026-11-13T15:00:00Z"
+          },
+          "source_url": "https://fixtures.invalid/course-search/2027-WI/CSE212-01",
+          "fetched_at": "2026-11-13T15:00:00Z"
+        },
+        {
+          "id": "2027;WI;W2|CSE 212-04",
+          "course_code": "CSE 212",
+          "section": "04",
+          "title": "Programming with Data Structures",
+          "credits": 2,
+          "term_code": "2027;WI;W2",
+          "block": "second",
+          "delivery_method": "campus",
+          "class_type": "Lecture",
+          "department": "Computer Science",
+          "instructor_ids": [
+            "p-smith-cse"
+          ],
+          "meetings": [
+            {
+              "days": [
+                "M",
+                "W"
+              ],
+              "start_time": "15:15:00",
+              "end_time": "16:15:00",
+              "start_date": "2027-02-24",
+              "end_date": "2027-04-08",
+              "room": "STC 231",
+              "tba": false
+            }
+          ],
+          "seats": {
+            "status": "open",
+            "open": 9,
+            "total": 30,
+            "as_of": "2026-11-13T15:00:00Z"
+          },
+          "source_url": "https://fixtures.invalid/course-search/2027-WI-W2/CSE212-04",
+          "fetched_at": "2026-11-13T15:00:00Z"
+        }
+      ],
+      "warnings": [
+        {
+          "kind": "prerequisite_check",
+          "message": "Check this before registering: needs CSE 111 with a C- or better",
+          "course_code": "CSE 212",
+          "section_id": "2027;WI|CSE 212-02"
+        }
+      ]
+    },
+    {
+      "section": {
+        "id": "2027;WI;W1|WDD 231-02",
+        "course_code": "WDD 231",
+        "section": "02",
+        "title": "Web Frontend Development I",
+        "credits": 2,
+        "term_code": "2027;WI;W1",
+        "block": "first",
+        "delivery_method": "campus",
+        "class_type": "Lecture",
+        "department": "Web Design and Development",
+        "instructor_ids": [
+          "p-okafor"
+        ],
+        "meetings": [
+          {
+            "days": [
+              "M",
+              "W"
+            ],
+            "start_time": "12:45:00",
+            "end_time": "13:45:00",
+            "start_date": "2027-01-06",
+            "end_date": "2027-02-23",
+            "room": "STC 150",
+            "tba": false
+          }
+        ],
+        "seats": {
+          "status": "open",
+          "open": 9,
+          "total": 30,
+          "as_of": "2026-11-13T15:00:00Z"
+        },
+        "source_url": "https://fixtures.invalid/course-search/2027-WI-W1/WDD231-02",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      },
+      "requirement_ids": [
+        "web-frontend"
+      ],
+      "waitlisted": false,
+      "backups": [],
+      "warnings": []
+    },
+    {
+      "section": {
+        "id": "2027;WI;W2|CSE 310-03",
+        "course_code": "CSE 310",
+        "section": "03",
+        "title": "Applied Programming",
+        "credits": 3,
+        "term_code": "2027;WI;W2",
+        "block": "second",
+        "delivery_method": "campus",
+        "class_type": "Lecture",
+        "department": "Computer Science",
+        "instructor_ids": [
+          "p-okafor"
+        ],
+        "meetings": [
+          {
+            "days": [
+              "M",
+              "T",
+              "W",
+              "R"
+            ],
+            "start_time": "14:00:00",
+            "end_time": "15:00:00",
+            "start_date": "2027-02-24",
+            "end_date": "2027-04-08",
+            "room": "STC 380",
+            "tba": false
+          }
+        ],
+        "seats": {
+          "status": "open",
+          "open": 13,
+          "total": 30,
+          "as_of": "2026-11-13T15:00:00Z"
+        },
+        "source_url": "https://fixtures.invalid/course-search/2027-WI-W2/CSE310-03",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      },
+      "requirement_ids": [
+        "core-applied"
+      ],
+      "waitlisted": false,
+      "backups": [],
+      "warnings": []
+    },
+    {
+      "section": {
+        "id": "2027;WI;W2|WDD 231-03",
+        "course_code": "WDD 231",
+        "section": "03",
+        "title": "Web Frontend Development I",
+        "credits": 2,
+        "term_code": "2027;WI;W2",
+        "block": "second",
+        "delivery_method": "campus",
+        "class_type": "Lecture",
+        "department": "Web Design and Development",
+        "instructor_ids": [
+          "p-okafor"
+        ],
+        "meetings": [
+          {
+            "days": [
+              "M",
+              "W"
+            ],
+            "start_time": "12:45:00",
+            "end_time": "13:45:00",
+            "start_date": "2027-02-24",
+            "end_date": "2027-04-08",
+            "room": "STC 150",
+            "tba": false
+          }
+        ],
+        "seats": {
+          "status": "open",
+          "open": 12,
+          "total": 30,
+          "as_of": "2026-11-13T15:00:00Z"
+        },
+        "source_url": "https://fixtures.invalid/course-search/2027-WI-W2/WDD231-03",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      },
+      "requirement_ids": [],
+      "waitlisted": false,
+      "backups": [],
+      "warnings": []
+    },
+    {
+      "section": {
+        "id": "2027;WI|MATH 113-04",
+        "course_code": "MATH 113",
+        "section": "04",
+        "title": "Calculus II",
+        "credits": 3,
+        "term_code": "2027;WI",
+        "block": "full",
+        "delivery_method": "online",
+        "class_type": "Lecture",
+        "department": "Mathematics",
+        "instructor_ids": [
+          "p-nakamura"
+        ],
+        "meetings": [],
+        "seats": {
+          "status": "open",
+          "open": 22,
+          "total": 40,
+          "as_of": "2026-11-13T15:00:00Z"
+        },
+        "source_url": "https://fixtures.invalid/course-search/2027-WI/MATH113-04",
+        "fetched_at": "2026-11-13T15:00:00Z"
+      },
+      "requirement_ids": [],
+      "waitlisted": false,
+      "backups": [],
+      "warnings": []
+    }
+  ],
+  "why": {
+    "preferences_met": [
+      "earliest_start",
+      "credit_range"
+    ],
+    "preferences_missed": [
+      "days_off:F"
+    ],
+    "favorite_professor_ids": []
+  },
+  "warnings": [],
+  "advising_note": "Confirm with BYU-Idaho Academic Advising."
+}
