@@ -3,6 +3,7 @@
 **
 !frontend/**
 !fixtures/*.json
+!fixtures/audits/*/expected.json
 frontend/node_modules
 frontend/dist
 frontend/openapi.json

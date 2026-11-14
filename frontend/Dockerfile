@@ -9,7 +9,8 @@ FROM node:22-alpine AS build
 WORKDIR /src/frontend
 COPY frontend/package.json frontend/package-lock.json ./
 RUN npm ci
-COPY fixtures/*.json /src/fixtures/
+# The .dockerignore lets in only the fixture JSON the tests import.
+COPY fixtures/ /src/fixtures/
 COPY frontend/ ./
 # VITE_* values are baked into the bundle at build time. Never put a secret here.
 # Empty VITE_API_BASE_URL = same origin (nginx proxies /api to the backend).

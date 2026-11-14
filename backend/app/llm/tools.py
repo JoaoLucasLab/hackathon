@@ -24,6 +24,7 @@ from anthropic.types import ToolParam
 from fastapi import HTTPException
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, ValidationError
 
+from app import config
 from app.api import catalog_data
 from app.api import mentors as mentors_api
 from app.api import professors as professors_api
@@ -38,8 +39,11 @@ from app.contracts import (
     MentorGoal,
     MentorSearchRequest,
     PrereqExpression,
+    Track,
 )
 from app.engine.candidates import remaining_requirements as unmet_requirements
+from app.llm import intake as intake_rules
+from app.schools.base import default_school
 
 
 class ToolInputError(ValueError):
@@ -57,6 +61,8 @@ class ToolContext:
     audit: DegreeAudit
     constraints: ConstraintSet = field(default_factory=ConstraintSet)
     favorite_professor_ids: set[str] = field(default_factory=set)
+    # AI-07: readiness checklist for the first schedule (used when the flag is on).
+    intake: intake_rules.IntakeState = field(default_factory=intake_rules.IntakeState)
 
 
 # --- JSON schema helpers (strict mode: every property required, no extras) ---------
@@ -88,11 +94,16 @@ _COURSE_CODES = {"type": "array", "items": _COURSE_CODE}
 _DAYS = [d for d in ("M", "T", "W", "R", "F", "S")]
 _GOALS = [g.value for g in MentorGoal]
 _DELIVERY = [d.value for d in DeliveryMethod]
+_TRACKS = [t.value for t in Track]
 
 _CONSTRAINT_SET = _obj(
     {
-        "credit_min": _nullable({"type": "number", "description": "Minimum credits."}),
-        "credit_max": _nullable({"type": "number", "description": "Maximum credits."}),
+        "credit_min": _nullable(
+            {"type": "number", "description": "Minimum credits. Any number the student asks for."}
+        ),
+        "credit_max": _nullable(
+            {"type": "number", "description": "Maximum credits. Any number the student asks for."}
+        ),
         "earliest_start": _nullable(
             _str('No class starts before this. 24-hour "HH:MM". No morning classes = "11:30".')
         ),
@@ -139,9 +150,19 @@ class CheckPrerequisitesArgs(_Args):
     course_codes: list[CourseCode] = Field(min_length=1, max_length=10)
 
 
+class BuildIntakeArgs(_Args):
+    """AI-07: what the student said about the readiness checklist."""
+
+    track: Track | None
+    use_default_credits: bool
+    student_agreed: bool
+
+
 class BuildSchedulesArgs(_Args):
     constraints: ConstraintSet
     max_results: int = Field(ge=1, le=5)
+    # Required by the tool schema when FEATURE_CONVERSATIONAL_PLANNER is on.
+    intake: BuildIntakeArgs | None = None
 
 
 class ProfessorProfileArgs(_Args):
@@ -179,9 +200,17 @@ def _not_found(exc: HTTPException) -> ToolExecutionError:
 
 
 def get_remaining_requirements(ctx: ToolContext, _: NoArgs) -> Json:
+    rules = default_school().rules
+    default_range = rules.default_credit_range() if rules else None
     return {
         "track": ctx.audit.track.value if ctx.audit.track else None,
         "track_known": ctx.audit.track is not None,
+        # Used only when the student gives no number. The student may pick any number.
+        "default_credit_range": (
+            {"credit_min": default_range[0], "credit_max": default_range[1]}
+            if default_range
+            else None
+        ),
         # Same function as GET /api/requirements/remaining, on this session's audit.
         "requirements": [_dump(r) for r in unmet_requirements(ctx.audit)],
     }
@@ -253,12 +282,37 @@ def check_prerequisites(ctx: ToolContext, args: CheckPrerequisitesArgs) -> Json:
     }
 
 
+def _intake_gate(ctx: ToolContext, args: BuildSchedulesArgs) -> None:
+    """AI-07: no schedule before the checklist is complete and the student agrees."""
+    if args.intake is None:
+        raise ToolInputError("Invalid arguments for build_schedules: intake: Field required")
+    try:
+        stated = intake_rules.check_build(
+            ctx.intake,
+            audit_track=ctx.audit.track,
+            constraints=args.constraints,
+            stated_track=args.intake.track,
+            use_default_credits=args.intake.use_default_credits,
+            student_agreed=args.intake.student_agreed,
+        )
+    except intake_rules.NotReadyError as exc:
+        raise ToolExecutionError(str(exc)) from exc
+    if stated is not None and ctx.audit.track is None:
+        # The student's answer is kept for the rest of the session.
+        ctx.audit = ctx.audit.model_copy(update={"track": stated})
+
+
 def build_schedules(ctx: ToolContext, args: BuildSchedulesArgs) -> Json:
+    conversational = config.FEATURE_CONVERSATIONAL_PLANNER
+    if conversational:
+        _intake_gate(ctx, args)
     response = schedules_api.build_schedules(
         BuildSchedulesRequest(constraints=args.constraints, max_results=args.max_results),
         ctx.favorite_professor_ids,
     )
     ctx.constraints = args.constraints
+    if conversational:
+        intake_rules.mark_built(ctx.intake)
     return {"constraints": _dump(args.constraints), **_dump(response)}
 
 
@@ -435,9 +489,53 @@ TOOLS: tuple[Tool, ...] = (
 
 TOOLS_BY_NAME: dict[str, Tool] = {t.name: t for t in TOOLS}
 
+# AI-07: with FEATURE_CONVERSATIONAL_PLANNER on, build_schedules also carries the
+# readiness checklist, and the backend refuses to build until it is complete.
+_INTAKE = _obj(
+    {
+        "track": _nullable(
+            _enum(
+                _TRACKS,
+                "The track the student told you, only when get_remaining_requirements "
+                "returned track_known false. Otherwise null.",
+            )
+        ),
+        "use_default_credits": {
+            "type": "boolean",
+            "description": "True only when the student said the default credit load is "
+            "fine. Then leave credit_min and credit_max null.",
+        },
+        "student_agreed": {
+            "type": "boolean",
+            "description": "True only when the student, after you restated their "
+            "preferences, said yes or asked you to build.",
+        },
+    }
+)
+
+
+def _conversational_build_tool() -> Tool:
+    base = TOOLS_BY_NAME["build_schedules"]
+    return Tool(
+        base.name,
+        "Build Winter 2027 schedules. Send the complete set of constraints the student "
+        "wants now, including earlier ones still in force. Returns an error starting "
+        '"not ready" when something must be asked first: then ask the student, do not '
+        "retry in the same turn.",
+        _obj({**base.input_schema["properties"], "intake": _INTAKE}),
+        base.args_model,
+        base.run,
+    )
+
 
 def tool_definitions() -> list[ToolParam]:
-    """Tool list for the Messages API. Fixed order, so the prompt cache keeps hitting."""
+    """Tool list for the Messages API. Fixed order, so the prompt cache keeps hitting.
+    The flag is constant for the life of the process, so the list is too."""
+    if config.FEATURE_CONVERSATIONAL_PLANNER:
+        return [
+            (_conversational_build_tool() if t.name == "build_schedules" else t).definition()
+            for t in TOOLS
+        ]
     return [t.definition() for t in TOOLS]
 
 

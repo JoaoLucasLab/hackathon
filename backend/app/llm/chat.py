@@ -19,11 +19,13 @@ from typing import Any
 
 import anthropic
 
+from app import config
 from app.contracts import ChatEvent
 
 # Module imports (not names): app.llm.tools imports app.api, whose chat router imports
 # this module, so a name import here would fail when tools is imported first.
 from app.llm import client, tools
+from app.llm.intake import OFFER_DEFAULTS_NOTE, ChoiceFilter
 
 MAX_MODEL_CALLS = 8
 MAX_TOKENS = 16000
@@ -59,13 +61,19 @@ class ChatSession:
     history: list[dict[str, Any]] = field(default_factory=list)
 
 
+def system_prompt_name() -> str:
+    """`system` has the intake rules (AI-07). `system_classic` is the prompt from
+    before them, used while FEATURE_CONVERSATIONAL_PLANNER is off."""
+    return "system" if config.FEATURE_CONVERSATIONAL_PLANNER else "system_classic"
+
+
 def build_params(history: list[dict[str, Any]]) -> dict[str, Any]:
     """Request body for one call. Tools and system come first and never change,
     so they stay in the prompt cache; the top-level breakpoint caches the history."""
     return {
         "model": client.chat_model(),
         "max_tokens": MAX_TOKENS,
-        "system": client.cached_system(),
+        "system": client.cached_system(system_prompt_name()),
         "tools": tools.tool_definitions(),
         "messages": list(history),
         "output_config": {"effort": CHAT_EFFORT},
@@ -96,19 +104,41 @@ def _tool_result(tool_use_id: str, content: str, is_error: bool = False) -> dict
 
 def run_turn(session: ChatSession, message: str, caller: Caller) -> Iterator[ChatEvent]:
     """Handle one student message. Always ends with a `done` event."""
-    session.history.append({"role": "user", "content": message})
+    conversational = config.FEATURE_CONVERSATIONAL_PLANNER
+    intake = session.ctx.intake
+    content: str | list[dict[str, Any]] = message
+    if conversational:
+        intake.start_turn()
+        if intake.should_offer_defaults():
+            content = [
+                {"type": "text", "text": message},
+                {"type": "text", "text": OFFER_DEFAULTS_NOTE},
+            ]
+    session.history.append({"role": "user", "content": content})
     input_errors: Counter[str] = Counter()
+    was_built = intake.built
+    quick_replies: list[str] = []
 
     try:
         for _ in range(MAX_MODEL_CALLS):
             result: TurnResult | None = None
+            # AI-07: the model's `<<choices: ...>>` line is not shown as text; it
+            # becomes quick replies on the `done` event.
+            choices = ChoiceFilter() if conversational else None
             for item in caller(build_params(session.history)):
                 if isinstance(item, str):
-                    yield ChatEvent(type="text", text=item)
+                    shown = choices.feed(item) if choices else item
+                    if shown:
+                        yield ChatEvent(type="text", text=shown)
                 else:
                     result = item
             if result is None:
                 raise RuntimeError("Caller ended without a TurnResult")
+            if choices:
+                tail = choices.finish()
+                if tail:
+                    yield ChatEvent(type="text", text=tail)
+                quick_replies = choices.choices
 
             session.history.append({"role": "assistant", "content": result.content})
 
@@ -158,4 +188,9 @@ def run_turn(session: ChatSession, message: str, caller: Caller) -> Iterator[Cha
         # The SDK already retried rate limits and server errors with backoff.
         yield ChatEvent(type="error", text=ERR_UNAVAILABLE)
 
+    if conversational:
+        intake.end_turn(built_this_turn=intake.built and not was_built)
+        if quick_replies:
+            yield ChatEvent(type="done", data={"quick_replies": quick_replies})
+            return
     yield ChatEvent(type="done")

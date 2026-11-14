@@ -19,6 +19,7 @@ from typing import Any
 
 import pytest
 
+from app import config
 from app.api import fixture_data
 from app.contracts import ChatEvent, Course
 from app.llm.chat import ChatSession, TurnResult, claude_caller, run_turn
@@ -35,6 +36,8 @@ class Scenario:
     id: str
     messages: list[str]
     setup: str | None = None  # "no_track" | "inject_description"
+    # AI-07: run with FEATURE_CONVERSATIONAL_PLANNER on (intake before the first schedule).
+    conversational: bool = False
 
 
 def _phrases() -> list[dict[str, Any]]:
@@ -56,10 +59,53 @@ GROUNDING_SCENARIOS = [
     Scenario("no-track", ["Build me a schedule with 12 to 15 credits"], setup="no_track"),
 ]
 
-ALL_SCENARIOS = PHRASE_SCENARIOS + GROUNDING_SCENARIOS
+# AI-07: multi-turn intake conversations. The student lines are fixed, so they answer
+# more than one possible question each; the tests check the rules, not exact wording.
+INTAKE_EVERYTHING = Scenario(
+    "intake-everything-first",
+    [
+        "Fall & Winter track, 12 to 15 credits, no classes before 10, no Fridays, "
+        "include CSE 210",
+        "yes",
+    ],
+    conversational=True,
+)
+INTAKE_HELP_ME_PLAN = Scenario(
+    "intake-help-me-plan",
+    [
+        "help me plan my semester",
+        "I'm on the Winter & Spring track. The default credit load is fine.",
+        "No classes on Fridays, no other time limits. No specific courses to add or skip.",
+        "Either campus or online is fine.",
+        "Yes, build it.",
+    ],
+    setup="no_track",
+    conversational=True,
+)
+INTAKE_UNKNOWN_COURSE = Scenario(
+    "intake-unknown-course", ["I want 14 credits and add CSE 999"], conversational=True
+)
+INTAKE_ANY_CREDITS = Scenario(
+    "intake-any-credits",
+    [
+        "I want exactly 7 credits. No time limits, no specific courses, campus or online "
+        "is fine.",
+        "yes",
+    ],
+    conversational=True,
+)
+INTAKE_SCENARIOS = [
+    INTAKE_EVERYTHING,
+    INTAKE_HELP_ME_PLAN,
+    INTAKE_UNKNOWN_COURSE,
+    INTAKE_ANY_CREDITS,
+]
+
+ALL_SCENARIOS = PHRASE_SCENARIOS + GROUNDING_SCENARIOS + INTAKE_SCENARIOS
 
 
 def make_session(scenario: Scenario, monkeypatch: pytest.MonkeyPatch) -> ChatSession:
+    monkeypatch.setattr(config, "FEATURE_CONVERSATIONAL_PLANNER", scenario.conversational)
     audit = fixture_data.audit()
     if scenario.setup == "no_track":
         audit = audit.model_copy(update={"track": None})
@@ -81,6 +127,8 @@ def make_session(scenario: Scenario, monkeypatch: pytest.MonkeyPatch) -> ChatSes
 @dataclass
 class Transcript:
     events: list[ChatEvent] = field(default_factory=list)
+    # The same events, one list per student message.
+    turns: list[list[ChatEvent]] = field(default_factory=list)
     calls: list[dict[str, Any]] = field(default_factory=list)
 
     @property
@@ -129,7 +177,9 @@ class ReplayCaller:
 def run(session: ChatSession, scenario: Scenario, caller: Any) -> Transcript:
     transcript = Transcript()
     for message in scenario.messages:
-        transcript.events.extend(run_turn(session, message, caller))
+        turn = list(run_turn(session, message, caller))
+        transcript.turns.append(turn)
+        transcript.events.extend(turn)
     return transcript
 
 
