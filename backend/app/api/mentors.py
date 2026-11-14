@@ -64,7 +64,8 @@ def search_mentors(body: MentorSearchRequest, request: Request) -> list[MentorMa
 
 @router.post("/mentors/{professor_id}/email-draft", response_model=EmailDraft)
 def email_draft(professor_id: str, body: EmailDraftRequest) -> EmailDraft:
-    """STUB (ENG-01). AI-05 writes the real draft in `llm/`."""
+    # STUB (ENG-01). AI-05 writes the real draft in `llm/`. (A comment, not a
+    # docstring: FastAPI would put a docstring in the OpenAPI spec.)
     prof = fixture_data.professor_by_id().get(professor_id)
     if prof is None:
         raise HTTPException(status_code=404, detail="Professor not found")
