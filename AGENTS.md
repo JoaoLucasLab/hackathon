@@ -257,8 +257,10 @@ Rules:
 - The chat works through a fixed set of tools with strict JSON schemas:
   `get_remaining_requirements`, `search_sections`, `check_prerequisites`,
   `build_schedules`, `get_professor_profile`, `toggle_favorite_professor`,
-  `find_mentors`, `draft_outreach_email`. Each tool calls the same Python function
-  as its API endpoint.
+  `find_mentors`, `draft_outreach_email`. With `FEATURE_CONVERSATIONAL_PLANNER` on
+  there is a ninth, `confirm_schedule` (AI-08), which saves the schedule shown last
+  as the student's plan. Each tool calls the same Python function as its API
+  endpoint.
 - Validate every JSON result from Claude with Pydantic. On failure, retry once
   with the error message. If it fails again, return a clear message, not a broken
   screen.
@@ -347,7 +349,7 @@ Rules:
 - Reviews rotate: Engine reviews Data, AI & Product reviews Engine, Data reviews
   AI & Product.
 - Unfinished features merge behind a flag (`FEATURE_AUDIT_UPLOAD`,
-  `FEATURE_MENTORS`, `FEATURE_RELAXATION`) that is off in production.
+  `FEATURE_MENTORS`, `FEATURE_RELAXATION`, `FEATURE_CONVERSATIONAL_PLANNER`) that is off in production.
 - AI agents (Claude included) never run `git commit` or `git push`, even when
   asked to finish a task. Make the changes, stage them with `git add`, and leave
   them in the staging area. A human reviews, commits and pushes.

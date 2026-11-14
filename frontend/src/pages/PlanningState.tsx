@@ -18,6 +18,12 @@ export interface ChatTurn {
   error?: string;
   /** Fixed answers to the assistant's question (AI-07). Shown on the latest turn only. */
   quickReplies?: string[];
+  /** AI-08: the one schedule this reply shows, and its card label ("Option 2"). */
+  schedule?: Schedule;
+  option?: number;
+  /** AI-08: a build ran and nothing fits; the rule to loosen, when there is one. */
+  noSchedule?: boolean;
+  relaxation?: Relaxation | null;
 }
 
 const Context = createContext<{
@@ -32,6 +38,7 @@ const Context = createContext<{
   sendError: string | null;
   setSendError: Dispatch<SetStateAction<string | null>>;
   nextTurnId: MutableRefObject<number>;
+  restored: MutableRefObject<boolean>;
   activeRequest: MutableRefObject<AbortController | null>;
   clearChat: () => void;
 } | null>(null);
@@ -41,6 +48,8 @@ export function PlanningState({ children }: { children: ReactNode }) {
   const [results, setResults] = useState<Results | null>(null);
   const [draft, setDraft] = useState("");
   const [turns, setTurns] = useState<ChatTurn[]>([]);
+  /** AI-08: the saved conversation was already loaded once (or there was none). */
+  const restored = useRef(false);
   const [busy, setBusy] = useState(false);
   const [sendError, setSendError] = useState<string | null>(null);
   const nextTurnId = useRef(0);
@@ -52,6 +61,7 @@ export function PlanningState({ children }: { children: ReactNode }) {
     activeRequest.current?.abort();
     activeRequest.current = null;
     setTurns([]);
+    restored.current = true;
     setBusy(false);
     setSendError(null);
   }
@@ -59,7 +69,7 @@ export function PlanningState({ children }: { children: ReactNode }) {
   return (
     <Context.Provider value={{
       results, setResults, draft, setDraft, turns, setTurns, busy, setBusy,
-      sendError, setSendError, nextTurnId, activeRequest, clearChat,
+      sendError, setSendError, nextTurnId, restored, activeRequest, clearChat,
     }}>
       {children}
     </Context.Provider>

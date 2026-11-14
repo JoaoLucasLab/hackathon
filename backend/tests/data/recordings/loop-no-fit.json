@@ -1,0 +1,642 @@
+{
+  "id": "loop-no-fit",
+  "messages": [
+    "12 to 15 credits, campus classes only, done by 10:00 AM. No specific courses to add or skip.",
+    "yes",
+    "Apply this change"
+  ],
+  "calls": [
+    {
+      "request_messages": [
+        {
+          "role": "user",
+          "content": "12 to 15 credits, campus classes only, done by 10:00 AM. No specific courses to add or skip."
+        }
+      ],
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_01LcQUpW3eiczxotAKjDLWuY",
+          "input": {},
+          "name": "get_remaining_requirements",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "request_messages": [
+        {
+          "role": "user",
+          "content": "12 to 15 credits, campus classes only, done by 10:00 AM. No specific courses to add or skip."
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "id": "toolu_01LcQUpW3eiczxotAKjDLWuY",
+              "input": {},
+              "name": "get_remaining_requirements",
+              "type": "tool_use",
+              "caller": {
+                "type": "direct"
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "toolu_01LcQUpW3eiczxotAKjDLWuY",
+              "content": "{\"track\": \"fall_winter\", \"track_known\": true, \"default_credit_range\": {\"credit_min\": 12.0, \"credit_max\": 15.0}, \"requirements\": [{\"id\": \"core-data-structures\", \"group\": \"Major Core\", \"name\": \"Programming with Data Structures\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"CSE 212\"], \"courses_counted\": []}, {\"id\": \"core-testing\", \"group\": \"Major Core\", \"name\": \"Software Testing\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"CSE 270\"], \"courses_counted\": []}, {\"id\": \"core-applied\", \"group\": \"Major Core\", \"name\": \"Applied Programming\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 310\"], \"courses_counted\": []}, {\"id\": \"core-web-backend\", \"group\": \"Major Core\", \"name\": \"Web Backend\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 340\", \"CSE 341\"], \"courses_counted\": []}, {\"id\": \"web-frontend\", \"group\": \"Web Foundations\", \"name\": \"Web Frontend Development\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"WDD 231\"], \"courses_counted\": []}, {\"id\": \"db-design\", \"group\": \"Databases\", \"name\": \"Database Design\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CIT 225\"], \"courses_counted\": []}, {\"id\": \"math-calc2\", \"group\": \"Mathematics\", \"name\": \"Calculus II\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"MATH 113\"], \"courses_counted\": []}, {\"id\": \"math-stats\", \"group\": \"Mathematics\", \"name\": \"Statistics\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"MATH 221A\", \"MATH 325\"], \"courses_counted\": []}, {\"id\": \"major-elective\", \"group\": \"Major Electives\", \"name\": \"Computer Science Elective\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 325\", \"CSE 381\", \"CSE 450\"], \"courses_counted\": []}, {\"id\": \"rel-book-of-mormon\", \"group\": \"Religion Cornerstones\", \"name\": \"Teachings and Doctrine of the Book of Mormon\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"REL 275\"], \"courses_counted\": []}]}"
+            }
+          ]
+        }
+      ],
+      "text": [
+        "Here is",
+        " what I have:\n- Track",
+        ": Fall & Winter",
+        "\n- Credits: 12 ",
+        "to 15\n- Camp",
+        "us class",
+        "es only\n- All",
+        " classes end",
+        " by 10:00 AM",
+        "\n- No spec",
+        "ific courses to include or skip",
+        "\n- Days",
+        " off: none",
+        "\n\nShould I build a sched",
+        "ule with these?\n<<cho",
+        "ices: Build it | Change",
+        " something>>"
+      ],
+      "content": [
+        {
+          "signature": "CAQSsAUKEAgTGAI4AUIIdGhpbmtpbmcSDBDVSbu6rNeAbyS3ERoMSPtM9WfThwrfivAFIjAMDYy+3qAB9R4n2xnNR4sf8mz32WaFJlOEmmdQn8qR3v7SfsoQVp/9rmVkOvetExYqzQTHj56pnyf7uE06Aken/rfLmXB2bjcI1EaKMz+S3x+b9rg9VuXTysf88fY3BNe/+mZr+Ggy15EWPgD7wv1urw1OtzWLe1cUpZQoLOWokpPz2YjXiVVP4A8wpiqFlmCMMMFZHZjudeObZosDM3A8W00aa1wZKIQRp6hBq6PUDXS4Wqg9CqCPcqgWdZA9T8371CVbv9Ym7MHUT53wPoxc7k4c0Clwy/ocv6bJkfcRuG8G844lmF2SOcSPryxljhgxE3URkQpCSqd4ZyVifi0cMZ9gQaCqZ6RaLGtJVJLg+EcLSB9LXigNAGoNtcw+y58xwbDDyJGpp7olhwvYIEsRtfYwgi1tITBw13fW2/RDhn8mKOmNscDDt7hhPiuL2q4KoGJJjERLMsAPGqCqvO4CSnBP56FuDL74n5f5ozKiaLJLKgRriTnzZjQn0CcQJDDMhg55kFcuXp3su/IcuRXg/G5CCb+4e/6h8T2hZoLhVKIuk1OysrHgUtzny0o5AIONhPoQCoqhCjQCTHETtPgua4SRYum3mZ2L4BW2Q8j55mOZQg+S2kUSDXMxaNVwfwTU/eC9ERXwjIsOHgTGrDxmVQWEJ3YkdguTP/su6jZ907ler3bhMkv6yhb8JJqnVfKpTe44PYv0Q5IS59c8TPjUcQvGwK0R9NykaWf8ZpdsbjuLrNx2BxIOkmaTTrpkSA7OAYEy0Jrr7P9N+BZvXKGBtjncxytLgQ84WCOS++yxOuFTbjgozhe2v8a/8H2e6fkJznJeljdp31N2dNszKr5JGAE=",
+          "thinking": "",
+          "type": "thinking"
+        },
+        {
+          "text": "Here is what I have:\n- Track: Fall & Winter\n- Credits: 12 to 15\n- Campus classes only\n- All classes end by 10:00 AM\n- No specific courses to include or skip\n- Days off: none\n\nShould I build a schedule with these?\n<<choices: Build it | Change something>>",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    },
+    {
+      "request_messages": [
+        {
+          "role": "user",
+          "content": "12 to 15 credits, campus classes only, done by 10:00 AM. No specific courses to add or skip."
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "id": "toolu_01LcQUpW3eiczxotAKjDLWuY",
+              "input": {},
+              "name": "get_remaining_requirements",
+              "type": "tool_use",
+              "caller": {
+                "type": "direct"
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "toolu_01LcQUpW3eiczxotAKjDLWuY",
+              "content": "{\"track\": \"fall_winter\", \"track_known\": true, \"default_credit_range\": {\"credit_min\": 12.0, \"credit_max\": 15.0}, \"requirements\": [{\"id\": \"core-data-structures\", \"group\": \"Major Core\", \"name\": \"Programming with Data Structures\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"CSE 212\"], \"courses_counted\": []}, {\"id\": \"core-testing\", \"group\": \"Major Core\", \"name\": \"Software Testing\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"CSE 270\"], \"courses_counted\": []}, {\"id\": \"core-applied\", \"group\": \"Major Core\", \"name\": \"Applied Programming\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 310\"], \"courses_counted\": []}, {\"id\": \"core-web-backend\", \"group\": \"Major Core\", \"name\": \"Web Backend\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 340\", \"CSE 341\"], \"courses_counted\": []}, {\"id\": \"web-frontend\", \"group\": \"Web Foundations\", \"name\": \"Web Frontend Development\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"WDD 231\"], \"courses_counted\": []}, {\"id\": \"db-design\", \"group\": \"Databases\", \"name\": \"Database Design\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CIT 225\"], \"courses_counted\": []}, {\"id\": \"math-calc2\", \"group\": \"Mathematics\", \"name\": \"Calculus II\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"MATH 113\"], \"courses_counted\": []}, {\"id\": \"math-stats\", \"group\": \"Mathematics\", \"name\": \"Statistics\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"MATH 221A\", \"MATH 325\"], \"courses_counted\": []}, {\"id\": \"major-elective\", \"group\": \"Major Electives\", \"name\": \"Computer Science Elective\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 325\", \"CSE 381\", \"CSE 450\"], \"courses_counted\": []}, {\"id\": \"rel-book-of-mormon\", \"group\": \"Religion Cornerstones\", \"name\": \"Teachings and Doctrine of the Book of Mormon\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"REL 275\"], \"courses_counted\": []}]}"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "signature": "CAQSsAUKEAgTGAI4AUIIdGhpbmtpbmcSDBDVSbu6rNeAbyS3ERoMSPtM9WfThwrfivAFIjAMDYy+3qAB9R4n2xnNR4sf8mz32WaFJlOEmmdQn8qR3v7SfsoQVp/9rmVkOvetExYqzQTHj56pnyf7uE06Aken/rfLmXB2bjcI1EaKMz+S3x+b9rg9VuXTysf88fY3BNe/+mZr+Ggy15EWPgD7wv1urw1OtzWLe1cUpZQoLOWokpPz2YjXiVVP4A8wpiqFlmCMMMFZHZjudeObZosDM3A8W00aa1wZKIQRp6hBq6PUDXS4Wqg9CqCPcqgWdZA9T8371CVbv9Ym7MHUT53wPoxc7k4c0Clwy/ocv6bJkfcRuG8G844lmF2SOcSPryxljhgxE3URkQpCSqd4ZyVifi0cMZ9gQaCqZ6RaLGtJVJLg+EcLSB9LXigNAGoNtcw+y58xwbDDyJGpp7olhwvYIEsRtfYwgi1tITBw13fW2/RDhn8mKOmNscDDt7hhPiuL2q4KoGJJjERLMsAPGqCqvO4CSnBP56FuDL74n5f5ozKiaLJLKgRriTnzZjQn0CcQJDDMhg55kFcuXp3su/IcuRXg/G5CCb+4e/6h8T2hZoLhVKIuk1OysrHgUtzny0o5AIONhPoQCoqhCjQCTHETtPgua4SRYum3mZ2L4BW2Q8j55mOZQg+S2kUSDXMxaNVwfwTU/eC9ERXwjIsOHgTGrDxmVQWEJ3YkdguTP/su6jZ907ler3bhMkv6yhb8JJqnVfKpTe44PYv0Q5IS59c8TPjUcQvGwK0R9NykaWf8ZpdsbjuLrNx2BxIOkmaTTrpkSA7OAYEy0Jrr7P9N+BZvXKGBtjncxytLgQ84WCOS++yxOuFTbjgozhe2v8a/8H2e6fkJznJeljdp31N2dNszKr5JGAE=",
+              "thinking": "",
+              "type": "thinking"
+            },
+            {
+              "text": "Here is what I have:\n- Track: Fall & Winter\n- Credits: 12 to 15\n- Campus classes only\n- All classes end by 10:00 AM\n- No specific courses to include or skip\n- Days off: none\n\nShould I build a schedule with these?\n<<choices: Build it | Change something>>",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": "yes"
+        }
+      ],
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_01BxfXiY8ErViUpbcpj7rUWN",
+          "input": {
+            "constraints": {
+              "credit_min": 12,
+              "credit_max": 15,
+              "earliest_start": null,
+              "latest_end": "10:00",
+              "days_off": [],
+              "include_courses": [],
+              "exclude_courses": [],
+              "exclude_section_ids": [],
+              "delivery_methods": [
+                "campus"
+              ],
+              "only_required": false,
+              "allow_waitlist": false,
+              "only_favorite_professors": false
+            },
+            "avoid_schedules": [],
+            "intake": {
+              "track": null,
+              "use_default_credits": false,
+              "student_agreed": true
+            }
+          },
+          "name": "build_schedules",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "request_messages": [
+        {
+          "role": "user",
+          "content": "12 to 15 credits, campus classes only, done by 10:00 AM. No specific courses to add or skip."
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "id": "toolu_01LcQUpW3eiczxotAKjDLWuY",
+              "input": {},
+              "name": "get_remaining_requirements",
+              "type": "tool_use",
+              "caller": {
+                "type": "direct"
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "toolu_01LcQUpW3eiczxotAKjDLWuY",
+              "content": "{\"track\": \"fall_winter\", \"track_known\": true, \"default_credit_range\": {\"credit_min\": 12.0, \"credit_max\": 15.0}, \"requirements\": [{\"id\": \"core-data-structures\", \"group\": \"Major Core\", \"name\": \"Programming with Data Structures\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"CSE 212\"], \"courses_counted\": []}, {\"id\": \"core-testing\", \"group\": \"Major Core\", \"name\": \"Software Testing\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"CSE 270\"], \"courses_counted\": []}, {\"id\": \"core-applied\", \"group\": \"Major Core\", \"name\": \"Applied Programming\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 310\"], \"courses_counted\": []}, {\"id\": \"core-web-backend\", \"group\": \"Major Core\", \"name\": \"Web Backend\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 340\", \"CSE 341\"], \"courses_counted\": []}, {\"id\": \"web-frontend\", \"group\": \"Web Foundations\", \"name\": \"Web Frontend Development\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"WDD 231\"], \"courses_counted\": []}, {\"id\": \"db-design\", \"group\": \"Databases\", \"name\": \"Database Design\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CIT 225\"], \"courses_counted\": []}, {\"id\": \"math-calc2\", \"group\": \"Mathematics\", \"name\": \"Calculus II\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"MATH 113\"], \"courses_counted\": []}, {\"id\": \"math-stats\", \"group\": \"Mathematics\", \"name\": \"Statistics\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"MATH 221A\", \"MATH 325\"], \"courses_counted\": []}, {\"id\": \"major-elective\", \"group\": \"Major Electives\", \"name\": \"Computer Science Elective\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 325\", \"CSE 381\", \"CSE 450\"], \"courses_counted\": []}, {\"id\": \"rel-book-of-mormon\", \"group\": \"Religion Cornerstones\", \"name\": \"Teachings and Doctrine of the Book of Mormon\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"REL 275\"], \"courses_counted\": []}]}"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "signature": "CAQSsAUKEAgTGAI4AUIIdGhpbmtpbmcSDBDVSbu6rNeAbyS3ERoMSPtM9WfThwrfivAFIjAMDYy+3qAB9R4n2xnNR4sf8mz32WaFJlOEmmdQn8qR3v7SfsoQVp/9rmVkOvetExYqzQTHj56pnyf7uE06Aken/rfLmXB2bjcI1EaKMz+S3x+b9rg9VuXTysf88fY3BNe/+mZr+Ggy15EWPgD7wv1urw1OtzWLe1cUpZQoLOWokpPz2YjXiVVP4A8wpiqFlmCMMMFZHZjudeObZosDM3A8W00aa1wZKIQRp6hBq6PUDXS4Wqg9CqCPcqgWdZA9T8371CVbv9Ym7MHUT53wPoxc7k4c0Clwy/ocv6bJkfcRuG8G844lmF2SOcSPryxljhgxE3URkQpCSqd4ZyVifi0cMZ9gQaCqZ6RaLGtJVJLg+EcLSB9LXigNAGoNtcw+y58xwbDDyJGpp7olhwvYIEsRtfYwgi1tITBw13fW2/RDhn8mKOmNscDDt7hhPiuL2q4KoGJJjERLMsAPGqCqvO4CSnBP56FuDL74n5f5ozKiaLJLKgRriTnzZjQn0CcQJDDMhg55kFcuXp3su/IcuRXg/G5CCb+4e/6h8T2hZoLhVKIuk1OysrHgUtzny0o5AIONhPoQCoqhCjQCTHETtPgua4SRYum3mZ2L4BW2Q8j55mOZQg+S2kUSDXMxaNVwfwTU/eC9ERXwjIsOHgTGrDxmVQWEJ3YkdguTP/su6jZ907ler3bhMkv6yhb8JJqnVfKpTe44PYv0Q5IS59c8TPjUcQvGwK0R9NykaWf8ZpdsbjuLrNx2BxIOkmaTTrpkSA7OAYEy0Jrr7P9N+BZvXKGBtjncxytLgQ84WCOS++yxOuFTbjgozhe2v8a/8H2e6fkJznJeljdp31N2dNszKr5JGAE=",
+              "thinking": "",
+              "type": "thinking"
+            },
+            {
+              "text": "Here is what I have:\n- Track: Fall & Winter\n- Credits: 12 to 15\n- Campus classes only\n- All classes end by 10:00 AM\n- No specific courses to include or skip\n- Days off: none\n\nShould I build a schedule with these?\n<<choices: Build it | Change something>>",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": "yes"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "id": "toolu_01BxfXiY8ErViUpbcpj7rUWN",
+              "input": {
+                "constraints": {
+                  "credit_min": 12,
+                  "credit_max": 15,
+                  "earliest_start": null,
+                  "latest_end": "10:00",
+                  "days_off": [],
+                  "include_courses": [],
+                  "exclude_courses": [],
+                  "exclude_section_ids": [],
+                  "delivery_methods": [
+                    "campus"
+                  ],
+                  "only_required": false,
+                  "allow_waitlist": false,
+                  "only_favorite_professors": false
+                },
+                "avoid_schedules": [],
+                "intake": {
+                  "track": null,
+                  "use_default_credits": false,
+                  "student_agreed": true
+                }
+              },
+              "name": "build_schedules",
+              "type": "tool_use",
+              "caller": {
+                "type": "direct"
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "toolu_01BxfXiY8ErViUpbcpj7rUWN",
+              "content": "{\"constraints\": {\"credit_min\": 12.0, \"credit_max\": 15.0, \"earliest_start\": null, \"latest_end\": \"10:00:00\", \"days_off\": [], \"include_courses\": [], \"exclude_courses\": [], \"exclude_section_ids\": [], \"delivery_methods\": [\"campus\"], \"only_required\": false, \"allow_waitlist\": false, \"only_favorite_professors\": false}, \"schedules\": [], \"excluded\": [{\"section_id\": \"2027;WI|CSE 212-02\", \"reason\": \"excluded by you\", \"detail\": \"ends at 13:45, after 10:00\"}, {\"section_id\": \"2027;WI|CSE 212-03\", \"reason\": \"excluded by you\", \"detail\": \"delivery: online\"}, {\"section_id\": \"2027;WI;W2|CSE 212-04\", \"reason\": \"excluded by you\", \"detail\": \"ends at 16:15, after 10:00\"}, {\"section_id\": \"2027;WI|CSE 270-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212\"}, {\"section_id\": \"2027;WI;W1|CSE 270-02\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212\"}, {\"section_id\": \"2027;WI;W2|CSE 300-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212\"}, {\"section_id\": \"2027;WI|CSE 310-02\", \"reason\": \"excluded by you\", \"detail\": \"ends at 13:45, after 10:00\"}, {\"section_id\": \"2027;WI;W2|CSE 310-03\", \"reason\": \"excluded by you\", \"detail\": \"ends at 15:00, after 10:00\"}, {\"section_id\": \"2027;WI|CSE 325-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212\"}, {\"section_id\": \"2027;WI|CSE 340-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212 and one of WDD 231, CIT 230\"}, {\"section_id\": \"2027;WI|CSE 340-02\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212 and one of WDD 231, CIT 230\"}, {\"section_id\": \"2027;WI|CSE 341-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs one of CSE 340, WDD 330\"}, {\"section_id\": \"2027;WI|CSE 370-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 270\"}, {\"section_id\": \"2027;WI|CSE 381-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212 and MATH 215 with C or better\"}, {\"section_id\": \"2027;WI|CSE 450-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212 and one of MATH 221A, MATH 325\"}, {\"section_id\": \"2027;WI|CSE 450-02\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212 and one of MATH 221A, MATH 325\"}, {\"section_id\": \"2027;WI|CSE 499-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 300\"}, {\"section_id\": \"2027;WI|CIT 225-01\", \"reason\": \"excluded by you\", \"detail\": \"ends at 12:30, after 10:00\"}, {\"section_id\": \"2027;WI|CIT 225-02\", \"reason\": \"excluded by you\", \"detail\": \"ends at 16:45, after 10:00\"}, {\"section_id\": \"2027;WI|WDD 231-01\", \"reason\": \"excluded by you\", \"detail\": \"ends at 12:30, after 10:00\"}, {\"section_id\": \"2027;WI;W1|WDD 231-02\", \"reason\": \"excluded by you\", \"detail\": \"ends at 13:45, after 10:00\"}, {\"section_id\": \"2027;WI;W2|WDD 231-03\", \"reason\": \"excluded by you\", \"detail\": \"ends at 13:45, after 10:00\"}, {\"section_id\": \"2027;WI|MATH 113-02\", \"reason\": \"excluded by you\", \"detail\": \"ends at 11:15, after 10:00\"}, {\"section_id\": \"2027;WI|MATH 113-03\", \"reason\": \"excluded by you\", \"detail\": \"ends at 12:45, after 10:00\"}, {\"section_id\": \"2027;WI|MATH 113-04\", \"reason\": \"excluded by you\", \"detail\": \"delivery: online\"}, {\"section_id\": \"2027;WI|MATH 215-01\", \"reason\": \"excluded by you\", \"detail\": \"ends at 10:15, after 10:00\"}, {\"section_id\": \"2027;WI|MATH 221A-01\", \"reason\": \"excluded by you\", \"detail\": \"ends at 13:45, after 10:00\"}, {\"section_id\": \"2027;WI|MATH 221A-02\", \"reason\": \"excluded by you\", \"detail\": \"ends at 10:15, after 10:00\"}, {\"section_id\": \"2027;WI;W1|MATH 221A-03\", \"reason\": \"excluded by you\", \"detail\": \"delivery: online\"}, {\"section_id\": \"2027;WI|MATH 325-01\", \"reason\": \"excluded by you\", \"detail\": \"ends at 15:00, after 10:00\"}, {\"section_id\": \"2027;WI|REL 275-01\", \"reason\": \"excluded by you\", \"detail\": \"ends at 11:15, after 10:00\"}, {\"section_id\": \"2027;WI|REL 275-02\", \"reason\": \"excluded by you\", \"detail\": \"ends at 13:45, after 10:00\"}], \"relaxation\": {\"constraint\": \"latest_end\", \"change\": \"allow classes until 12:30 instead of 10:00\", \"schedules_available\": 1, \"patch\": {\"credit_min\": 12.0, \"credit_max\": 15.0, \"earliest_start\": null, \"latest_end\": \"12:30:00\", \"days_off\": [], \"include_courses\": [], \"exclude_courses\": [], \"exclude_section_ids\": [], \"delivery_methods\": [\"campus\"], \"only_required\": false, \"allow_waitlist\": false, \"only_favorite_professors\": false}}, \"exhausted\": false}"
+            }
+          ]
+        }
+      ],
+      "text": [
+        "No schedule fits all",
+        " of",
+        " your",
+        " rules. With camp",
+        "us-",
+        "only classes that",
+        " end by 10:00 A",
+        "M, almost every section is",
+        " ",
+        "ruled out. Many",
+        " of the remaining cour",
+        "ses also",
+        " need CSE 212 first",
+        ".\n\nI suggest all",
+        "owing classes until 12:",
+        "30 instead of 10:",
+        "00. That g",
+        "ives one schedule that",
+        " fits. Do you want me",
+        " to apply that change?"
+      ],
+      "content": [
+        {
+          "text": "No schedule fits all of your rules. With campus-only classes that end by 10:00 AM, almost every section is ruled out. Many of the remaining courses also need CSE 212 first.\n\nI suggest allowing classes until 12:30 instead of 10:00. That gives one schedule that fits. Do you want me to apply that change?",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    },
+    {
+      "request_messages": [
+        {
+          "role": "user",
+          "content": "12 to 15 credits, campus classes only, done by 10:00 AM. No specific courses to add or skip."
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "id": "toolu_01LcQUpW3eiczxotAKjDLWuY",
+              "input": {},
+              "name": "get_remaining_requirements",
+              "type": "tool_use",
+              "caller": {
+                "type": "direct"
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "toolu_01LcQUpW3eiczxotAKjDLWuY",
+              "content": "{\"track\": \"fall_winter\", \"track_known\": true, \"default_credit_range\": {\"credit_min\": 12.0, \"credit_max\": 15.0}, \"requirements\": [{\"id\": \"core-data-structures\", \"group\": \"Major Core\", \"name\": \"Programming with Data Structures\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"CSE 212\"], \"courses_counted\": []}, {\"id\": \"core-testing\", \"group\": \"Major Core\", \"name\": \"Software Testing\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"CSE 270\"], \"courses_counted\": []}, {\"id\": \"core-applied\", \"group\": \"Major Core\", \"name\": \"Applied Programming\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 310\"], \"courses_counted\": []}, {\"id\": \"core-web-backend\", \"group\": \"Major Core\", \"name\": \"Web Backend\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 340\", \"CSE 341\"], \"courses_counted\": []}, {\"id\": \"web-frontend\", \"group\": \"Web Foundations\", \"name\": \"Web Frontend Development\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"WDD 231\"], \"courses_counted\": []}, {\"id\": \"db-design\", \"group\": \"Databases\", \"name\": \"Database Design\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CIT 225\"], \"courses_counted\": []}, {\"id\": \"math-calc2\", \"group\": \"Mathematics\", \"name\": \"Calculus II\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"MATH 113\"], \"courses_counted\": []}, {\"id\": \"math-stats\", \"group\": \"Mathematics\", \"name\": \"Statistics\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"MATH 221A\", \"MATH 325\"], \"courses_counted\": []}, {\"id\": \"major-elective\", \"group\": \"Major Electives\", \"name\": \"Computer Science Elective\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 325\", \"CSE 381\", \"CSE 450\"], \"courses_counted\": []}, {\"id\": \"rel-book-of-mormon\", \"group\": \"Religion Cornerstones\", \"name\": \"Teachings and Doctrine of the Book of Mormon\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"REL 275\"], \"courses_counted\": []}]}"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "signature": "CAQSsAUKEAgTGAI4AUIIdGhpbmtpbmcSDBDVSbu6rNeAbyS3ERoMSPtM9WfThwrfivAFIjAMDYy+3qAB9R4n2xnNR4sf8mz32WaFJlOEmmdQn8qR3v7SfsoQVp/9rmVkOvetExYqzQTHj56pnyf7uE06Aken/rfLmXB2bjcI1EaKMz+S3x+b9rg9VuXTysf88fY3BNe/+mZr+Ggy15EWPgD7wv1urw1OtzWLe1cUpZQoLOWokpPz2YjXiVVP4A8wpiqFlmCMMMFZHZjudeObZosDM3A8W00aa1wZKIQRp6hBq6PUDXS4Wqg9CqCPcqgWdZA9T8371CVbv9Ym7MHUT53wPoxc7k4c0Clwy/ocv6bJkfcRuG8G844lmF2SOcSPryxljhgxE3URkQpCSqd4ZyVifi0cMZ9gQaCqZ6RaLGtJVJLg+EcLSB9LXigNAGoNtcw+y58xwbDDyJGpp7olhwvYIEsRtfYwgi1tITBw13fW2/RDhn8mKOmNscDDt7hhPiuL2q4KoGJJjERLMsAPGqCqvO4CSnBP56FuDL74n5f5ozKiaLJLKgRriTnzZjQn0CcQJDDMhg55kFcuXp3su/IcuRXg/G5CCb+4e/6h8T2hZoLhVKIuk1OysrHgUtzny0o5AIONhPoQCoqhCjQCTHETtPgua4SRYum3mZ2L4BW2Q8j55mOZQg+S2kUSDXMxaNVwfwTU/eC9ERXwjIsOHgTGrDxmVQWEJ3YkdguTP/su6jZ907ler3bhMkv6yhb8JJqnVfKpTe44PYv0Q5IS59c8TPjUcQvGwK0R9NykaWf8ZpdsbjuLrNx2BxIOkmaTTrpkSA7OAYEy0Jrr7P9N+BZvXKGBtjncxytLgQ84WCOS++yxOuFTbjgozhe2v8a/8H2e6fkJznJeljdp31N2dNszKr5JGAE=",
+              "thinking": "",
+              "type": "thinking"
+            },
+            {
+              "text": "Here is what I have:\n- Track: Fall & Winter\n- Credits: 12 to 15\n- Campus classes only\n- All classes end by 10:00 AM\n- No specific courses to include or skip\n- Days off: none\n\nShould I build a schedule with these?\n<<choices: Build it | Change something>>",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": "yes"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "id": "toolu_01BxfXiY8ErViUpbcpj7rUWN",
+              "input": {
+                "constraints": {
+                  "credit_min": 12,
+                  "credit_max": 15,
+                  "earliest_start": null,
+                  "latest_end": "10:00",
+                  "days_off": [],
+                  "include_courses": [],
+                  "exclude_courses": [],
+                  "exclude_section_ids": [],
+                  "delivery_methods": [
+                    "campus"
+                  ],
+                  "only_required": false,
+                  "allow_waitlist": false,
+                  "only_favorite_professors": false
+                },
+                "avoid_schedules": [],
+                "intake": {
+                  "track": null,
+                  "use_default_credits": false,
+                  "student_agreed": true
+                }
+              },
+              "name": "build_schedules",
+              "type": "tool_use",
+              "caller": {
+                "type": "direct"
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "toolu_01BxfXiY8ErViUpbcpj7rUWN",
+              "content": "{\"constraints\": {\"credit_min\": 12.0, \"credit_max\": 15.0, \"earliest_start\": null, \"latest_end\": \"10:00:00\", \"days_off\": [], \"include_courses\": [], \"exclude_courses\": [], \"exclude_section_ids\": [], \"delivery_methods\": [\"campus\"], \"only_required\": false, \"allow_waitlist\": false, \"only_favorite_professors\": false}, \"schedules\": [], \"excluded\": [{\"section_id\": \"2027;WI|CSE 212-02\", \"reason\": \"excluded by you\", \"detail\": \"ends at 13:45, after 10:00\"}, {\"section_id\": \"2027;WI|CSE 212-03\", \"reason\": \"excluded by you\", \"detail\": \"delivery: online\"}, {\"section_id\": \"2027;WI;W2|CSE 212-04\", \"reason\": \"excluded by you\", \"detail\": \"ends at 16:15, after 10:00\"}, {\"section_id\": \"2027;WI|CSE 270-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212\"}, {\"section_id\": \"2027;WI;W1|CSE 270-02\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212\"}, {\"section_id\": \"2027;WI;W2|CSE 300-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212\"}, {\"section_id\": \"2027;WI|CSE 310-02\", \"reason\": \"excluded by you\", \"detail\": \"ends at 13:45, after 10:00\"}, {\"section_id\": \"2027;WI;W2|CSE 310-03\", \"reason\": \"excluded by you\", \"detail\": \"ends at 15:00, after 10:00\"}, {\"section_id\": \"2027;WI|CSE 325-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212\"}, {\"section_id\": \"2027;WI|CSE 340-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212 and one of WDD 231, CIT 230\"}, {\"section_id\": \"2027;WI|CSE 340-02\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212 and one of WDD 231, CIT 230\"}, {\"section_id\": \"2027;WI|CSE 341-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs one of CSE 340, WDD 330\"}, {\"section_id\": \"2027;WI|CSE 370-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 270\"}, {\"section_id\": \"2027;WI|CSE 381-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212 and MATH 215 with C or better\"}, {\"section_id\": \"2027;WI|CSE 450-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212 and one of MATH 221A, MATH 325\"}, {\"section_id\": \"2027;WI|CSE 450-02\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212 and one of MATH 221A, MATH 325\"}, {\"section_id\": \"2027;WI|CSE 499-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 300\"}, {\"section_id\": \"2027;WI|CIT 225-01\", \"reason\": \"excluded by you\", \"detail\": \"ends at 12:30, after 10:00\"}, {\"section_id\": \"2027;WI|CIT 225-02\", \"reason\": \"excluded by you\", \"detail\": \"ends at 16:45, after 10:00\"}, {\"section_id\": \"2027;WI|WDD 231-01\", \"reason\": \"excluded by you\", \"detail\": \"ends at 12:30, after 10:00\"}, {\"section_id\": \"2027;WI;W1|WDD 231-02\", \"reason\": \"excluded by you\", \"detail\": \"ends at 13:45, after 10:00\"}, {\"section_id\": \"2027;WI;W2|WDD 231-03\", \"reason\": \"excluded by you\", \"detail\": \"ends at 13:45, after 10:00\"}, {\"section_id\": \"2027;WI|MATH 113-02\", \"reason\": \"excluded by you\", \"detail\": \"ends at 11:15, after 10:00\"}, {\"section_id\": \"2027;WI|MATH 113-03\", \"reason\": \"excluded by you\", \"detail\": \"ends at 12:45, after 10:00\"}, {\"section_id\": \"2027;WI|MATH 113-04\", \"reason\": \"excluded by you\", \"detail\": \"delivery: online\"}, {\"section_id\": \"2027;WI|MATH 215-01\", \"reason\": \"excluded by you\", \"detail\": \"ends at 10:15, after 10:00\"}, {\"section_id\": \"2027;WI|MATH 221A-01\", \"reason\": \"excluded by you\", \"detail\": \"ends at 13:45, after 10:00\"}, {\"section_id\": \"2027;WI|MATH 221A-02\", \"reason\": \"excluded by you\", \"detail\": \"ends at 10:15, after 10:00\"}, {\"section_id\": \"2027;WI;W1|MATH 221A-03\", \"reason\": \"excluded by you\", \"detail\": \"delivery: online\"}, {\"section_id\": \"2027;WI|MATH 325-01\", \"reason\": \"excluded by you\", \"detail\": \"ends at 15:00, after 10:00\"}, {\"section_id\": \"2027;WI|REL 275-01\", \"reason\": \"excluded by you\", \"detail\": \"ends at 11:15, after 10:00\"}, {\"section_id\": \"2027;WI|REL 275-02\", \"reason\": \"excluded by you\", \"detail\": \"ends at 13:45, after 10:00\"}], \"relaxation\": {\"constraint\": \"latest_end\", \"change\": \"allow classes until 12:30 instead of 10:00\", \"schedules_available\": 1, \"patch\": {\"credit_min\": 12.0, \"credit_max\": 15.0, \"earliest_start\": null, \"latest_end\": \"12:30:00\", \"days_off\": [], \"include_courses\": [], \"exclude_courses\": [], \"exclude_section_ids\": [], \"delivery_methods\": [\"campus\"], \"only_required\": false, \"allow_waitlist\": false, \"only_favorite_professors\": false}}, \"exhausted\": false}"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "No schedule fits all of your rules. With campus-only classes that end by 10:00 AM, almost every section is ruled out. Many of the remaining courses also need CSE 212 first.\n\nI suggest allowing classes until 12:30 instead of 10:00. That gives one schedule that fits. Do you want me to apply that change?",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": "Apply this change"
+        }
+      ],
+      "text": [],
+      "content": [
+        {
+          "id": "toolu_01AkC4SbKntpJHwsk6prE7RH",
+          "input": {
+            "constraints": {
+              "credit_min": 12,
+              "credit_max": 15,
+              "earliest_start": null,
+              "latest_end": "12:30",
+              "days_off": [],
+              "include_courses": [],
+              "exclude_courses": [],
+              "exclude_section_ids": [],
+              "delivery_methods": [
+                "campus"
+              ],
+              "only_required": false,
+              "allow_waitlist": false,
+              "only_favorite_professors": false
+            },
+            "avoid_schedules": [],
+            "intake": {
+              "track": null,
+              "use_default_credits": false,
+              "student_agreed": true
+            }
+          },
+          "name": "build_schedules",
+          "type": "tool_use",
+          "caller": {
+            "type": "direct"
+          }
+        }
+      ],
+      "stop_reason": "tool_use"
+    },
+    {
+      "request_messages": [
+        {
+          "role": "user",
+          "content": "12 to 15 credits, campus classes only, done by 10:00 AM. No specific courses to add or skip."
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "id": "toolu_01LcQUpW3eiczxotAKjDLWuY",
+              "input": {},
+              "name": "get_remaining_requirements",
+              "type": "tool_use",
+              "caller": {
+                "type": "direct"
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "toolu_01LcQUpW3eiczxotAKjDLWuY",
+              "content": "{\"track\": \"fall_winter\", \"track_known\": true, \"default_credit_range\": {\"credit_min\": 12.0, \"credit_max\": 15.0}, \"requirements\": [{\"id\": \"core-data-structures\", \"group\": \"Major Core\", \"name\": \"Programming with Data Structures\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"CSE 212\"], \"courses_counted\": []}, {\"id\": \"core-testing\", \"group\": \"Major Core\", \"name\": \"Software Testing\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"CSE 270\"], \"courses_counted\": []}, {\"id\": \"core-applied\", \"group\": \"Major Core\", \"name\": \"Applied Programming\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 310\"], \"courses_counted\": []}, {\"id\": \"core-web-backend\", \"group\": \"Major Core\", \"name\": \"Web Backend\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 340\", \"CSE 341\"], \"courses_counted\": []}, {\"id\": \"web-frontend\", \"group\": \"Web Foundations\", \"name\": \"Web Frontend Development\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"WDD 231\"], \"courses_counted\": []}, {\"id\": \"db-design\", \"group\": \"Databases\", \"name\": \"Database Design\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CIT 225\"], \"courses_counted\": []}, {\"id\": \"math-calc2\", \"group\": \"Mathematics\", \"name\": \"Calculus II\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"MATH 113\"], \"courses_counted\": []}, {\"id\": \"math-stats\", \"group\": \"Mathematics\", \"name\": \"Statistics\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"MATH 221A\", \"MATH 325\"], \"courses_counted\": []}, {\"id\": \"major-elective\", \"group\": \"Major Electives\", \"name\": \"Computer Science Elective\", \"status\": \"not_met\", \"credits_required\": 3.0, \"credits_needed\": 3.0, \"options\": [\"CSE 325\", \"CSE 381\", \"CSE 450\"], \"courses_counted\": []}, {\"id\": \"rel-book-of-mormon\", \"group\": \"Religion Cornerstones\", \"name\": \"Teachings and Doctrine of the Book of Mormon\", \"status\": \"not_met\", \"credits_required\": 2.0, \"credits_needed\": 2.0, \"options\": [\"REL 275\"], \"courses_counted\": []}]}"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "signature": "CAQSsAUKEAgTGAI4AUIIdGhpbmtpbmcSDBDVSbu6rNeAbyS3ERoMSPtM9WfThwrfivAFIjAMDYy+3qAB9R4n2xnNR4sf8mz32WaFJlOEmmdQn8qR3v7SfsoQVp/9rmVkOvetExYqzQTHj56pnyf7uE06Aken/rfLmXB2bjcI1EaKMz+S3x+b9rg9VuXTysf88fY3BNe/+mZr+Ggy15EWPgD7wv1urw1OtzWLe1cUpZQoLOWokpPz2YjXiVVP4A8wpiqFlmCMMMFZHZjudeObZosDM3A8W00aa1wZKIQRp6hBq6PUDXS4Wqg9CqCPcqgWdZA9T8371CVbv9Ym7MHUT53wPoxc7k4c0Clwy/ocv6bJkfcRuG8G844lmF2SOcSPryxljhgxE3URkQpCSqd4ZyVifi0cMZ9gQaCqZ6RaLGtJVJLg+EcLSB9LXigNAGoNtcw+y58xwbDDyJGpp7olhwvYIEsRtfYwgi1tITBw13fW2/RDhn8mKOmNscDDt7hhPiuL2q4KoGJJjERLMsAPGqCqvO4CSnBP56FuDL74n5f5ozKiaLJLKgRriTnzZjQn0CcQJDDMhg55kFcuXp3su/IcuRXg/G5CCb+4e/6h8T2hZoLhVKIuk1OysrHgUtzny0o5AIONhPoQCoqhCjQCTHETtPgua4SRYum3mZ2L4BW2Q8j55mOZQg+S2kUSDXMxaNVwfwTU/eC9ERXwjIsOHgTGrDxmVQWEJ3YkdguTP/su6jZ907ler3bhMkv6yhb8JJqnVfKpTe44PYv0Q5IS59c8TPjUcQvGwK0R9NykaWf8ZpdsbjuLrNx2BxIOkmaTTrpkSA7OAYEy0Jrr7P9N+BZvXKGBtjncxytLgQ84WCOS++yxOuFTbjgozhe2v8a/8H2e6fkJznJeljdp31N2dNszKr5JGAE=",
+              "thinking": "",
+              "type": "thinking"
+            },
+            {
+              "text": "Here is what I have:\n- Track: Fall & Winter\n- Credits: 12 to 15\n- Campus classes only\n- All classes end by 10:00 AM\n- No specific courses to include or skip\n- Days off: none\n\nShould I build a schedule with these?\n<<choices: Build it | Change something>>",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": "yes"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "id": "toolu_01BxfXiY8ErViUpbcpj7rUWN",
+              "input": {
+                "constraints": {
+                  "credit_min": 12,
+                  "credit_max": 15,
+                  "earliest_start": null,
+                  "latest_end": "10:00",
+                  "days_off": [],
+                  "include_courses": [],
+                  "exclude_courses": [],
+                  "exclude_section_ids": [],
+                  "delivery_methods": [
+                    "campus"
+                  ],
+                  "only_required": false,
+                  "allow_waitlist": false,
+                  "only_favorite_professors": false
+                },
+                "avoid_schedules": [],
+                "intake": {
+                  "track": null,
+                  "use_default_credits": false,
+                  "student_agreed": true
+                }
+              },
+              "name": "build_schedules",
+              "type": "tool_use",
+              "caller": {
+                "type": "direct"
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "toolu_01BxfXiY8ErViUpbcpj7rUWN",
+              "content": "{\"constraints\": {\"credit_min\": 12.0, \"credit_max\": 15.0, \"earliest_start\": null, \"latest_end\": \"10:00:00\", \"days_off\": [], \"include_courses\": [], \"exclude_courses\": [], \"exclude_section_ids\": [], \"delivery_methods\": [\"campus\"], \"only_required\": false, \"allow_waitlist\": false, \"only_favorite_professors\": false}, \"schedules\": [], \"excluded\": [{\"section_id\": \"2027;WI|CSE 212-02\", \"reason\": \"excluded by you\", \"detail\": \"ends at 13:45, after 10:00\"}, {\"section_id\": \"2027;WI|CSE 212-03\", \"reason\": \"excluded by you\", \"detail\": \"delivery: online\"}, {\"section_id\": \"2027;WI;W2|CSE 212-04\", \"reason\": \"excluded by you\", \"detail\": \"ends at 16:15, after 10:00\"}, {\"section_id\": \"2027;WI|CSE 270-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212\"}, {\"section_id\": \"2027;WI;W1|CSE 270-02\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212\"}, {\"section_id\": \"2027;WI;W2|CSE 300-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212\"}, {\"section_id\": \"2027;WI|CSE 310-02\", \"reason\": \"excluded by you\", \"detail\": \"ends at 13:45, after 10:00\"}, {\"section_id\": \"2027;WI;W2|CSE 310-03\", \"reason\": \"excluded by you\", \"detail\": \"ends at 15:00, after 10:00\"}, {\"section_id\": \"2027;WI|CSE 325-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212\"}, {\"section_id\": \"2027;WI|CSE 340-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212 and one of WDD 231, CIT 230\"}, {\"section_id\": \"2027;WI|CSE 340-02\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212 and one of WDD 231, CIT 230\"}, {\"section_id\": \"2027;WI|CSE 341-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs one of CSE 340, WDD 330\"}, {\"section_id\": \"2027;WI|CSE 370-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 270\"}, {\"section_id\": \"2027;WI|CSE 381-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212 and MATH 215 with C or better\"}, {\"section_id\": \"2027;WI|CSE 450-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212 and one of MATH 221A, MATH 325\"}, {\"section_id\": \"2027;WI|CSE 450-02\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212 and one of MATH 221A, MATH 325\"}, {\"section_id\": \"2027;WI|CSE 499-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 300\"}, {\"section_id\": \"2027;WI|CIT 225-01\", \"reason\": \"excluded by you\", \"detail\": \"ends at 12:30, after 10:00\"}, {\"section_id\": \"2027;WI|CIT 225-02\", \"reason\": \"excluded by you\", \"detail\": \"ends at 16:45, after 10:00\"}, {\"section_id\": \"2027;WI|WDD 231-01\", \"reason\": \"excluded by you\", \"detail\": \"ends at 12:30, after 10:00\"}, {\"section_id\": \"2027;WI;W1|WDD 231-02\", \"reason\": \"excluded by you\", \"detail\": \"ends at 13:45, after 10:00\"}, {\"section_id\": \"2027;WI;W2|WDD 231-03\", \"reason\": \"excluded by you\", \"detail\": \"ends at 13:45, after 10:00\"}, {\"section_id\": \"2027;WI|MATH 113-02\", \"reason\": \"excluded by you\", \"detail\": \"ends at 11:15, after 10:00\"}, {\"section_id\": \"2027;WI|MATH 113-03\", \"reason\": \"excluded by you\", \"detail\": \"ends at 12:45, after 10:00\"}, {\"section_id\": \"2027;WI|MATH 113-04\", \"reason\": \"excluded by you\", \"detail\": \"delivery: online\"}, {\"section_id\": \"2027;WI|MATH 215-01\", \"reason\": \"excluded by you\", \"detail\": \"ends at 10:15, after 10:00\"}, {\"section_id\": \"2027;WI|MATH 221A-01\", \"reason\": \"excluded by you\", \"detail\": \"ends at 13:45, after 10:00\"}, {\"section_id\": \"2027;WI|MATH 221A-02\", \"reason\": \"excluded by you\", \"detail\": \"ends at 10:15, after 10:00\"}, {\"section_id\": \"2027;WI;W1|MATH 221A-03\", \"reason\": \"excluded by you\", \"detail\": \"delivery: online\"}, {\"section_id\": \"2027;WI|MATH 325-01\", \"reason\": \"excluded by you\", \"detail\": \"ends at 15:00, after 10:00\"}, {\"section_id\": \"2027;WI|REL 275-01\", \"reason\": \"excluded by you\", \"detail\": \"ends at 11:15, after 10:00\"}, {\"section_id\": \"2027;WI|REL 275-02\", \"reason\": \"excluded by you\", \"detail\": \"ends at 13:45, after 10:00\"}], \"relaxation\": {\"constraint\": \"latest_end\", \"change\": \"allow classes until 12:30 instead of 10:00\", \"schedules_available\": 1, \"patch\": {\"credit_min\": 12.0, \"credit_max\": 15.0, \"earliest_start\": null, \"latest_end\": \"12:30:00\", \"days_off\": [], \"include_courses\": [], \"exclude_courses\": [], \"exclude_section_ids\": [], \"delivery_methods\": [\"campus\"], \"only_required\": false, \"allow_waitlist\": false, \"only_favorite_professors\": false}}, \"exhausted\": false}"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "No schedule fits all of your rules. With campus-only classes that end by 10:00 AM, almost every section is ruled out. Many of the remaining courses also need CSE 212 first.\n\nI suggest allowing classes until 12:30 instead of 10:00. That gives one schedule that fits. Do you want me to apply that change?",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": "Apply this change"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "id": "toolu_01AkC4SbKntpJHwsk6prE7RH",
+              "input": {
+                "constraints": {
+                  "credit_min": 12,
+                  "credit_max": 15,
+                  "earliest_start": null,
+                  "latest_end": "12:30",
+                  "days_off": [],
+                  "include_courses": [],
+                  "exclude_courses": [],
+                  "exclude_section_ids": [],
+                  "delivery_methods": [
+                    "campus"
+                  ],
+                  "only_required": false,
+                  "allow_waitlist": false,
+                  "only_favorite_professors": false
+                },
+                "avoid_schedules": [],
+                "intake": {
+                  "track": null,
+                  "use_default_credits": false,
+                  "student_agreed": true
+                }
+              },
+              "name": "build_schedules",
+              "type": "tool_use",
+              "caller": {
+                "type": "direct"
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "toolu_01AkC4SbKntpJHwsk6prE7RH",
+              "content": "{\"constraints\": {\"credit_min\": 12.0, \"credit_max\": 15.0, \"earliest_start\": null, \"latest_end\": \"12:30:00\", \"days_off\": [], \"include_courses\": [], \"exclude_courses\": [], \"exclude_section_ids\": [], \"delivery_methods\": [\"campus\"], \"only_required\": false, \"allow_waitlist\": false, \"only_favorite_professors\": false}, \"schedules\": [{\"id\": \"sch-9a443c700a79\", \"rank\": 1, \"score\": 682.775, \"total_credits\": 15.0, \"optimal\": true, \"classes\": [{\"section\": {\"id\": \"2027;WI|CIT 225-01\", \"course_code\": \"CIT 225\", \"section\": \"01\", \"title\": \"Database Design and Development\", \"credits\": 3.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Information Technology\", \"instructor_ids\": [\"p-whitfield\"], \"meetings\": [{\"days\": [\"M\", \"W\", \"F\"], \"start_time\": \"11:30:00\", \"end_time\": \"12:30:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 140\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 6, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CIT225-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"db-design\"], \"waitlisted\": false, \"backups\": [], \"warnings\": [{\"kind\": \"prerequisite_check\", \"message\": \"Prerequisite CIT 111 is in progress: pending grade\", \"course_code\": \"CIT 225\", \"section_id\": \"2027;WI|CIT 225-01\"}]}, {\"section\": {\"id\": \"2027;WI|CSE 212-01\", \"course_code\": \"CSE 212\", \"section\": \"01\", \"title\": \"Programming with Data Structures\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-barros\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"09:00:00\", \"end_time\": \"10:00:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 235\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 4, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CSE212-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"core-data-structures\"], \"waitlisted\": false, \"backups\": [], \"warnings\": [{\"kind\": \"prerequisite_check\", \"message\": \"Prerequisite CSE 210 is in progress: pending grade\", \"course_code\": \"CSE 212\", \"section_id\": \"2027;WI|CSE 212-01\"}]}, {\"section\": {\"id\": \"2027;WI|CSE 310-01\", \"course_code\": \"CSE 310\", \"section\": \"01\", \"title\": \"Applied Programming\", \"credits\": 3.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Computer Science\", \"instructor_ids\": [\"p-smith-cse\"], \"meetings\": [{\"days\": [\"M\", \"W\", \"F\"], \"start_time\": \"09:00:00\", \"end_time\": \"10:00:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 380\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 6, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/CSE310-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"core-applied\"], \"waitlisted\": false, \"backups\": [], \"warnings\": [{\"kind\": \"prerequisite_check\", \"message\": \"Prerequisite CSE 210 is in progress: pending grade\", \"course_code\": \"CSE 310\", \"section_id\": \"2027;WI|CSE 310-01\"}]}, {\"section\": {\"id\": \"2027;WI|MATH 113-02\", \"course_code\": \"MATH 113\", \"section\": \"02\", \"title\": \"Calculus II\", \"credits\": 3.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Mathematics\", \"instructor_ids\": [\"p-nakamura\"], \"meetings\": [{\"days\": [\"M\", \"W\", \"F\"], \"start_time\": \"10:15:00\", \"end_time\": \"11:15:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"RKS 103\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 3, \"total\": 40, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/MATH113-02\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"math-calc2\"], \"waitlisted\": false, \"backups\": [{\"id\": \"2027;WI|MATH 113-01\", \"course_code\": \"MATH 113\", \"section\": \"01\", \"title\": \"Calculus II\", \"credits\": 3.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Mathematics\", \"instructor_ids\": [\"p-nakamura\"], \"meetings\": [{\"days\": [\"M\", \"W\", \"F\"], \"start_time\": \"07:45:00\", \"end_time\": \"08:45:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"RKS 103\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 10, \"total\": 40, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/MATH113-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|REL 275-01\", \"course_code\": \"REL 275\", \"section\": \"01\", \"title\": \"Teachings and Doctrine of the Book of Mormon\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Religious Education\", \"instructor_ids\": [\"p-smith-rel\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"10:15:00\", \"end_time\": \"11:15:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"TAY 120\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 12, \"total\": 80, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/REL275-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"rel-book-of-mormon\"], \"waitlisted\": false, \"backups\": [], \"warnings\": []}, {\"section\": {\"id\": \"2027;WI|WDD 231-01\", \"course_code\": \"WDD 231\", \"section\": \"01\", \"title\": \"Web Frontend Development I\", \"credits\": 2.0, \"term_code\": \"2027;WI\", \"block\": \"full\", \"delivery_method\": \"campus\", \"class_type\": \"Lecture\", \"department\": \"Web Design and Development\", \"instructor_ids\": [\"p-okafor\"], \"meetings\": [{\"days\": [\"T\", \"R\"], \"start_time\": \"11:30:00\", \"end_time\": \"12:30:00\", \"start_date\": \"2027-01-06\", \"end_date\": \"2027-04-08\", \"room\": \"STC 150\", \"tba\": false}], \"seats\": {\"status\": \"open\", \"open\": 5, \"total\": 30, \"as_of\": \"2026-11-13T15:00:00Z\"}, \"source_url\": \"https://fixtures.invalid/course-search/2027-WI/WDD231-01\", \"fetched_at\": \"2026-11-13T15:00:00Z\"}, \"requirement_ids\": [\"web-frontend\"], \"waitlisted\": false, \"backups\": [], \"warnings\": [{\"kind\": \"prerequisite_check\", \"message\": \"Prerequisite WDD 131 is in progress: pending grade\", \"course_code\": \"WDD 231\", \"section_id\": \"2027;WI|WDD 231-01\"}]}], \"why\": {\"preferences_met\": [\"credit_range\", \"latest_end\", \"delivery_methods\"], \"preferences_missed\": [], \"favorite_professor_ids\": []}, \"warnings\": [{\"kind\": \"prerequisite_check\", \"message\": \"Prerequisite CIT 111 is in progress: pending grade\", \"course_code\": \"CIT 225\", \"section_id\": \"2027;WI|CIT 225-01\"}, {\"kind\": \"prerequisite_check\", \"message\": \"Prerequisite CSE 210 is in progress: pending grade\", \"course_code\": \"CSE 212\", \"section_id\": \"2027;WI|CSE 212-01\"}, {\"kind\": \"prerequisite_check\", \"message\": \"Prerequisite CSE 210 is in progress: pending grade\", \"course_code\": \"CSE 310\", \"section_id\": \"2027;WI|CSE 310-01\"}, {\"kind\": \"prerequisite_check\", \"message\": \"Prerequisite WDD 131 is in progress: pending grade\", \"course_code\": \"WDD 231\", \"section_id\": \"2027;WI|WDD 231-01\"}, {\"kind\": \"religion_limit\", \"message\": \"You can add a second religion course after the first day of the semester.\", \"course_code\": \"REL 275\", \"section_id\": \"2027;WI|REL 275-01\"}], \"advising_note\": \"Confirm with BYU-Idaho Academic Advising.\"}], \"excluded\": [{\"section_id\": \"2027;WI|CSE 212-02\", \"reason\": \"excluded by you\", \"detail\": \"ends at 13:45, after 12:30\"}, {\"section_id\": \"2027;WI|CSE 212-03\", \"reason\": \"excluded by you\", \"detail\": \"delivery: online\"}, {\"section_id\": \"2027;WI;W2|CSE 212-04\", \"reason\": \"excluded by you\", \"detail\": \"ends at 16:15, after 12:30\"}, {\"section_id\": \"2027;WI|CSE 270-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212\"}, {\"section_id\": \"2027;WI;W1|CSE 270-02\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212\"}, {\"section_id\": \"2027;WI;W2|CSE 300-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212\"}, {\"section_id\": \"2027;WI|CSE 310-02\", \"reason\": \"excluded by you\", \"detail\": \"ends at 13:45, after 12:30\"}, {\"section_id\": \"2027;WI;W2|CSE 310-03\", \"reason\": \"excluded by you\", \"detail\": \"ends at 15:00, after 12:30\"}, {\"section_id\": \"2027;WI|CSE 325-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212\"}, {\"section_id\": \"2027;WI|CSE 340-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212 and one of WDD 231, CIT 230\"}, {\"section_id\": \"2027;WI|CSE 340-02\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212 and one of WDD 231, CIT 230\"}, {\"section_id\": \"2027;WI|CSE 341-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs one of CSE 340, WDD 330\"}, {\"section_id\": \"2027;WI|CSE 370-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 270\"}, {\"section_id\": \"2027;WI|CSE 381-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212 and MATH 215 with C or better\"}, {\"section_id\": \"2027;WI|CSE 450-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212 and one of MATH 221A, MATH 325\"}, {\"section_id\": \"2027;WI|CSE 450-02\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 212 and one of MATH 221A, MATH 325\"}, {\"section_id\": \"2027;WI|CSE 499-01\", \"reason\": \"prerequisite\", \"detail\": \"prerequisite: needs CSE 300\"}, {\"section_id\": \"2027;WI|CIT 225-02\", \"reason\": \"excluded by you\", \"detail\": \"ends at 16:45, after 12:30\"}, {\"section_id\": \"2027;WI;W1|WDD 231-02\", \"reason\": \"excluded by you\", \"detail\": \"ends at 13:45, after 12:30\"}, {\"section_id\": \"2027;WI;W2|WDD 231-03\", \"reason\": \"excluded by you\", \"detail\": \"ends at 13:45, after 12:30\"}, {\"section_id\": \"2027;WI|MATH 113-03\", \"reason\": \"excluded by you\", \"detail\": \"ends at 12:45, after 12:30\"}, {\"section_id\": \"2027;WI|MATH 113-04\", \"reason\": \"excluded by you\", \"detail\": \"delivery: online\"}, {\"section_id\": \"2027;WI|MATH 221A-01\", \"reason\": \"excluded by you\", \"detail\": \"ends at 13:45, after 12:30\"}, {\"section_id\": \"2027;WI;W1|MATH 221A-03\", \"reason\": \"excluded by you\", \"detail\": \"delivery: online\"}, {\"section_id\": \"2027;WI|MATH 325-01\", \"reason\": \"excluded by you\", \"detail\": \"ends at 15:00, after 12:30\"}, {\"section_id\": \"2027;WI|REL 275-02\", \"reason\": \"excluded by you\", \"detail\": \"ends at 13:45, after 12:30\"}], \"relaxation\": null, \"exhausted\": false, \"option\": 1, \"changed_from_previous\": null}"
+            }
+          ]
+        }
+      ],
+      "text": [
+        "This ",
+        "15-credit schedule cov",
+        "ers",
+        " Database Design,",
+        " Data Structures, Appl",
+        "ied Programming, Calcul",
+        "us II, Book of M",
+        "ormon and",
+        " Web Frontend.",
+        " Four class",
+        "es (",
+        "CIT 225, CS",
+        "E 212, CSE ",
+        "310 and WDD 231",
+        ") have prerequisites that",
+        " are still in progress with",
+        " gr",
+        "ades pending,",
+        " so check those before you",
+        " register.\n\nDoes this sched",
+        "ule work for you? Confir",
+        "m with BYU-Id",
+        "aho Academic Advising",
+        "."
+      ],
+      "content": [
+        {
+          "text": "This 15-credit schedule covers Database Design, Data Structures, Applied Programming, Calculus II, Book of Mormon and Web Frontend. Four classes (CIT 225, CSE 212, CSE 310 and WDD 231) have prerequisites that are still in progress with grades pending, so check those before you register.\n\nDoes this schedule work for you? Confirm with BYU-Idaho Academic Advising.",
+          "type": "text"
+        }
+      ],
+      "stop_reason": "end_turn"
+    }
+  ]
+}

@@ -13,7 +13,8 @@ from fastapi.responses import StreamingResponse
 
 from app.api import audit_store
 from app.api import professors as professors_api
-from app.contracts import ChatEvent, ChatRequest, ConstraintSet, DegreeAudit
+from app.api import schedules as schedules_api
+from app.contracts import ChatEvent, ChatHistory, ChatRequest, ConstraintSet, DegreeAudit
 
 # Module imports (not names) avoid a circular import: see app/llm/chat.py.
 from app.llm import chat as llm_chat
@@ -33,6 +34,8 @@ def get_session(request: Request) -> llm_chat.ChatSession:
             ctx=llm_tools.ToolContext(
                 audit=audit_store.get(sid),
                 favorite_professor_ids=professors_api.favorites_for(sid),
+                # Shared with /api/plan, so the chat tool and the endpoint agree.
+                plan=schedules_api.plan_for(sid),
             )
         )
     return _sessions[sid]
@@ -65,6 +68,12 @@ def chat(body: ChatRequest, request: Request) -> StreamingResponse:
             yield _sse(event)
 
     return StreamingResponse(events(), media_type="text/event-stream")
+
+
+@router.get("/chat/history", response_model=ChatHistory)
+def chat_history(request: Request) -> ChatHistory:
+    """The conversation as the chat showed it, so a reload keeps it (AI-08)."""
+    return ChatHistory(turns=get_session(request).transcript)
 
 
 @router.get("/constraints", response_model=ConstraintSet)

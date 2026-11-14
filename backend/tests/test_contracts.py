@@ -15,6 +15,7 @@ from app.contracts import (
     AuditRequirement,
     BuildSchedulesResponse,
     ChatEvent,
+    ChatHistory,
     ConstraintSet,
     DegreeAudit,
     EmailDraft,
@@ -116,6 +117,7 @@ ENDPOINTS: list[tuple[str, str, dict[str, object] | None, Any]] = [
     ("POST", "/api/audit/sample", None, DegreeAudit),
     ("GET", "/api/requirements/remaining", None, list[AuditRequirement]),
     ("GET", "/api/constraints", None, ConstraintSet),
+    ("GET", "/api/chat/history", None, ChatHistory),
     (
         "PUT",
         "/api/constraints",

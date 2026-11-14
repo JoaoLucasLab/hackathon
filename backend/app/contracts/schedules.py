@@ -122,6 +122,12 @@ class BuildSchedulesResponse(Contract):
     )
 
 
+class ConfirmPlanRequest(Contract):
+    """AI-08: confirm the schedule the chat showed last as the session's plan."""
+
+    schedule_id: str = Field(min_length=1, max_length=64, examples=["sch-8bac2d25a327"])
+
+
 class ExplainScheduleRequest(Contract):
     """The schedule to explain, exactly as `POST /api/schedules/build` returned it."""
 
